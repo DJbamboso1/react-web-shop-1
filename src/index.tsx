@@ -1,17 +1,27 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { AppProvider, routerConfig } from './core';
+import {reducers} from './store'
+import {routers} from './routers'
+import en from './locale/en/index.json'
+import vn from './locale/vn/index.json'
+import {CartModal} from './components'
+import saga from 'store/saga';
+
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <AppProvider reducers={reducers} translate={{ en, vn }} language="en" saga={saga}>
+        
+      <Suspense fallback={<div>Loading....</div>}>
+        {routerConfig(routers)}
+        <CartModal/>
+      </Suspense>
+      
+    </AppProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+console.log(document.querySelector('#modalShoppingCart'))
+
