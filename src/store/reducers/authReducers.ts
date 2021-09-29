@@ -1,30 +1,50 @@
+import { AUTH_LOGOUT, FETCH_LOGIN, LOGIN, LOGIN_ERROR } from "store/types"
 
-const initState = {}
 
-export const TYPE_LOGIN = 'LOGIN'
-export const TYPE_LOGIN_USER = 'LOGIN_USER'
-
-type UserInfo = {
-    username: string,
-    password: string
+type State = {
+    user?: {
+        
+    },
+    login: boolean,
+    errorMsg: ''
 }
 
-export const loginAction: ActionReturnType<UserInfo> = (user: UserInfo) => {
-    return {
-        type: TYPE_LOGIN,
-        payload: user
-    }
+let user: State['user'];
+
+try {
+    user = JSON.parse(localStorage.getItem('login') || '')
+} catch (err) {
+    user = undefined
+}
+
+const initState: State = {
+    user,
+    login: !!user,
+    errorMsg: ''
 }
 
 
 const authReducer = (state = initState, action: any) => {
-    // console.log(action)
+    console.log(action.payload)
     switch (action.type) {
-        case TYPE_LOGIN_USER:
+        case LOGIN:
             return {
                 ...state,
-                user: action.payload
+                user: action.payload,
+                login: true
             }
+
+        case AUTH_LOGOUT:
+            return {
+                login: false,
+                user: undefined
+            }
+        case LOGIN_ERROR: {
+            return {
+                ...state,
+                errorMsg: action.payload
+            }
+        }
     }
     return state
 }

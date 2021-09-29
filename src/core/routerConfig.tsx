@@ -7,7 +7,7 @@ export type RouterParam = {
     path?: string,
     component: any,
     exact?: true,
-    auth?: true,
+    auth?: boolean,
     routers?: RouterParam[]
 }
 
@@ -27,14 +27,19 @@ export function routerConfig(routers: RouterParam[], parentPath = '') {
             children = routerConfig(routerChildren, parentPath + path)
         }
 
-        if (auth) {
+        if (auth === true) {
             list.push(<PrivateRouter key={parentPath + path} path={parentPath + path} exact={exact} render={(props: any) => <Component {...props}>{children}</Component>}></PrivateRouter>)
         } else {
-            list.push(<Route key={parentPath + path} path={parentPath + path} exact={exact} render={(props: any) => <Component {...props}>{children}</Component>}></Route>)
+
+            list.push(<Route key={parentPath + path} path={parentPath + path} exact={exact}>
+                <Component>
+                    {children}
+                </Component>
+            </Route>)
         }
-        
+
     }
-    
+
     return (
         <Switch>
             {list}

@@ -2,14 +2,26 @@ import React from 'react'
 
 export const GET_WISHLIST = 'GET_WISHLIST'
 
-const initState = {}
+export const FETCH_WISHLIST = 'FETCH_WISHLIST' 
+
+interface State {
+    list: {
+        userId: number,
+        id: number,
+        title: string,
+        body: string
+    }[]
+}
+
+const initState: State = {list: []}
 
 const wishlistReducers = (state = initState, action: any) => {
     console.log('action.type: ' + action.type)
     switch (action.type) {
         case GET_WISHLIST: {
             return {
-                ...state
+                ...state,
+                list: action.payload
             }
         }
     }

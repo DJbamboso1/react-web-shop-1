@@ -6,6 +6,7 @@ import MainLayout from 'pages/_layout/MainLayout'
 import Page404 from '../pages/404'
 import { RouterParam } from 'core'
 import AccountLayout from 'pages/account/_layout'
+import AuthLayout from 'pages/_layout/AuthLayout'
 
 export const routers: RouterParam[] = [
     {
@@ -17,8 +18,26 @@ export const routers: RouterParam[] = [
                 exact: true
             },
             {
+                path: '/auth',
+                component: AuthLayout,
+                auth: false,
+                routers: [
+                    {
+                        path: '/login',
+                        component: lazy(() => import('../pages/authenicate/login')),
+                        exact: true,
+                    },
+                    {
+                        path: '/register',
+                        component: lazy(() => import('../pages/authenicate/register')),
+                        exact: true,
+                    },
+                ]
+            },
+            {
                 path: '/account',
                 component: AccountLayout,
+                auth: false,
                 routers: [
                     {
                         path: '/info',

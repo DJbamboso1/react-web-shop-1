@@ -1,4 +1,4 @@
-import { GET_WISHLIST } from "store/reducers/wishlistReducers";
+import { FETCH_WISHLIST, GET_WISHLIST } from "store/reducers/wishlistReducers";
 
 
 type wishtlistDemoFake = {
@@ -10,9 +10,15 @@ type wishtlistDemoFake = {
 
 export default wishtlistDemoFake
 
-export const wishlistAction: ActionReturnType<wishtlistDemoFake> = () => {
+export const wishlistAction = (wishlist: any[]) => {
     return{
-        type: GET_WISHLIST
-        // payload: wishlist
+        type: GET_WISHLIST,
+        payload: wishlist
     };
+}
+
+export function fetchWishlistAction() {
+    return {
+        type: FETCH_WISHLIST
+    }
 }

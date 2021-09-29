@@ -1,7 +1,11 @@
 import React, { createContext, useState, useCallback, useContext } from 'react'
 
 
-const AppContext = createContext({})
+type TranslateContext = {
+    t: (key: string) => string
+}
+
+const AppContext = createContext<TranslateContext>({} as TranslateContext)
 
 export const TranslateProvider: React.FC<{
     language?: string,
@@ -26,14 +30,14 @@ export const TranslateProvider: React.FC<{
         [],
     )
 
-    const trans = (name: string): string => {
+    const t = (name: string): string => {
         return state.translate[state.language]?.[name] || name
     }
 
     let value = {
         ...state,
         selectLang,
-        trans
+        t
     }
 
     return (

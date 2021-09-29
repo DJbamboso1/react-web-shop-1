@@ -1,41 +1,62 @@
 import { Pagination } from 'components/Pagination'
-import React, { useEffect } from 'react'
+import { WishItem } from 'components/WishItem'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { StateStore } from 'store'
-import { wishlistAction } from 'store/actions/wishlistAction'
+import { fetchWishlistAction, wishlistAction } from 'store/actions/wishlistAction'
 import { convertQueryURLToObject } from 'utils'
 
-
+export interface WishType {
+  userId: number,
+  id: number,
+  title: string,
+  body: string
+}
 
 const Wishlist: React.FC = () => {
   let queryURLObject = convertQueryURLToObject<{ page: string }>()
 
   let dispatch = useDispatch()
-
   useEffect(() => {
     console.log('queryURLObject page: ' + queryURLObject.page)
     try {
-      dispatch(wishlistAction)
+      dispatch(fetchWishlistAction())
     } catch (err) { }
   }, [queryURLObject.page])
 
+
+
   let wishlist = useSelector((store: StateStore) => store.wishlist)
-  console.log('wishlist: ' + wishlist)
+  console.log('wishlist: ', wishlist)
 
-  // let wishlist = []
+  
 
+  let [currentPage, setCurrentPage] = useState(parseInt(queryURLObject?.page || '1'))
+  let [itemsPerPage] = useState(9)
+
+  const indexOfLastItem = currentPage * itemsPerPage
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage
+  const currentItems = wishlist.list.slice(indexOfFirstItem, indexOfLastItem)
+  console.log(currentItems)
+  const totalItems = wishlist.list.length
+
+  const pageNumbers = []
+
+  for (let i = 1; i <= Math.ceil(totalItems / itemsPerPage); i++) {
+    pageNumbers.push(i)
+  }
+
+  const paginate = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  }
 
   return (
-    <div>
-      <div className="row">
-        {/* Item */}
-        
-
-      </div>
-      {/* Pagination */}
-      <Pagination currentPage={parseInt(queryURLObject?.page || '0')} totalPage={11} />
-    </div>
+    <>
+      <WishItem wishlist={currentItems}/>
+      {/* Pagination 1 */}
+      < Pagination currentPage={currentPage} totalPage={pageNumbers.length} paginate={paginate} />
+    </>
   )
 }
 

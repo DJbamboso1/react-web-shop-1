@@ -1,6 +1,9 @@
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { StateStore } from 'store'
 
 const AccountInfo:React.FC = () => {
+    let { user } = useSelector((store: StateStore) => store.auth)
     return (
         <form>
             <div className="row">
@@ -10,7 +13,7 @@ const AccountInfo:React.FC = () => {
                         <label htmlFor="accountFirstName">
                             First Name *
                         </label>
-                        <input className="form-control form-control-sm" id="accountFirstName" type="text" placeholder="First Name *" defaultValue="Daniel" required />
+                        <input className="form-control form-control-sm" id="accountFirstName" type="text" placeholder="First Name *"  required />
                     </div>
                 </div>
                 <div className="col-12 col-md-6">
