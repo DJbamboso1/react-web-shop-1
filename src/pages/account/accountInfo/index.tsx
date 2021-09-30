@@ -1,37 +1,47 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { StateStore } from 'store'
+import { useForm } from 'core'
+import ErrorInput from 'components/ErrorInput'
+
+type Form = {
+    displayName: string,
+    email: string,
+    
+
+}
 
 const AccountInfo:React.FC = () => {
     let { user } = useSelector((store: StateStore) => store.auth)
+
+    
+    let { register, form, handleSubmit, error } = useForm<Form>(user?.data)
+
+
+    const submit = (form: Form) => {
+        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        console.log(form)
+    }
     return (
-        <form>
+        <form onSubmit={handleSubmit(submit)}>
             <div className="row">
-                <div className="col-12 col-md-6">
+                <div className="col-12">
                     {/* Email */}
                     <div className="form-group">
                         <label htmlFor="accountFirstName">
-                            First Name *
+                            Full Name *
                         </label>
-                        <input className="form-control form-control-sm" id="accountFirstName" type="text" placeholder="First Name *"  required />
+                        <input className="form-control form-control-sm" id="accountFirstName" type="text" placeholder="First Name *" {...register('displayName', {required: true} )}  />
                     </div>
                 </div>
-                <div className="col-12 col-md-6">
-                    {/* Email */}
-                    <div className="form-group">
-                        <label htmlFor="accountLastName">
-                            Last Name *
-                        </label>
-                        <input className="form-control form-control-sm" id="accountLastName" type="text" placeholder="Last Name *" defaultValue="Robinson" required />
-                    </div>
-                </div>
+                <ErrorInput error={error.displayName}/>
                 <div className="col-12">
                     {/* Email */}
                     <div className="form-group">
                         <label htmlFor="accountEmail">
                             Email Address *
                         </label>
-                        <input className="form-control form-control-sm" id="accountEmail" type="email" placeholder="Email Address *" defaultValue="user@email.com" required />
+                        <input className="form-control form-control-sm" id="accountEmail" type="email" placeholder="Email Address *"   {...register('email', {required: true, pattern: 'email'} )}/>
                     </div>
                 </div>
                 <div className="col-12 col-md-6">
@@ -40,7 +50,7 @@ const AccountInfo:React.FC = () => {
                         <label htmlFor="accountPassword">
                             Current Password *
                         </label>
-                        <input className="form-control form-control-sm" id="accountPassword" type="password" placeholder="Current Password *" required />
+                        <input className="form-control form-control-sm" id="accountPassword" type="password" placeholder="Current Password *"  />
                     </div>
                 </div>
                 <div className="col-12 col-md-6">
@@ -49,7 +59,7 @@ const AccountInfo:React.FC = () => {
                         <label htmlFor="AccountNewPassword">
                             New Password *
                         </label>
-                        <input className="form-control form-control-sm" id="AccountNewPassword" type="password" placeholder="New Password *" required />
+                        <input className="form-control form-control-sm" id="AccountNewPassword" type="password" placeholder="New Password *"  />
                     </div>
                 </div>
                 <div className="col-12 col-lg-6">

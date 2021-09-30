@@ -4,13 +4,14 @@ import { authLogin } from "store/actions/authAction";
 import { LOGIN_ERROR } from "store/types";
 
 export function* fetchLogin(action: any) : any {
+    console.log('aaaaaaaaaaaaaaaaaaaa')
     try {
         let user = yield call(authService.login, action.payload)
-        console.log(user)
-        if (user.errors === null) {
+        console.log(user.succeeded)
+        if (user.succeeded === false) {
             yield put({
                     type: LOGIN_ERROR,
-                    payload: user.errors
+                    payload: user.message
             })
         } else {
             localStorage.setItem('login', JSON.stringify(user))

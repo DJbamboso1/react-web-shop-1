@@ -37,7 +37,7 @@ export const routers: RouterParam[] = [
             {
                 path: '/account',
                 component: AccountLayout,
-                auth: false,
+                auth: true,
                 routers: [
                     {
                         path: '/info',

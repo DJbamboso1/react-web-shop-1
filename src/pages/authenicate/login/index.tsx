@@ -8,6 +8,7 @@ import { authFetchAction } from 'store/actions/authAction'
 import { Redirect } from 'react-router-dom'
 
 
+
 type Form = {
     username: string
     password: string
@@ -23,12 +24,16 @@ const Login: React.FC = () => {
         dispatch(authFetchAction(form))
     }
 
+    
+
+    let {errorMsg} = useSelector((store: StateStore) => store.auth)
+
     return (
 
         <div className="card card-lg mb-10 mb-md-0" style={{ maxWidth: 700, margin: '0 auto' }}>
             <div className="card-body">
                 {/* Heading */}
-                <h6 className="mb-7">Returning Customer</h6>
+                <h6 className="mb-7">Returning Customer <ErrorInput error={errorMsg}/></h6>
                 {/* Form */}
                 <form onSubmit={handleSubmit(submit)}>
                     <div className="row">

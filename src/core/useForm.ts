@@ -33,18 +33,19 @@ type UseFormReturn<T> = {
     register: (name: keyof T, rule?: RuleItem, message?: any) => {
         name: keyof T,
         onChange: (event: ChangeEvent<HTMLInputElement>) => void,
-        defaultValue: string
+        value: string
     },
     handleSubmit: Function,
     form: T,
-    error: ErrorState<T>
+    error: ErrorState<T>,
+    // setForm: React.Dispatch<T>
 }
 
 
 
 export function useForm<T extends Object>(initvalue = {}): UseFormReturn<T> {
 
-    let [form] = useState<any>(initvalue || {})
+    let [form, setForm] = useState<any>(initvalue || {})
     let [error, setError] = useState<ErrorState<T>>({})
     let [initRule] = useState<RuleState<T>>({})
     let [initMessage] = useState<MessageState<T>>({})
@@ -53,7 +54,7 @@ export function useForm<T extends Object>(initvalue = {}): UseFormReturn<T> {
         let name = ev.currentTarget.name
         let value = ev.currentTarget.value
         
-
+        // form[name] = value
         if (ev.currentTarget.getAttribute('type') === 'checkbox') {
             if (value &&  value !== 'true' && value !== 'false') {
                 form[name] = ev.currentTarget.checked ? value : ''
@@ -65,8 +66,10 @@ export function useForm<T extends Object>(initvalue = {}): UseFormReturn<T> {
         } else {
             form[name] = value
         }
-
+        setForm({...form})
     }
+
+
 
     function check() {
 
@@ -110,7 +113,7 @@ export function useForm<T extends Object>(initvalue = {}): UseFormReturn<T> {
         if (!form[name]) {
             form[name] = ''
         }
-
+        console.log(form)
         if (rule) {
 
             initRule[name] = rule
@@ -123,14 +126,17 @@ export function useForm<T extends Object>(initvalue = {}): UseFormReturn<T> {
         return {
             name,
             onChange: inputChange,
-            defaultValue: form[name]
+            value: form[name]
         }
     }
     function handleSubmit(callback: Function) {
+        let errorObject = check()
+        console.log("ccccccccccccc ", Object.keys(errorObject).length)
         return (ev: any) => {
             ev.preventDefault()
-            let errorObject = check()
+            
             if (Object.keys(errorObject).length === 0) {
+                console.log("NO ERROR")
                 callback(form)
             }
 
@@ -139,6 +145,7 @@ export function useForm<T extends Object>(initvalue = {}): UseFormReturn<T> {
     }
 
     return {
+        // setForm,
         register,
         handleSubmit,
         form,

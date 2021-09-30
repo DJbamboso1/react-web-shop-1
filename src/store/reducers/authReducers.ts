@@ -1,9 +1,21 @@
 import { AUTH_LOGOUT, FETCH_LOGIN, LOGIN, LOGIN_ERROR } from "store/types"
 
 
-type State = {
+export type State = {
     user?: {
-        
+        succeeded: boolean,
+        message: string,
+        errors: null,
+        data?: {
+            id: string,
+            roleId: string,
+            username: string,
+            displayName: string,
+            avatar: null,
+            email: string,
+            phoneNumber: string,
+            jwtToken: string
+        }
     },
     login: boolean,
     errorMsg: ''
@@ -20,11 +32,11 @@ try {
 const initState: State = {
     user,
     login: !!user,
-    errorMsg: ''
+    errorMsg: ""
 }
 
 
-const authReducer = (state = initState, action: any) => {
+const authReducer = (state = initState, action: any): State => {
     console.log(action.payload)
     switch (action.type) {
         case LOGIN:
@@ -37,11 +49,13 @@ const authReducer = (state = initState, action: any) => {
         case AUTH_LOGOUT:
             return {
                 login: false,
-                user: undefined
+                user: undefined,
+                errorMsg: ""
             }
         case LOGIN_ERROR: {
             return {
                 ...state,
+                user: undefined,
                 errorMsg: action.payload
             }
         }

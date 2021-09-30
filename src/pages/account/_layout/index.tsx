@@ -1,10 +1,16 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import { Link, NavLink } from 'react-router-dom'
+import { authLogoutAction } from 'store/actions/authAction'
 
 const AccountLayout: React.FC = ({ children }) => {
     function navbarHandle(event: any) {
         event.preventDefault()
 
+    }
+    const dispatch = useDispatch()
+    function logoutHandle() {
+        dispatch(authLogoutAction())
     }
     return (
         <div className="account-layout">
@@ -37,7 +43,7 @@ const AccountLayout: React.FC = ({ children }) => {
                                     <NavLink className="list-group-item list-group-item-action dropright-toggle " href="account-payment.html">
                                         Payment Methods
                                     </NavLink> */}
-                                    <NavLink className="list-group-item list-group-item-action dropright-toggle" to="">
+                                    <NavLink className="list-group-item list-group-item-action dropright-toggle" to="#" onClick={logoutHandle}>
                                         Logout
                                     </NavLink>
                                 </div>

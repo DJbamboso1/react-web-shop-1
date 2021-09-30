@@ -5,14 +5,13 @@ const authService = {
             method: 'POST',
             body: JSON.stringify(user),
             headers: {
-                'Content': 'application/json-patch+json'
+                'Content-Type': 'application/json-patch+json'
             }
         }).then(res => {
             console.log(res.json)
-            if (res.status === 200) {
+            // if (res.status === 200 || res.status === 400) {
                 return res.json()
-
-            }
+            // } 
         })
     }
 }
