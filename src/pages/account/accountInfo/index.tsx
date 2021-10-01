@@ -19,7 +19,6 @@ const AccountInfo:React.FC = () => {
 
 
     const submit = (form: Form) => {
-        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaa")
         console.log(form)
     }
     return (
