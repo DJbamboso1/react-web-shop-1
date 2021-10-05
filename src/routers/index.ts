@@ -7,6 +7,7 @@ import Page404 from '../pages/404'
 import { RouterParam } from 'core'
 import AccountLayout from 'pages/account/_layout'
 import AuthLayout from 'pages/_layout/AuthLayout'
+import ProductPage from 'pages/product'
 
 export const routers: RouterParam[] = [
     {
@@ -54,6 +55,12 @@ export const routers: RouterParam[] = [
                         component: lazy(() => import('../pages/account/wishList'))
                     },
                 ]
+            },
+
+            {
+                path: '/product',
+                auth: false,
+                component: ProductPage
             },
             {
                 component: Page404

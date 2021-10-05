@@ -19,11 +19,12 @@ const Login: React.FC = () => {
 
     let { register, form, handleSubmit, error } = useForm<Form>()
     const dispatch = useDispatch()
+
     const submit = (form: Form) => {
         console.log(form)
         dispatch(authFetchAction(form))
     }
-
+    
     
 
     let {errorMsg} = useSelector((store: StateStore) => store.auth)
@@ -41,9 +42,9 @@ const Login: React.FC = () => {
                             {/* Email */}
                             <div className="form-group">
                                 <label className="sr-only" htmlFor="loginEmail">
-                                    Email Address *
+                                    Account *
                                 </label>
-                                <input className="form-control form-control-sm" id="loginEmail" type="text" placeholder="Email Address *"   {...register('username', { required: true })} />
+                                <input className="form-control form-control-sm" id="loginEmail" type="text" placeholder="Email Address *"  {...register('username', { required: true }, { required: 'Tài khoản không được để trống' })} />
                                 <ErrorInput error={error.username} />
                             </div>
                         </div>
@@ -53,7 +54,7 @@ const Login: React.FC = () => {
                                 <label className="sr-only" htmlFor="loginPassword">
                                     Password *
                                 </label>
-                                <input {...register('password', { min: 6, max: 32 })} className="form-control form-control-sm" id="loginPassword" type="password" placeholder="Password *" />
+                                <input {...register('password', { min: 3, max: 32 })} className="form-control form-control-sm" id="loginPassword" type="password" placeholder="Password *" />
                                 <ErrorInput error={error.password} />
 
                             </div>

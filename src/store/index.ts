@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
+import { accountReducer } from "./reducers/accountReducer";
 import authReducer from "./reducers/authReducers";
 import wishlistReducers from "./reducers/wishlistReducers";
 // import cartReducer from "./reducers/cartReducer";
@@ -6,7 +7,8 @@ import wishlistReducers from "./reducers/wishlistReducers";
 export const reducers = combineReducers({
     auth: authReducer,
     // cart: cartReducer
-    wishlist: wishlistReducers
+    wishlist: wishlistReducers,
+    account: accountReducer,
 })
 
 export type StateStore = ReturnType<typeof reducers>

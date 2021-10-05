@@ -16,7 +16,7 @@ const AccountInfo:React.FC = () => {
 
     
     let { register, form, handleSubmit, error } = useForm<Form>(user?.data)
-
+    
 
     const submit = (form: Form) => {
         console.log(form)
