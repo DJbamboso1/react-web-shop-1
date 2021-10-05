@@ -18,6 +18,7 @@ export type State = {
         }
     },
     login: boolean,
+    role?: any,
     errorMsg: ''
 }
 
@@ -43,7 +44,8 @@ const authReducer = (state = initState, action: any): State => {
             return {
                 ...state,
                 user: action.payload,
-                login: true
+                login: true,
+                role: action.payload.data?.roleId
             }
 
         case AUTH_LOGOUT:
