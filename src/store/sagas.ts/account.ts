@@ -5,7 +5,7 @@ import { GET_ACCOUNTS_ERROR } from "store/types";
 
 export function* fetchAccount(action: any): any {
     try {
-        let accounts = yield call(accountService.getAccounts, action.payload)
+        let accounts = yield call(accountService.getAccounts)
         console.log(accounts.succeeded)
         if (accounts.succeeded === false) {
             yield put({
