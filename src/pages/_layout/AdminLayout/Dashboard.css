@@ -1,0 +1,35 @@
+.containerDashboard {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 0.8fr 5fr;
+  grid-template-rows: 0.2fr 3fr;
+  grid-template-areas:
+    "sidebar nav"
+    "sidebar main";
+    
+}
+
+.container main {
+  grid-area: main;
+  background-color: #D5CEDE;
+  overflow-y: auto;
+}
+
+.mainContainer{
+  padding: 20px 35px; 
+}
+
+.wrapContent {
+  flex-grow: 1;
+}
+
+@media only screen and (max-width: 978px) {
+  .containerDashboard {
+    flex-direction: column;
+    grid-template-columns: 1fr;
+    grid-template-rows: 0.2fr 3fr;
+    grid-template-areas:
+      "nav"
+      "main";
+  }
+}
