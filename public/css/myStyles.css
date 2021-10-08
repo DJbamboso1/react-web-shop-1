@@ -3,3 +3,7 @@
     margin: 5px 0px;
     font-size: 20px;
 }
+
+.card-img, .card-img-bottom, .card-img-top {
+    height: 200px;
+}

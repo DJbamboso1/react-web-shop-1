@@ -1,7 +1,7 @@
-import { call, put } from "@redux-saga/core/effects";
-import authService from "services/authService";
-import { authLogin } from "store/actions/authAction";
-import { LOGIN_ERROR } from "store/types";
+import { call, put, takeLatest } from "@redux-saga/core/effects";
+import authService from "../../services/authService";
+import { authLogin } from "../../store/actions/authAction";
+import { AUTH_LOGOUT, FETCH_LOGIN, LOGIN_ERROR } from "../../store/types";
 
 export function* fetchLogin(action: any) : any {
     console.log('aaaaaaaaaaaaaaaaaaaa')
@@ -24,4 +24,10 @@ export function* fetchLogin(action: any) : any {
 
 export function* logout() : any{
     localStorage.removeItem('login')
+}
+
+export function* rootAuthSaga() {
+    // yield takeLatest(GET_WISHLIST, getWishlist)
+    yield takeLatest(FETCH_LOGIN, fetchLogin)
+    yield takeLatest(AUTH_LOGOUT, logout)
 }

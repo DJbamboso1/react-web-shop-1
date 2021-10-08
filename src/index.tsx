@@ -5,7 +5,7 @@ import {reducers} from './store'
 import {routers} from './routers'
 import en from './locale/en/index.json'
 import vn from './locale/vn/index.json'
-import {CartModal} from './components'
+import {CartModal} from './components/CartModal'
 import saga from 'store/saga';
 
 

@@ -1,6 +1,5 @@
-import React from 'react'
 
-export const Category: React.FC = () => {
+export const Filter : React.FC = () => {
     return (
         <div className="col-12 col-md-4 col-lg-3">
             {/* Filters */}

@@ -1,12 +1,12 @@
 import React from 'react'
 import { useMemo } from 'react'
 import { combineReducers, createStore, compose, Reducer, applyMiddleware } from 'redux'
-import { BrowserRouter as Router } from 'react-router-dom'
+import { Router } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { TranslateProvider } from './translate'
 import { Saga } from '@redux-saga/types'
 import createSagaMiddleware from '@redux-saga/core'
-
+import { createBrowserHistory, } from 'history'
 
 // export const AppProvider = ({ children, reducers, translate, language = "en" }) => {
 //     let store = useMemo(() => {
@@ -47,6 +47,8 @@ type AppProviderProp = {
     }
 }
 
+export const history = createBrowserHistory()
+
 export const AppProvider: React.FC<AppProviderProp> = ({ children, reducers, language = "en", translate, saga }) => {
     let store = useMemo(() => {
         const composeEnhancers = typeof window === 'object' && (window as any)['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'] ?
@@ -63,7 +65,7 @@ export const AppProvider: React.FC<AppProviderProp> = ({ children, reducers, lan
 
 
     return (
-        <Router>
+        <Router history={history}>
             <Provider store={store}>
                 <TranslateProvider language={language} translate={translate}>
                     {children}

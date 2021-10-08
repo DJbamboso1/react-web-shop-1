@@ -1,7 +1,9 @@
 
+// let API = process.env.REACT_APP_API_KEY || ''
+
 const authService = {
     async login(user: { username: string, password: string }) {
-        return fetch('https://b2bflatform.azurewebsites.net/api/v1/account', {
+        return fetch('https://gekco.azurewebsites.net/api/v1/account', {
             method: 'POST',
             body: JSON.stringify(user),
             headers: {

@@ -1,97 +1,47 @@
-import React from 'react'
+import { Categories, Product, Product01 } from '@types'
+import React, { useEffect } from 'react'
 import ReactDOM from 'react-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { StateStore } from 'store'
+import { cartDecrement, cartIncrement, cartRemove, toggleCart } from 'store/actions/cartAction'
+import { useCartNumber } from 'store/selector'
+
+
+
 
 export const CartModal: React.FC = () => {
+    let { openCart, list } = useSelector((store: StateStore) => store.cart)
 
-    function _closeCartModal() {
-        const modal = document.getElementById('modalShoppingCart')
-        if( modal ) {
-            modal.style.display = 'none'
-            modal.style.transition = 'all 2s'
-            modal.removeAttribute('aria-modal')
-            modal.setAttribute('aria-hidden', 'true')
-            // modal.style.paddingRight='0px'
-            modal.style.removeProperty('padding-right')
-            modal.classList.remove('show')
+    let num = useCartNumber()
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        if (openCart) {
+            document.body.classList.add('modal-open')
+        } else {
+            document.body.classList.remove('modal-open')
         }
-    }
+    }, [openCart])
 
     return ReactDOM.createPortal(
-        <div className="modal fixed-right fade" id="modalShoppingCart" tabIndex={-1} role="dialog" aria-hidden="true"> 
-            <div className="modal-dialog modal-dialog-vertical" role="document">
+        <div onClick={(ev) => { dispatch(toggleCart(false)) }} className={`modal fixed-right fade ${openCart ? 'show' : ''}`} style={{ display: openCart ? 'block' : 'none' }} id="modalShoppingCart" tabIndex={-1} role="dialog" aria-hidden="true">
+            <div style={{ transition: 'transform .3s ease-out' }} onClick={ev => ev.stopPropagation()} className="modal-dialog modal-dialog-vertical" role="document">
                 {/* Full cart (add `.d-none` to disable it) */}
                 <div className="modal-content">
                     {/* Close */}
-                    <Link type="button" className="close" data-dismiss="modal" aria-label="Close" to="#" onClick={_closeCartModal}>
+                    <button type="button" onClick={() => dispatch(toggleCart(false))} className="close" data-dismiss="modal" aria-label="Close">
                         <i className="fe fe-x" aria-hidden="true" />
-                    </Link>
+                    </button>
                     {/* Header*/}
                     <div className="modal-header line-height-fixed font-size-lg">
-                        <strong className="mx-auto">Your Cart (2)</strong>
+                        <strong className="mx-auto">Your Cart ({num})</strong>
                     </div>
                     {/* List group */}
                     <ul className="list-group list-group-lg list-group-flush">
-                        <li className="list-group-item">
-                            <div className="row align-items-center">
-                                <div className="col-4">
-                                    {/* Image */}
-                                    <a href="./product.html">
-                                        <img className="img-fluid" src="/img/products/product-6.jpg" alt="..." />
-                                    </a>
-                                </div>
-                                <div className="col-8">
-                                    {/* Title */}
-                                    <p className="font-size-sm font-weight-bold mb-6">
-                                        <a className="text-body" href="./product.html">Cotton floral print Dress</a> <br />
-                                        <span className="text-muted">$40.00</span>
-                                    </p>
-                                    {/*Footer */}
-                                    <div className="d-flex align-items-center">
-                                        {/* Select */}
-                                        <select className="custom-select custom-select-xxs w-auto">
-                                            <option value={1}>1</option>
-                                            <option value={1}>2</option>
-                                            <option value={1}>3</option>
-                                        </select>
-                                        {/* Remove */}
-                                        <a className="font-size-xs text-gray-400 ml-auto" href="#!">
-                                            <i className="fe fe-x" /> Remove
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li className="list-group-item">
-                            <div className="row align-items-center">
-                                <div className="col-4">
-                                    {/* Image */}
-                                    <a href="./product.html">
-                                        <img className="img-fluid" src="/img/products/product-10.jpg" alt="..." />
-                                    </a>
-                                </div>
-                                <div className="col-8">
-                                    {/* Title */}
-                                    <p className="font-size-sm font-weight-bold mb-6">
-                                        <a className="text-body" href="./product.html">Suede cross body Bag</a> <br />
-                                        <span className="text-muted">$49.00</span>
-                                    </p>
-                                    {/*Footer */}
-                                    <div className="d-flex align-items-center">
-                                        {/* Select */}
-                                        <select className="custom-select custom-select-xxs w-auto">
-                                            <option value={1}>1</option>
-                                            <option value={1}>2</option>
-                                            <option value={1}>3</option>
-                                        </select>
-                                        {/* Remove */}
-                                        <a className="font-size-xs text-gray-400 ml-auto" href="#!">
-                                            <i className="fe fe-x" /> Remove
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
+                        {
+                            list.map(e => <CartItem key={e.product.id} {...e} />)
+                        }
                     </ul>
                     {/* Footer */}
                     <div className="modal-footer line-height-fixed font-size-sm bg-light mt-auto">
@@ -106,7 +56,7 @@ export const CartModal: React.FC = () => {
                 {/* Empty cart (remove `.d-none` to enable it) */}
                 <div className="modal-content d-none">
                     {/* Close */}
-                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" className="close">
                         <i className="fe fe-x" aria-hidden="true" />
                     </button>
                     {/* Header*/}
@@ -124,8 +74,74 @@ export const CartModal: React.FC = () => {
                     </div>
                 </div>
             </div>
-        </div>,
-        document.body
+            {
+                openCart && <BackDrop onClick={() => dispatch(toggleCart(false))} />
+            }
+        </div >
+        , document.body)
+}
+
+const CartItem: React.FC<{
+    product: Product01<Categories>,
+    num: number
+}> = ({ num, product }) => {
+
+    const dispatch = useDispatch()
+    const _changeNumber = (ev: React.ChangeEvent<HTMLInputElement>) => {
+
+        if (num > parseInt(ev.currentTarget.value)) {
+            dispatch(cartDecrement(product.id))
+        } else {
+            dispatch(cartIncrement(product.id))
+        }
+
+    }
+
+    let { id, distributorId, category, description, image, minQuantity, name, status } = product
+    // console.log(thumbnail_url)
+    return (
+        <li className="list-group-item">
+            <div className="row align-items-center">
+                <div className="col-4">
+                    {/* Image */}
+                    <Link className="card-img-hover" to={`/product/${name}`}>
+                        <img className="img-fluid" src={image} alt="..." />
+                    </Link>
+                </div>
+                <div className="col-8">
+                    {/* Title */}
+                    <p className="font-size-sm font-weight-bold mb-6">
+                        <a className="text-body" href="./product.html">{name}</a> <br />
+                        <span className="text-muted">
+                            {/* {real_price?.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })} */}
+                        </span>
+                    </p>
+                    {/*Footer */}
+                    <div className="d-flex align-items-center">
+                        {/* Select */}
+                        <input autoComplete="false" onChange={_changeNumber} type="number" className="cart-input-num" value={num} />
+                        {/* Remove */}
+                        <a onClick={() => dispatch(cartRemove(id))} className="font-size-xs text-gray-400 ml-auto" href="#">
+                            <i className="fe fe-x" /> Remove
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </li>
     )
 }
 
+const BackDrop: React.FC<{
+    onClick?: (ev: React.MouseEvent) => void
+}> = ({ onClick }) => {
+    useEffect(() => {
+        setTimeout(() => {
+            document.querySelector('.modal-backdrop')?.classList.add('show')
+        })
+        return () => {
+            document.querySelector('.modal-backdrop')?.classList.remove('show')
+        }
+    }, [])
+
+    return ReactDOM.createPortal(<div onClick={onClick} className="modal-backdrop fade "></div>, document.body)
+}
