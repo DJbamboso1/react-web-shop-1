@@ -1,7 +1,7 @@
 import { call, put, takeLatest } from "@redux-saga/core/effects";
 import authService from "../../services/authService";
-import { authLogin } from "../../store/actions/authAction";
-import { AUTH_LOGOUT, FETCH_LOGIN, LOGIN_ERROR } from "../../store/types";
+import { authLogin } from "../actions/authAction";
+import { AUTH_LOGOUT, FETCH_LOGIN, LOGIN_ERROR } from "../types";
 
 export function* fetchLogin(action: any) : any {
     console.log('aaaaaaaaaaaaaaaaaaaa')
