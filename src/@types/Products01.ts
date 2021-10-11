@@ -6,5 +6,6 @@ export interface Product01<T> {
     image: string,
     description: string,
     minQuantity: number,
-    status: number
+    status: number,
+    price: 10.00
 }

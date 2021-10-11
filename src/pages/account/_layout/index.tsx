@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link, NavLink } from 'react-router-dom'
 import { authLogoutAction } from 'store/actions/authAction'
@@ -9,9 +9,10 @@ const AccountLayout: React.FC = ({ children }) => {
 
     }
     const dispatch = useDispatch()
-    function logoutHandle() {
+    const logout = useCallback((ev: React.MouseEvent) => {
+        ev.preventDefault()
         dispatch(authLogoutAction())
-    }
+    }, [])
     return (
         <div className="account-layout">
             <section className="pt-7 pb-12">
@@ -43,7 +44,7 @@ const AccountLayout: React.FC = ({ children }) => {
                                     <NavLink className="list-group-item list-group-item-action dropright-toggle " href="account-payment.html">
                                         Payment Methods
                                     </NavLink> */}
-                                    <NavLink className="list-group-item list-group-item-action dropright-toggle" to="#" onClick={logoutHandle}>
+                                    <NavLink className="list-group-item list-group-item-action dropright-toggle" to="#" onClick={logout}>
                                         Logout
                                     </NavLink>
                                 </div>

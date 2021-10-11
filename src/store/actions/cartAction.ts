@@ -1,5 +1,5 @@
 import { Product01, Categories } from "../../@types";
-import { CART_ADD_CART, CART_DECREMENT, CART_INCREMENT, CART_REMOVE, CART_TOGGLE_CART } from "../types";
+import { CART_ADD_CART, CART_CHECK_LOGIN, CART_DECREMENT, CART_INCREMENT, CART_REMOVE, CART_TOGGLE_CART } from "../types";
 
  export function toggleCart(flag?: boolean) {
      return {
@@ -10,7 +10,7 @@ import { CART_ADD_CART, CART_DECREMENT, CART_INCREMENT, CART_REMOVE, CART_TOGGLE
 
  export function addToCart(product: Product01<Categories>) {
      return {
-         type: CART_ADD_CART,
+         type: CART_CHECK_LOGIN,
          payload: product
      }
  }

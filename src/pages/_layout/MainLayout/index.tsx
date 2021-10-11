@@ -24,7 +24,7 @@ const MainLayout: React.FC = ({ children }) => {
         })
     }   
 
-    console.log(document.querySelector('#modalShoppingCart'))
+   
     return (
         <>
             <Header hoverEvent={hoverEvent} mouseLeaveEvent={mouseLeaveEvent}/>

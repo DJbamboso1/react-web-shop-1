@@ -1,13 +1,14 @@
 import { Categories, Product, Product01 } from '@types'
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { StateStore } from 'store'
 import { cartDecrement, cartIncrement, cartRemove, toggleCart } from 'store/actions/cartAction'
-import { useCartNumber } from 'store/selector'
+import { getSubtotal, useCartNumber } from 'store/selector'
 
-
+import { useHistory } from 'react-router-dom'
+import { currency } from 'utils'
 
 
 export const CartModal: React.FC = () => {
@@ -15,6 +16,8 @@ export const CartModal: React.FC = () => {
 
     let num = useCartNumber()
     const dispatch = useDispatch()
+    const history = useHistory()
+    const subtotal = useSelector(getSubtotal) 
 
     useEffect(() => {
         if (openCart) {
@@ -23,6 +26,14 @@ export const CartModal: React.FC = () => {
             document.body.classList.remove('modal-open')
         }
     }, [openCart])
+
+    const _preventViewCart = useCallback((ev: React.MouseEvent) => {
+        if (list.length === 0) {
+            ev.preventDefault();
+            history.push('/product')
+        }
+        dispatch(toggleCart(false))
+    }, [list])
 
     return ReactDOM.createPortal(
         <div onClick={(ev) => { dispatch(toggleCart(false)) }} className={`modal fixed-right fade ${openCart ? 'show' : ''}`} style={{ display: openCart ? 'block' : 'none' }} id="modalShoppingCart" tabIndex={-1} role="dialog" aria-hidden="true">
@@ -45,12 +56,12 @@ export const CartModal: React.FC = () => {
                     </ul>
                     {/* Footer */}
                     <div className="modal-footer line-height-fixed font-size-sm bg-light mt-auto">
-                        <strong>Subtotal</strong> <strong className="ml-auto">$89.00</strong>
+                        <strong>Subtotal</strong> <strong className="ml-auto">{currency(subtotal)}</strong>
                     </div>
                     {/* Buttons */}
                     <div className="modal-body">
-                        <a className="btn btn-block btn-dark" href="./checkout.html">Continue to Checkout</a>
-                        <a className="btn btn-block btn-outline-dark" href="./shopping-cart.html">View Cart</a>
+                        <Link className="btn btn-block btn-dark" to="/checkout" onClick={_preventViewCart}>Continue to Checkout</Link>
+                        <Link className="btn btn-block btn-outline-dark" to="/view-cart" onClick={_preventViewCart}>View Cart</Link>
                     </div>
                 </div>
                 {/* Empty cart (remove `.d-none` to enable it) */}

@@ -12,7 +12,8 @@ type RuleItem = {
     max?: number,
     required?: true,
     pattern?: RegExp | 'email' | 'phone' | 'url',
-    confirm?: string
+    confirm?: string,
+    check?: boolean
 }
 
 type RuleState<T extends Object> = Partial<{
@@ -102,6 +103,15 @@ export function useForm<T extends Object>(initvalue = {}): UseFormReturn<T> {
 
             if (r?.confirm && form[r.confirm] !== form[i]) {
                 errorObj[i] = initMessage?.[i]?.confirm || `Vui lòng điền giông ${r.confirm}`
+            }
+
+        }
+
+        for (let i in initRule) {
+            let r = initRule[i]
+
+            if (typeof r?.check !== 'undefined' && !r.check) {
+                delete errorObj[i]
             }
 
         }

@@ -1,7 +1,8 @@
 import { put, select, takeEvery, takeLatest } from "@redux-saga/core/effects";
 import { StateStore } from "..";
 import { AUTH_LOGOUT, CART_ADD_CART, CART_CHECK_LOGIN, CART_CLEAR_CART, CART_DECREMENT, CART_INCREMENT, CART_REMOVE, LOGIN } from "../types";
-import { history } from "../../core";
+// import { history } from "core";
+import { backToLogin } from "core";
 
 export function* changeCart(): any {
     let store: StateStore = yield select()
@@ -9,14 +10,16 @@ export function* changeCart(): any {
     localStorage.setItem('cart', JSON.stringify(store.cart.list))
 }
 
-export function* addCartCheckLogin(action: any): any {
+export function* AddCartCheckLogin(action: any): any {
+    
     let store: StateStore = yield select()
     console.log(store.auth.login)
     if (store.auth.login) {
         yield put({ type: CART_ADD_CART, payload: action.payload })
     } else {
         console.log('NEED TO PUSH TO LOGIN PAGE !')
-        history.push('/auth/login')
+        backToLogin();
+        // history.push('/auth/login')
     }
 }
 export function* clearCart() {
@@ -36,6 +39,6 @@ export function* loginGetCart() {
 export function* cartRootSaga(){
     yield takeLatest(LOGIN, loginGetCart)
     yield takeLatest(AUTH_LOGOUT, clearCart)
-    yield takeEvery(CART_CHECK_LOGIN, addCartCheckLogin)
+    yield takeEvery(CART_CHECK_LOGIN, AddCartCheckLogin)
     yield takeLatest([CART_ADD_CART, CART_REMOVE, CART_INCREMENT, CART_DECREMENT, CART_CLEAR_CART], changeCart)
 }

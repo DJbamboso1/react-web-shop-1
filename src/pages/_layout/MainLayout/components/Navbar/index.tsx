@@ -1,7 +1,8 @@
 import { useTranslate } from 'core'
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { StateStore } from 'store'
 import { toggleCart } from 'store/actions/cartAction'
 import { useCartNumber } from 'store/selector'
 import Blog from './components/Blog'
@@ -17,18 +18,7 @@ type NavbarProp = {
 
 const Navbar: React.FC<NavbarProp> = ({hoverEvent, mouseLeaveEvent}) => {
 
-    // function _openCartModal() {
-    //     let modal = document.getElementById("modalShoppingCart")
-    //     if(modal) {
-    //         modal.classList.add('show')
-    //         modal.style.display = 'block'
-    //         modal.style.transition = "all 2s ease-out"
-    //         modal.style.paddingRight = '19px'           
-    //         modal.removeAttribute('aria-hidden')
-    //         modal.setAttribute('aria-modal', 'true')
-    //         // modal.style.transition = 'all .2s ease-in-out'
-    //     }
-    // }
+    let { login } = useSelector((store: StateStore) => store.auth)
 
     const { t } = useTranslate()
     const dispatch = useDispatch()
@@ -110,12 +100,15 @@ const Navbar: React.FC<NavbarProp> = ({hoverEvent, mouseLeaveEvent}) => {
                             </a>
                         </li>
                         <li className="nav-item ml-lg-n4">
-                            <Link className="nav-link" to="/account/info">
+                            {/* <Link className="nav-link" to="/account/info">
+                                <i className="fe fe-user" />
+                            </Link> */}
+                            <Link className="nav-link" to={login ? '/account/info' : '/auth/login'}>
                                 <i className="fe fe-user" />
                             </Link>
                         </li>
                         <li className="nav-item ml-lg-n4">
-                            <Link className="nav-link" to="/account/wishlist" >
+                            <Link className="nav-link" to={login ? '/account/info' : '/auth/login'} >
                                 <i className="fe fe-heart" />
                             </Link>
                         </li>

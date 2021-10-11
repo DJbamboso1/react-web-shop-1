@@ -23,5 +23,5 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-console.log(document.querySelector('#modalShoppingCart'))
+
 

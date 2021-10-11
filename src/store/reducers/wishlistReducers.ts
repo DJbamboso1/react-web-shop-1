@@ -16,7 +16,7 @@ interface State {
 const initState: State = {list: []}
 
 const wishlistReducers = (state = initState, action: any) => {
-    console.log('action.type: ' + action.type)
+    
     switch (action.type) {
         case GET_WISHLIST: {
             return {

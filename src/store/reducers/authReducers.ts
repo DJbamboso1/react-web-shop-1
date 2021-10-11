@@ -37,7 +37,7 @@ const initState: State = {
 
 
 const authReducer = (state = initState, action: any): State => {
-    console.log(action.payload)
+    
     switch (action.type) {
         case LOGIN:
             return {

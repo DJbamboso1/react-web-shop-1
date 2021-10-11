@@ -62,7 +62,7 @@ const ProductPage: React.FC = () => {
                     <Filter />
                     <div className="col-12 col-md-8 col-lg-9">
                         {/* Slider */}
-                        <div className="main-carousel flickity-page-dots-inner mb-9" data-flickity={flkty}>
+                        <div className="main-carousel flickity-page-dots-inner mb-9" >
                             {/* Item */}
                             <div className="carousel-cell w-100">
                                 <div className="card bg-h-100 bg-left" style={{ backgroundImage: 'url(/img/covers/cover-24.jpg)' }}>
@@ -193,7 +193,7 @@ const ProductPage: React.FC = () => {
                         {/* Products */}
                         <div className="row">
                             {
-                                data.data.map(e => <ProductCard key={e.id} {...e} />)
+                                data.data.map(e => <ProductCard key={e.id} product={e} />)
                                 // data.map(pro => <ProductCard key={pro.id} {...pro}/>)
                             }
                         </div>

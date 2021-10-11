@@ -1,7 +1,7 @@
 import React from 'react'
 import { useMemo } from 'react'
 import { combineReducers, createStore, compose, Reducer, applyMiddleware } from 'redux'
-import { Router } from 'react-router-dom'
+import { BrowserRouter as Router, Redirect } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { TranslateProvider } from './translate'
 import { Saga } from '@redux-saga/types'
@@ -47,7 +47,14 @@ type AppProviderProp = {
     }
 }
 
-export const history = createBrowserHistory()
+// export const history = createBrowserHistory()
+
+export function backToLogin() {
+    return (    
+        <Redirect to='/auth/login'/>
+    )
+    
+}
 
 export const AppProvider: React.FC<AppProviderProp> = ({ children, reducers, language = "en", translate, saga }) => {
     let store = useMemo(() => {
@@ -65,7 +72,7 @@ export const AppProvider: React.FC<AppProviderProp> = ({ children, reducers, lan
 
 
     return (
-        <Router history={history}>
+        <Router >
             <Provider store={store}>
                 <TranslateProvider language={language} translate={translate}>
                     {children}

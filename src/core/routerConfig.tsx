@@ -28,9 +28,10 @@ export function routerConfig(routers: RouterParam[], parentPath = '') {
         }
 
         if (auth === true) {
+            
             list.push(<PrivateRouter key={parentPath + path} path={parentPath + path} exact={exact} render={(props: any) => <Component {...props}>{children}</Component>}></PrivateRouter>)
         } else {
-
+            
             list.push(<Route key={parentPath + path} path={parentPath + path} exact={exact} render={(props: any) => <Component {...props}>{children}</Component>}></Route>)
         }
 

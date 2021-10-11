@@ -4,7 +4,6 @@ import { authLogin } from "../actions/authAction";
 import { AUTH_LOGOUT, FETCH_LOGIN, LOGIN_ERROR } from "../types";
 
 export function* fetchLogin(action: any) : any {
-    console.log('aaaaaaaaaaaaaaaaaaaa')
     try {
         let user = yield call(authService.login, action.payload)
         console.log(user.succeeded)

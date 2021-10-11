@@ -1,12 +1,13 @@
 import { Product, Product01, Categories } from "../../@types";
-import { CART_ADD_CART, CART_DECREMENT, CART_INCREMENT, CART_REMOVE, CART_TOGGLE_CART } from "../types";
+import { CART_ADD_CART, CART_CLEAR_CART, CART_DECREMENT, CART_INCREMENT, CART_REMOVE, CART_TOGGLE_CART } from "../types";
 
 type CartStore = {
     openCart: boolean,
     list: {
         product: Product01<Categories>,
         num: number,
-    }[]
+    }[],
+    tax: number,
 }
 
 type PayloadAction = {
@@ -16,15 +17,17 @@ type PayloadAction = {
 
 const initState: CartStore = {
     openCart: false,
-    list: JSON.parse(localStorage.getItem('cart') || '[]')
+    list: JSON.parse(localStorage.getItem('cart') || '[]'),
+    tax: 0.1
 }
 
 const cartReducer = (state = initState, action: PayloadAction): CartStore => {
-    switch( action.type) {
+    switch (action.type) {
         case CART_TOGGLE_CART: {
             console.log('toggle toggle')
+            console.log('NOT undifined: ', action.payload)
             let flag = state.openCart
-            if(typeof action.payload === 'undefined') {
+            if (typeof action.payload === 'undefined') {
                 flag = !flag
             } else {
                 flag = action.payload
@@ -37,7 +40,7 @@ const cartReducer = (state = initState, action: PayloadAction): CartStore => {
 
         case CART_ADD_CART:
             let p = state.list.find(e => e.product.id === action.payload.id)
-            if(p){
+            if (p) {
                 p.num++
                 return {
                     ...state,
@@ -53,47 +56,52 @@ const cartReducer = (state = initState, action: PayloadAction): CartStore => {
                 list: [...state.list]
             }
 
-            case CART_INCREMENT:
-                {
-                    let p = state.list.find(e => e.product.id === action.payload)
-                    if (p) {
-                        p.num++
-                    }
-                    return {
-                        ...state,
-                        list: [...state.list]
-                    }
+        case CART_INCREMENT:
+            {
+                let p = state.list.find(e => e.product.id === action.payload)
+                if (p) {
+                    p.num++
                 }
-            case CART_DECREMENT:
-                {
-                    let p = state.list.find(e => e.product.id === action.payload)
-                    if (p) {
-                        p.num--
-    
-                        if (p.num === 0) {
-                            let i = state.list.findIndex(e => e.product.id === action.payload)
-                            if (i !== -1) {
-                                state.list.splice(i, 1)
-                            }
+                return {
+                    ...state,
+                    list: [...state.list]
+                }
+            }
+        case CART_DECREMENT:
+            {
+                let p = state.list.find(e => e.product.id === action.payload)
+                if (p) {
+                    p.num--
+
+                    if (p.num === 0) {
+                        let i = state.list.findIndex(e => e.product.id === action.payload)
+                        if (i !== -1) {
+                            state.list.splice(i, 1)
                         }
                     }
-                    return {
-                        ...state,
-                        list: [...state.list]
-                    }
                 }
-    
-            case CART_REMOVE:
-                {
-                    let i = state.list.findIndex(e => e.product.id === action.payload)
-                    if (i !== -1) {
-                        state.list.splice(i, 1)
-                    }
-                    return {
-                        ...state,
-                        list: [...state.list]
-                    }
+                return {
+                    ...state,
+                    list: [...state.list]
                 }
+            }
+
+        case CART_REMOVE:
+            {
+                let i = state.list.findIndex(e => e.product.id === action.payload)
+                if (i !== -1) {
+                    state.list.splice(i, 1)
+                }
+                return {
+                    ...state,
+                    list: [...state.list]
+                }
+            }
+        case CART_CLEAR_CART:
+            return {
+                ...state,
+                list: []
+            }
     }
     return state
 }
