@@ -18,7 +18,12 @@ export type State = {
         }
     },
     login: boolean,
-    errorMsg: ''
+    errorMsg?: ''
+}
+
+type PayloadAction = {
+    type: string,
+    payload: State['user'] 
 }
 
 let user: State['user'];
@@ -36,7 +41,7 @@ const initState: State = {
 }
 
 
-const authReducer = (state = initState, action: any): State => {
+const authReducer = (state = initState, action: PayloadAction): State => {
     
     switch (action.type) {
         case LOGIN:
@@ -56,8 +61,8 @@ const authReducer = (state = initState, action: any): State => {
             return {
                 ...state,
                 user: undefined,
-                errorMsg: action.payload
-            }
+                errorMsg: action.payload?.message
+            } as State
         }
     }
     return state

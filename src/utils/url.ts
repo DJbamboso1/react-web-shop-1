@@ -22,8 +22,19 @@ export const convertObjectToQueryURL = (data: Json) => {
     }).join('&')
 }
 
+// export const changeQueryURL = (data: Json) => {
+//     return window.location.pathname + '?' + Object.keys(data).map(function(key) {
+//         return encodeURIComponent(key) + '=' + encodeURIComponent(data[key])
+//     }).join('&')
+// }
+
 export const changeQueryURL = (data: Json) => {
-    return window.location.pathname + '?' + Object.keys(data).map(function(key) {
-        return encodeURIComponent(key) + '=' + encodeURIComponent(data[key])
-    }).join('&')
+    let path = window.location.pathname + '?' + Object.keys(data).map(function(key) {
+        if(data[key] !== '') {
+            return encodeURIComponent(key) + '=' + encodeURIComponent(data[key])
+        }
+        return ''
+    }).join(`${data.SubCategoryId ? '&' : ''}`)
+
+    return path
 }

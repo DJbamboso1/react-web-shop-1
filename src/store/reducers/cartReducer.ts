@@ -4,7 +4,7 @@ import { CART_ADD_CART, CART_CLEAR_CART, CART_DECREMENT, CART_INCREMENT, CART_RE
 type CartStore = {
     openCart: boolean,
     list: {
-        product: Product01<Categories>,
+        product: Product01,
         num: number,
     }[],
     tax: number,
@@ -26,6 +26,7 @@ const cartReducer = (state = initState, action: PayloadAction): CartStore => {
         case CART_TOGGLE_CART: {
             console.log('toggle toggle')
             console.log('NOT undifined: ', action.payload)
+            console.log('state: ', state)
             let flag = state.openCart
             if (typeof action.payload === 'undefined') {
                 flag = !flag

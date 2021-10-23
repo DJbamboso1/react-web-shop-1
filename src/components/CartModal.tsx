@@ -1,14 +1,14 @@
 import { Categories, Product, Product01 } from '@types'
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { StateStore } from 'store'
 import { cartDecrement, cartIncrement, cartRemove, toggleCart } from 'store/actions/cartAction'
 import { getSubtotal, useCartNumber } from 'store/selector'
-
 import { useHistory } from 'react-router-dom'
 import { currency } from 'utils'
+import { SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG } from 'constants'
 
 
 export const CartModal: React.FC = () => {
@@ -17,7 +17,9 @@ export const CartModal: React.FC = () => {
     let num = useCartNumber()
     const dispatch = useDispatch()
     const history = useHistory()
-    const subtotal = useSelector(getSubtotal) 
+    const subtotal = useSelector(getSubtotal)
+    
+
 
     useEffect(() => {
         if (openCart) {
@@ -39,51 +41,55 @@ export const CartModal: React.FC = () => {
         <div onClick={(ev) => { dispatch(toggleCart(false)) }} className={`modal fixed-right fade ${openCart ? 'show' : ''}`} style={{ display: openCart ? 'block' : 'none' }} id="modalShoppingCart" tabIndex={-1} role="dialog" aria-hidden="true">
             <div style={{ transition: 'transform .3s ease-out' }} onClick={ev => ev.stopPropagation()} className="modal-dialog modal-dialog-vertical" role="document">
                 {/* Full cart (add `.d-none` to disable it) */}
-                <div className="modal-content">
-                    {/* Close */}
-                    <button type="button" onClick={() => dispatch(toggleCart(false))} className="close" data-dismiss="modal" aria-label="Close">
-                        <i className="fe fe-x" aria-hidden="true" />
-                    </button>
-                    {/* Header*/}
-                    <div className="modal-header line-height-fixed font-size-lg">
-                        <strong className="mx-auto">Your Cart ({num})</strong>
-                    </div>
-                    {/* List group */}
-                    <ul className="list-group list-group-lg list-group-flush">
-                        {
-                            list.map(e => <CartItem key={e.product.id} {...e} />)
-                        }
-                    </ul>
-                    {/* Footer */}
-                    <div className="modal-footer line-height-fixed font-size-sm bg-light mt-auto">
-                        <strong>Subtotal</strong> <strong className="ml-auto">{currency(subtotal)}</strong>
-                    </div>
-                    {/* Buttons */}
-                    <div className="modal-body">
-                        <Link className="btn btn-block btn-dark" to="/checkout" onClick={_preventViewCart}>Continue to Checkout</Link>
-                        <Link className="btn btn-block btn-outline-dark" to="/view-cart" onClick={_preventViewCart}>View Cart</Link>
-                    </div>
-                </div>
+                {
+                    list.length > 0 ? <div className="modal-content">
+                        {/* Close */}
+                        <button type="button" onClick={(ev) => dispatch(toggleCart(false))} className="close" data-dismiss="modal" aria-label="Close">
+                            <i className="fe fe-x" aria-hidden="true" />
+                        </button>
+                        {/* Header*/}
+                        <div className="modal-header line-height-fixed font-size-lg">
+                            <strong className="mx-auto">Your Cart ({list.length})</strong>
+                        </div>
+                        {/* List group */}
+                        <ul className="list-group list-group-lg list-group-flush">
+                            {
+                                list.map(e => <CartItem key={e.product.id} {...e} />)
+                            }
+                        </ul>
+                        {/* Footer */}
+                        <div className="modal-footer line-height-fixed font-size-sm bg-light mt-auto">
+                            <strong>Subtotal</strong> <strong className="ml-auto">{currency(subtotal)}</strong>
+                        </div>
+                        {/* Buttons */}
+                        <div className="modal-body">
+                            <Link className="btn btn-block btn-dark" to="/checkout" onClick={_preventViewCart}>Continue to Checkout</Link>
+                            <Link className="btn btn-block btn-outline-dark" to="/view-cart" onClick={_preventViewCart}>View Cart</Link>
+                        </div>
+                    </div> :
+                        <div className="modal-content ">
+                            {/* Close */}
+                            <button type="button" onClick={(ev) => dispatch(toggleCart(false))} className="close" data-dismiss="modal" aria-label="Close">
+                                <i className="fe fe-x" aria-hidden="true" />
+                            </button>
+                            {/* Header*/}
+                            <div className="modal-header line-height-fixed font-size-lg">
+                                <strong className="mx-auto">Your Cart ({list.length})</strong>
+                            </div>
+                            {/* Body */}
+                            <div className="modal-body flex-grow-0 my-auto">
+                                {/* Heading */}
+                                <h6 className="mb-7 text-center">Your cart is empty 😞</h6>
+                                {/* Button */}
+                                <a className="btn btn-block btn-outline-dark" href="/product">
+                                    Continue Shopping
+                                </a>
+                            </div>
+                        </div>
+                }
+
                 {/* Empty cart (remove `.d-none` to enable it) */}
-                <div className="modal-content d-none">
-                    {/* Close */}
-                    <button type="button" className="close">
-                        <i className="fe fe-x" aria-hidden="true" />
-                    </button>
-                    {/* Header*/}
-                    <div className="modal-header line-height-fixed font-size-lg">
-                        <strong className="mx-auto">Your Cart (0)</strong>
-                    </div>
-                    {/* Body */}
-                    <div className="modal-body flex-grow-0 my-auto">
-                        {/* Heading */}
-                        <h6 className="mb-7 text-center">Your cart is empty 😞</h6>
-                        {/* Button */}
-                        <a className="btn btn-block btn-outline-dark" href="#!">
-                            Continue Shopping
-                        </a>
-                    </div>
-                </div>
+
             </div>
             {
                 openCart && <BackDrop onClick={() => dispatch(toggleCart(false))} />
@@ -93,7 +99,7 @@ export const CartModal: React.FC = () => {
 }
 
 const CartItem: React.FC<{
-    product: Product01<Categories>,
+    product: Product01,
     num: number
 }> = ({ num, product }) => {
 
@@ -108,7 +114,9 @@ const CartItem: React.FC<{
 
     }
 
-    let { id, distributorId, category, description, image, minQuantity, name, status } = product
+    let [price, setPrice] = useState(0)
+
+    let { id, distributor, subCategory, description, image, minQuantity, name, status } = product
     // console.log(thumbnail_url)
     return (
         <li className="list-group-item">
@@ -122,9 +130,20 @@ const CartItem: React.FC<{
                 <div className="col-8">
                     {/* Title */}
                     <p className="font-size-sm font-weight-bold mb-6">
-                        <a className="text-body" href="./product.html">{name}</a> <br />
+                        <Link className="text-body" to={`product/${product.id}`}>{product?.name} ({product && product.listPrice.length > 0 ? product.listPrice[0].volume + ' items' : '0 item'})</Link> <br />
                         <span className="text-muted">
-                            {/* {real_price?.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })} */}
+                            {product && ((product.listPrice.length > 0) ?
+                                <>
+                                    {
+                                        num <= product.listPrice[0].volume ? product.listPrice[0].value.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) :
+                                            <>
+                                                {
+                                                   
+                                                }
+                                            </>
+                                    }
+                                </>
+                                : <h6 style={{ color: 'red' }}>No price</h6>)}
                         </span>
                     </p>
                     {/*Footer */}
@@ -132,7 +151,7 @@ const CartItem: React.FC<{
                         {/* Select */}
                         <input autoComplete="false" onChange={_changeNumber} type="number" className="cart-input-num" value={num} />
                         {/* Remove */}
-                        <a onClick={() => dispatch(cartRemove(id))} className="font-size-xs text-gray-400 ml-auto" href="#">
+                        <a onClick={() => dispatch(cartRemove(id))} className="font-size-xs text-gray-400 ml-auto" href="">
                             <i className="fe fe-x" /> Remove
                         </a>
                     </div>

@@ -16,3 +16,5 @@ export const GET_PRODUCT = 'GET_PRODUCT'
 
 export const FETCH_WISHLIST = 'FETCH_WISHLIST'
 export const GET_WISHLIST = 'GET_WISHLIST'
+
+export const SEARCH_TOGGLE_SEARCH = 'product/toggleSearch'

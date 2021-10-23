@@ -8,7 +8,7 @@ import { CART_ADD_CART, CART_CHECK_LOGIN, CART_DECREMENT, CART_INCREMENT, CART_R
      }
  }
 
- export function addToCart(product: Product01<Categories>) {
+ export function addToCart(product: Product01) {
      return {
          type: CART_CHECK_LOGIN,
          payload: product

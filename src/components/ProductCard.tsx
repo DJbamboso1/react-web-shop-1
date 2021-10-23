@@ -4,48 +4,64 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { addToCart } from 'store/actions/cartAction'
-
+import { Skeleton } from '@mui/material'
 
 // export const ProductCard: React.FC<Product> = ({ name, price, real_price, slug, thumbnail_url }) => {
-export const ProductCard: React.FC<{product: Product01<Categories>}> = ( product ) => {
+export const ProductCard: React.FC<{product?: Product01}> = ( {product} ) => {
     const dispatch = useDispatch()
 
-    
+    // console.log(product.listPrice)
 
     return (
         <div className="col-6 col-md-4">
             {/* Card */}
             <div className="card mb-7">
                 {/* Badge */}
-                <div className="badge badge-white card-badge card-badge-left text-uppercase">
+                {/* <div className="badge badge-white card-badge card-badge-left text-uppercase">
                     New
-                </div>
+                </div> */}
                 {/* Image */}
                 <div className="card-img">
                     {/* Image */}
-                    <Link className="card-img-hover" to={`/product/${product.product.name}`}>
+                    {/* <Link className="card-img-hover" to={`/product/${product.name}`}> */}
                         {/* <img className="card-img-top card-img-back" src={image} alt="..." /> */}
                         {/* <img className="card-img-top card-img-front" src={image} alt="..." /> */}
-                        <img className="card-img-top" src={product.product.image} alt="..." />
-                    </Link>
+                        {
+                            product ? (
+                                <Link className="card-img-hover" to={`/product/${product.id}`}>
+                                    <img className="card-img-top" src={product.image} alt="..." />
+                                </Link>
+                            ) : <Skeleton variant="rectangular" width={200} height={200} />
+                        }
+                        
+                    {/* </Link> */}
                     {/* Actions */}
-                    <div className="card-actions">
-                        <span className="card-action">
-                            <button className="btn btn-xs btn-circle btn-white-primary" data-toggle="modal" data-target="#modalProduct">
-                                <i className="fe fe-eye" />
-                            </button>
-                        </span>
-                        <span className="card-action">
-                            <button className="btn btn-xs btn-circle btn-white-primary" onClick={() => dispatch(addToCart(product.product))} data-toggle="button">
-                                <i className="fe fe-shopping-cart" />
-                            </button>
-                        </span>
-                        <span className="card-action">
-                            <button className="btn btn-xs btn-circle btn-white-primary" data-toggle="button">
-                                <i className="fe fe-heart" />
-                            </button>
-                        </span>
-                    </div>
+                    {
+                        product && (
+                            <div className="card-actions">
+                                <span className="card-action">
+                                    <Link className="btn btn-xs btn-circle btn-white-primary" data-toggle="modal" data-target="#modalProduct" to={`product/${product.id}`}>
+                                        <i className="fe fe-eye" />
+                                    </Link>
+                                </span>
+                                <span className="card-action">
+                                    {
+                                        product && (
+                                            <button onClick={() => {( product.listPrice.length > 0 ) && dispatch(addToCart(product)) }} className="btn btn-xs btn-circle btn-white-primary" data-toggle="button">
+                                                <i className="fe fe-shopping-cart" />
+                                            </button>
+                                        )
+                                    }
+
+                                </span>
+                                {/* <span className="card-action">
+                                    <button className="btn btn-xs btn-circle btn-white-primary" data-toggle="button">
+                                        <i className="fe fe-heart" />
+                                    </button>
+                                </span> */}
+                            </div>
+                        )
+                    }
                 </div>
                 {/* Body */}
                 <div className="card-body px-0">
@@ -55,14 +71,24 @@ export const ProductCard: React.FC<{product: Product01<Categories>}> = ( product
                     </div>
                     {/* Title */}
                     <div className="font-weight-bold">
-                        <Link className="text-body" to={`/product/${product.product.name}`}>
-                            {}
-                        </Link>
+                        {
+                            product ? (
+                                <Link className="text-body" to={`/product/${product?.name}`}>
+                                    {product?.name} 
+                                    {/* ({product && product.listPrice.length > 0 ? product.listPrice[0].volume + ' items' : '0 item'}) */}
+                                </Link>
+                            ) : <Skeleton width="100%" height={47} />
+
+                        }
                     </div>
                     {/* Price */}
                     <div className="font-weight-bold text-muted">
                         {/* {price?.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })} */}
                         {/* <h6 style={{color: 'red'}}>Price ?</h6> */}
+                        {
+                            product && ( (product.listPrice.length > 0) ? `${product.listPrice[0].value.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })} ` : <h6 style={{color: 'red'}}>No price</h6> )
+                            
+                        }
                     </div>
                 </div>
             </div>

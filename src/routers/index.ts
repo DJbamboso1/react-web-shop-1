@@ -73,6 +73,11 @@ export const routers: RouterParam[] = [
                 exact: true
             },
             {
+                path: '/product/:slug',
+                component: lazy(() => import('../pages/productDetail')),
+                exact: true
+            },
+            {
                 component: Page404
             }
         ]

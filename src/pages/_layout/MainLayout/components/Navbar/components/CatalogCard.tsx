@@ -13,7 +13,7 @@ const CatalogCard: React.FC = () => {
         })
         event.currentTarget.classList.add('active')
         let id = event.currentTarget.getAttribute('href')
-        console.log(id)
+        
         document.querySelector(`.card .card-body #${id}`)?.classList.add('active','show')
     }
 

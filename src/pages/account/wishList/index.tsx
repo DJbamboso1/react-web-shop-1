@@ -19,7 +19,7 @@ const Wishlist: React.FC = () => {
 
   let dispatch = useDispatch()
   useEffect(() => {
-    console.log('queryURLObject page: ' + queryURLObject.page)
+    
     try {
       dispatch(fetchWishlistAction())
     } catch (err) { }
@@ -28,7 +28,7 @@ const Wishlist: React.FC = () => {
 
 
   let wishlist = useSelector((store: StateStore) => store.wishlist)
-  console.log('wishlist: ', wishlist)
+  
 
   
 
@@ -38,7 +38,7 @@ const Wishlist: React.FC = () => {
   const indexOfLastItem = currentPage * itemsPerPage
   const indexOfFirstItem = indexOfLastItem - itemsPerPage
   const currentItems = wishlist.list.slice(indexOfFirstItem, indexOfLastItem)
-  console.log(currentItems)
+  
   const totalItems = wishlist.list.length
 
   const pageNumbers = []

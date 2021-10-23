@@ -33,7 +33,7 @@ export const Paginate: React.FC<PaginateProp> = ({ currentPage, totalPage }) => 
         for (let i = start; i <= end; i++) {
             list.push(
                 <li className={`page-item ${currentPage === i ? 'active' : ''}`}>
-                    <Link className="page-link" to={changeQueryURL({ ...objectURL, page: i })}>{i}</Link>
+                    <Link className="page-link" to={changeQueryURL({ ...objectURL, PageNumber: i })}>{i}</Link>
                 </li>
             )
         }
@@ -47,7 +47,7 @@ export const Paginate: React.FC<PaginateProp> = ({ currentPage, totalPage }) => 
                 {
                     currentPage > 1 && (
                         <li className="page-item">
-                            <Link className="page-link page-link-arrow" to={changeQueryURL({ ...objectURL, page: currentPage - 1 })}>
+                            <Link className="page-link page-link-arrow" to={changeQueryURL({ ...objectURL, PageNumber: currentPage - 1 })}>
                                 <i className="fa fa-caret-left" />
                             </Link>
                         </li>
@@ -58,7 +58,7 @@ export const Paginate: React.FC<PaginateProp> = ({ currentPage, totalPage }) => 
                 {
                     currentPage < totalPage && (
                         <li className="page-item">
-                            <Link className="page-link page-link-arrow" to={changeQueryURL({ ...objectURL, page: currentPage + 1 })}>
+                            <Link className="page-link page-link-arrow" to={changeQueryURL({ ...objectURL, PageNumber: currentPage + 1 })}>
                                 <i className="fa fa-caret-right" />
                             </Link>
                         </li>

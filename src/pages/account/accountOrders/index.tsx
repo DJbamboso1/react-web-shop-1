@@ -77,18 +77,19 @@ const AccountOrders: React.FC = () => {
             </div>
             <div className="col-12 col-lg-6">
               <div className="form-row">
+                <div className='col-6'></div>
                 <div className="col-6">
                   {/* Button */}
                   <a className="btn btn-sm btn-block btn-outline-dark" href="account-order.html">
                     Order Details
                   </a>
                 </div>
-                <div className="col-6">
-                  {/* Button */}
+                {/* <div className="col-6">
+                  
                   <a className="btn btn-sm btn-block btn-outline-dark" href="#!">
                     Track order
                   </a>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -151,18 +152,19 @@ const AccountOrders: React.FC = () => {
             </div>
             <div className="col-12 col-lg-6">
               <div className="form-row">
+                <div className='col-6'></div>
                 <div className="col-6">
                   {/* Button */}
                   <a className="btn btn-sm btn-block btn-outline-dark" href="account-order.html">
                     Order Details
                   </a>
                 </div>
-                <div className="col-6">
-                  {/* Button */}
+                {/* <div className="col-6">
+                  
                   <a className="btn btn-sm btn-block btn-outline-dark" href="#!">
                     Track order
                   </a>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -229,18 +231,19 @@ const AccountOrders: React.FC = () => {
             </div>
             <div className="col-12 col-lg-6">
               <div className="form-row">
+                <div className='col-6'></div>
                 <div className="col-6">
                   {/* Button */}
                   <a className="btn btn-sm btn-block btn-outline-dark" href="account-order.html">
                     Order Details
                   </a>
                 </div>
-                <div className="col-6">
-                  {/* Button */}
+                {/* <div className="col-6">
+                  
                   <a className="btn btn-sm btn-block btn-outline-dark" href="#!">
                     Track order
                   </a>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

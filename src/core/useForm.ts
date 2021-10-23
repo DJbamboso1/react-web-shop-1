@@ -140,14 +140,11 @@ export function useForm<T extends Object>(initvalue = {}): UseFormReturn<T> {
         }
     }
     function handleSubmit(callback: Function) {
-        
-        // console.log("ccccccccccccc ", Object.keys(errorObject).length)
         return (ev: any) => {
             let errorObject = check()
             ev.preventDefault()
             
             if (Object.keys(errorObject).length === 0) {
-                console.log("NO ERROR")
                 callback(form)
             }
 

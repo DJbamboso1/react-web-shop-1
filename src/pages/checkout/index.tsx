@@ -36,6 +36,9 @@ const Checkout: React.FC = () => {
 
     const formSubmit = (form: Form) => {
         console.log('thanh cong')
+        return (
+            <Redirect to="/product"/>
+        )
     }
 
     const changeShipping = (ev: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,7 +78,7 @@ const Checkout: React.FC = () => {
                                 <TextField {...register('address', { required: true })} error={error.address} required label="Address" placeholder="Address" />
                                 <TextField {...register('phone', { required: true })} error={error.phone} required label="Phone" placeholder="Phone" />
                             </div>
-                            <h6 className="mb-7">Shipping Details</h6>
+                            {/* <h6 className="mb-7">Shipping Details</h6>
                             <div className="table-responsive mb-6">
                                 <table className="table table-bordered table-sm table-hover mb-0">
                                     <tbody>
@@ -131,7 +134,7 @@ const Checkout: React.FC = () => {
                                         </tr>
                                     </tbody>
                                 </table>
-                            </div>
+                            </div> */}
                             <div className="mb-9">
                                 <div className="custom-control custom-checkbox">
                                     <input onChange={(ev) => setIsDifferentAddress(ev.currentTarget.checked)} checked={isDifferentAddress} className="custom-control-input" id="checkoutShippingAddress" type="checkbox" />
@@ -227,7 +230,7 @@ const Checkout: React.FC = () => {
                             {/* List group */}
                             <ul className="list-group list-group-lg list-group-flush-y list-group-flush-x mb-7">
                                 {
-                                    list.map(e => <ProductItem key={e.product.id} product={e.product} num={cartNumber}/>)
+                                    list.map(e => <ProductItem key={e.product.id} product={e.product} num={e.num}/>)
                                 }
                             </ul>
                             {/* Card */}

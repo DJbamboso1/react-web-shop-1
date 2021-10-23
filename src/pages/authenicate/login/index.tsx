@@ -18,6 +18,7 @@ const Login: React.FC = () => {
     let { t } = useTranslate()
 
     let { register, form, handleSubmit, error } = useForm<Form>()
+    
     const dispatch = useDispatch()
     const submit = (form: Form) => {
         console.log(form)

@@ -14,6 +14,7 @@ export function* fetchLogin(action: any) : any {
             })
         } else {
             localStorage.setItem('login', JSON.stringify(user))
+            localStorage.setItem('token', JSON.stringify(user.data.jwtToken))
             yield put(authLogin(user))
         }
     } catch( err ) {

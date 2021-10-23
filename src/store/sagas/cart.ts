@@ -1,7 +1,7 @@
 import { put, select, takeEvery, takeLatest } from "@redux-saga/core/effects";
 import { StateStore } from "..";
 import { AUTH_LOGOUT, CART_ADD_CART, CART_CHECK_LOGIN, CART_CLEAR_CART, CART_DECREMENT, CART_INCREMENT, CART_REMOVE, LOGIN } from "../types";
-// import { history } from "core";
+import { history } from "core";
 import { backToLogin } from "core";
 
 export function* changeCart(): any {
@@ -17,9 +17,9 @@ export function* AddCartCheckLogin(action: any): any {
     if (store.auth.login) {
         yield put({ type: CART_ADD_CART, payload: action.payload })
     } else {
-        console.log('NEED TO PUSH TO LOGIN PAGE !')
+       
         backToLogin();
-        // history.push('/auth/login')
+        history.push('/auth/login')
     }
 }
 export function* clearCart() {

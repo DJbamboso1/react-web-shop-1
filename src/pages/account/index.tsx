@@ -9,7 +9,7 @@ function Account() {
         <AccountLayout>
             <AccountInfo />
             <AccountOrders />
-            <Wishlist />
+            {/* <Wishlist /> */}
         </AccountLayout>
     )
 }

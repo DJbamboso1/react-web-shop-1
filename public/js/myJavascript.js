@@ -1,8 +1,15 @@
-let elem = document.querySelector('.main-carousel');
-let flkty = new Flickity(elem, {
-    // options
-    cellAlign: 'left',
-    contain: true,
-    autoPlay: true,
-    wrapAround: true,
-});
+let $header = document.querySelector('#header')
+
+console.log($header)
+
+// window.addEventListener('scroll', function(){
+//     let scrollTop = document.documentElement.scrollTop
+    
+//     if(scrollTop  > $header.offsetWidth){
+//         $header.classList.add('fixed')
+//     }else{
+//         $header.classList.remove('fixed')
+//     }
+
+    
+// })

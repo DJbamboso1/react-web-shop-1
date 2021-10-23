@@ -7,3 +7,27 @@
 .card-img, .card-img-bottom, .card-img-top {
     height: 200px;
 }
+
+.cart-input-num {
+    width: 50px;
+    text-align: center;
+    border: none;
+    appearance: none;
+    outline: none;
+    border: 1px solid #ccc;
+}
+
+
+.error-request{
+    color: red;
+}
+
+a[type=checkbox], input[type=radio] {
+    box-sizing: border-box;
+    padding: 0
+}
+
+#header.fixed{
+    background: white;
+    box-shadow: 0 0 10px #00000047;
+}
