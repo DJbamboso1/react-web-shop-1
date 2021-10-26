@@ -31,3 +31,17 @@ a[type=checkbox], input[type=radio] {
     background: white;
     box-shadow: 0 0 10px #00000047;
 }
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    border: 1px solid #ddd;
+    margin: 40px 0px;
+  }
+  
+  th, td {
+    text-align: left;
+    padding: 8px;
+    border: 1px solid #ddd;
+  }

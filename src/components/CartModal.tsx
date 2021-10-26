@@ -7,7 +7,7 @@ import { StateStore } from 'store'
 import { cartDecrement, cartIncrement, cartRemove, toggleCart } from 'store/actions/cartAction'
 import { getSubtotal, useCartNumber } from 'store/selector'
 import { useHistory } from 'react-router-dom'
-import { currency } from 'utils'
+import { currency, getPricePerPro } from 'utils'
 import { SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG } from 'constants'
 
 
@@ -18,8 +18,8 @@ export const CartModal: React.FC = () => {
     const dispatch = useDispatch()
     const history = useHistory()
     const subtotal = useSelector(getSubtotal)
-    
 
+    let [price, setPrice] = useState(0)
 
     useEffect(() => {
         if (openCart) {
@@ -114,8 +114,6 @@ const CartItem: React.FC<{
 
     }
 
-    let [price, setPrice] = useState(0)
-
     let { id, distributor, subCategory, description, image, minQuantity, name, status } = product
     // console.log(thumbnail_url)
     return (
@@ -132,18 +130,24 @@ const CartItem: React.FC<{
                     <p className="font-size-sm font-weight-bold mb-6">
                         <Link className="text-body" to={`product/${product.id}`}>{product?.name} ({product && product.listPrice.length > 0 ? product.listPrice[0].volume + ' items' : '0 item'})</Link> <br />
                         <span className="text-muted">
-                            {product && ((product.listPrice.length > 0) ?
+                            {getPricePerPro(product, num)}
+                            {/* {product && ((product.listPrice.length > 0) ?
                                 <>
                                     {
+
                                         num <= product.listPrice[0].volume ? product.listPrice[0].value.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) :
-                                            <>
-                                                {
-                                                   
+                                            () => {
+                                                product.listPrice.map(price => {
+                                                    if (price.volume <= num) {
+                                                       return price.value.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })
+                                                    }
+                                                    return price
                                                 }
-                                            </>
+                                                )
+                                            }
                                     }
                                 </>
-                                : <h6 style={{ color: 'red' }}>No price</h6>)}
+                                : <h6 style={{ color: 'red' }}>No price</h6>)} */}
                         </span>
                     </p>
                     {/*Footer */}

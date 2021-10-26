@@ -30,7 +30,7 @@ const MainLayout: React.FC = ({ children }) => {
         let $header = document.querySelector('#header')
         let scrollTop = document.documentElement.scrollTop
         if ($header) {
-            console.log($header?.scrollHeight)
+            // console.log($header?.scrollHeight)
             let height = $header?.scrollHeight || 0
             
             if (scrollTop > height) {

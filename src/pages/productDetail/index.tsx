@@ -6,6 +6,8 @@ import Flickity from 'react-flickity-component'
 import { useDispatch } from 'react-redux'
 import { useCartNumber } from 'store/selector'
 import { addToCart, cartDecrement, cartIncrement } from 'store/actions/cartAction'
+import { calculateTotal, getPricePerPro } from 'utils'
+import { style } from '@mui/system'
 
 const ProductDetail: React.FC = () => {
     let slug: any
@@ -20,13 +22,14 @@ const ProductDetail: React.FC = () => {
             console.log(product)
             setData(product)
         })()
-    }, [])
+    }, [num])
     const dispatch = useDispatch()
 
+    console.log('num: ', num)
 
 
     const _changeNumber = (ev: React.ChangeEvent<HTMLInputElement>) => {
-
+        ev.preventDefault()
         if (num > parseInt(ev.currentTarget.value)) {
             dispatch(cartDecrement(data?.data.id || ''))
         } else {
@@ -35,22 +38,23 @@ const ProductDetail: React.FC = () => {
 
     }
     return (
-        <section style={{ padding: '40px 0px' }}>
-            <div className="container">
-                {data && (
-                    <div className="row">
-                        <div className="col-12">
-                            <div className="row">
-                                <div className="col-12 col-md-6">
-                                    {/* Card */}
-                                    <div className="card">
-                                        {/* Badge */}
-                                        {/* <div className="badge badge-primary card-badge text-uppercase">
+        <>
+            <section style={{ padding: '40px 0px' }}>
+                <div className="container">
+                    {data && (
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="row">
+                                    <div className="col-12 col-md-6">
+                                        {/* Card */}
+                                        <div className="card">
+                                            {/* Badge */}
+                                            {/* <div className="badge badge-primary card-badge text-uppercase">
                                         Sale
                                     </div> */}
 
-                                        {/* Slider */}
-                                        {/* <div className="mb-4" data-flickity="{&quot;draggable&quot;: false, &quot;fade&quot;: true}" id="productSlider">
+                                            {/* Slider */}
+                                            {/* <div className="mb-4" data-flickity="{&quot;draggable&quot;: false, &quot;fade&quot;: true}" id="productSlider">
                                         
                                         <a href="/img/products/product-7.jpg" data-fancybox>
                                             <img src="/img/products/product-7.jpg" alt="..." className="card-img-top" />
@@ -64,9 +68,9 @@ const ProductDetail: React.FC = () => {
                                             <img src="/img/products/product-146.jpg" alt="..." className="card-img-top" />
                                         </a>
                                     </div> */}
-                                    </div>
-                                    {/* Slider */}
-                                    {/* <Flickity className="flickity-nav mx-n2 mb-10 mb-md-0" options={{
+                                        </div>
+                                        {/* Slider */}
+                                        {/* <Flickity className="flickity-nav mx-n2 mb-10 mb-md-0" options={{
                                         pageDots: false,
                                         autoPlay: false,
                                         wrapAround: false,
@@ -78,23 +82,23 @@ const ProductDetail: React.FC = () => {
                                             <div className="embed-responsive embed-responsive-1by1 bg-cover" style={{ backgroundImage: `${data.data.image}` }} />
                                         </div>
                                     </Flickity> */}
-                                    <img className="col-12 px-2" style={{ maxWidth: '100%' }} src={data.data.image} alt="" />
-                                    {/* <div className="col-12 px-2" style={{ maxWidth: '100%' }}>
+                                        <img className="col-12 px-2" style={{ maxWidth: '100%' }} src={data.data.image} alt="" />
+                                        {/* <div className="col-12 px-2" style={{ maxWidth: '100%' }}>
                                         <div className="embed-responsive embed-responsive-1by1 bg-cover">
                                             <img src={data.data.image} alt="" />
                                         </div>
                                     </div> */}
-                                </div>
-                                <div className="col-12 col-md-6 pl-lg-10">
-                                    {/* Header */}
-                                    <div className="row mb-1">
-                                        <div className="col">
-                                            {/* Preheading */}
-                                            <Link className="text-muted" to={`product/${data.data.id}`}>{data.data.name}</Link>
-                                        </div>
-                                        <div className="col-auto">
-                                            {/* Rating */}
-                                            {/* <div className="rating font-size-xs text-dark" data-value={4}>
+                                    </div>
+                                    <div className="col-12 col-md-6 pl-lg-10">
+                                        {/* Header */}
+                                        <div className="row mb-1">
+                                            <div className="col">
+                                                {/* Preheading */}
+                                                <Link className="text-muted" to={`product/${data.data.id}`}>{data.data.parentCategoryName}</Link>
+                                            </div>
+                                            <div className="col-auto">
+                                                {/* Rating */}
+                                                {/* <div className="rating font-size-xs text-dark" data-value={4}>
                                                 <div className="rating-item">
                                                     <i className="fas fa-star" />
                                                 </div>
@@ -111,112 +115,101 @@ const ProductDetail: React.FC = () => {
                                                     <i className="fas fa-star" />
                                                 </div>
                                             </div> */}
-                                            {/* <a className="font-size-sm text-reset ml-2" href="#reviews">
+                                                {/* <a className="font-size-sm text-reset ml-2" href="#reviews">
                                                 Reviews (6)
                                             </a> */}
-                                        </div>
-                                    </div>
-                                    {/* Heading */}
-                                    <h3 className="mb-2">{data.data.name}</h3>
-                                    {/* Price */}
-                                    <div className="mb-7">
-                                        {/* <span className="font-size-lg font-weight-bold text-gray-350 text-decoration-line-through">$115.00</span> */}
-                                        <span className="ml-1 font-size-h5 font-weight-bolder text-primary">{data && ((data.data.listPrice.length > 0) ? data.data.listPrice[0].value : 'No price')}</span>
-                                        {/* <span className="font-size-sm ml-1">(In Stock)</span> */}
-                                    </div>
-                                    {/* Form */}
-                                    <form>
-                                        {/* <div className="form-group">
-                                        
-                                        <p className="mb-5">
-                                            Color: <strong id="colorCaption">White</strong>
-                                        </p>
-                                        
-                                        <div className="mb-8 ml-n1">
-                                            <div className="custom-control custom-control-inline custom-control-img">
-                                                <input type="radio" className="custom-control-input" id="imgRadioOne" name="imgRadio" data-toggle="form-caption" data-target="#colorCaption" defaultValue="White" defaultChecked />
-                                                <label className="custom-control-label" htmlFor="imgRadioOne">
-                                                    <span className="embed-responsive embed-responsive-1by1 bg-cover" style={{ backgroundImage: 'url(/img/products/product-7.jpg)' }} />
-                                                </label>
-                                            </div>
-                                            <div className="custom-control custom-control-inline custom-control-img">
-                                                <input type="radio" className="custom-control-input" id="imgRadioTwo" name="imgRadio" data-toggle="form-caption" data-target="#colorCaption" defaultValue="Black" />
-                                                <label className="custom-control-label" htmlFor="imgRadioTwo">
-                                                    <span className="embed-responsive embed-responsive-1by1 bg-cover" style={{ backgroundImage: 'url(/img/products/product-49.jpg)' }} />
-                                                </label>
                                             </div>
                                         </div>
-                                    </div> */}
-                                        <div className="form-group">
-                                            {/* Label */}
-                                            <p className="mb-5">
-                                                Volume:
-                                            </p>
-                                            {/* Radio */}
-                                            <div className="mb-2">
-                                                {
-                                                    data && (data.data.listPrice.length > 0 ? data.data.listPrice.map(price => {
-                                                        return (
-                                                            <div className="custom-control custom-control-inline custom-control-size mb-2">
-                                                                <input type="radio" className="custom-control-input" name="sizeRadio" id="sizeRadioOne" defaultValue={price.volume} data-toggle="form-caption" data-target="#sizeCaption" />
-                                                                <label className="custom-control-label" htmlFor="sizeRadioOne">{price.volume}</label>
-                                                            </div>
-                                                        )
-                                                    }) : 'No volume')
-                                                }
+                                        {/* Heading */}
+                                        <h3 className="mb-2">{data.data.name}</h3>
+                                        {/* Price */}
+                                        <div className="mb-7">
+                                            {/* <span className="font-size-lg font-weight-bold text-gray-350 text-decoration-line-through">$115.00</span> */}
+                                            <span className="ml-1 font-size-h5 font-weight-bolder text-primary">{num > 0 ? getPricePerPro(data.data, num).toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) : data.data.listPrice[0].value.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span>
+                                        </div>
 
+                                        <table style={{ overflowX: 'auto' }}>
+                                            <tr>
+                                                <th>Volume</th>
+                                                <th>Price</th>
+                                            </tr>
+                                            {data.data.listPrice.map(price => {
+                                                return (
+                                                    <tr>
+                                                        <th>{price.volume}</th>
+                                                        <th>{price.value}</th>
+                                                    </tr>
+                                                )
+                                            })}
+                                        </table>
 
-                                            </div>
-                                            {/* Size chart */}
-                                            {/* <p className="mb-8">
+                                        {/* Form */}
+                                        <form>
+                                            <div className="form-group">
+                                                {/* Label */}
+                                                {/* Size chart */}
+                                                {/* <p className="mb-8">
                                                 <img src="/img/icons/icon-ruler.svg" alt="..." className="img-fluid" /> <a className="text-reset text-decoration-underline ml-3" data-toggle="modal" href="#modalSizeChart">Size
                                                     chart</a>
                                             </p> */}
-                                            <div className="form-row mb-7">
-                                                <div className="col-12 col-lg-auto">
-                                                    <input autoComplete="false" onChange={_changeNumber} type="number" className="cart-input-num" value={num} style={{ height: '90%' }} />
+                                                <div className="form-row mb-7">
+                                                    {/* <div className="col-12 col-lg-auto">
+                                                        {num > 0 && <input onChange={_changeNumber} type="number" className="cart-input-num" value={num} style={{ height: '90%' }} />}
+                                                    </div> */}
+                                                    <div className="col-12 col-lg" style={{ flexBasis: num === 0 ? 'unset' : 0 }}>
+                                                        {/* Submit */}
+                                                        <Link type="submit" to='#' className="btn btn-block btn-dark mb-2" onClick={() => { data && (data.data.listPrice.length > 0) && dispatch(addToCart(data.data)) }}>
+                                                            Add to Cart <i className="fe fe-shopping-cart ml-2" />
+                                                        </Link>
+                                                    </div>
                                                 </div>
-                                                <div className="col-12 col-lg">
-                                                    {/* Submit */}
-                                                    <button type="submit" className="btn btn-block btn-dark mb-2" onClick={() => { data && ( data?.data.listPrice.length > 0 ) && dispatch(addToCart(data?.data)) }}>
-                                                        Add to Cart <i className="fe fe-shopping-cart ml-2" />
-                                                    </button>
-                                                </div>
-                                                {/* <div className="col-12 col-lg-auto">
-                                                    
-                                                    <button className="btn btn-outline-dark btn-block mb-2" data-toggle="button">
-                                                        Wishlist <i className="fe fe-heart ml-2" />
-                                                    </button>
-                                                </div> */}
                                             </div>
-                                            {/* Text */}
-                                            {/* <p>
-                                                <span className="text-gray-500">Is your size/color sold out?</span>
-                                                <a className="text-reset text-decoration-underline" data-toggle="modal" href="#modalWaitList">Join the
-                                                    Wait List!</a>
-                                            </p>
-                                            
-                                            <p className="mb-0">
-                                                <span className="mr-4">Share: </span>
-                                                <a className="btn btn-xxs btn-circle btn-light font-size-xxxs text-gray-350" href="#!">
-                                                    <i className="fab fa-twitter" />
-                                                </a>
-                                                <a className="btn btn-xxs btn-circle btn-light font-size-xxxs text-gray-350" href="#!">
-                                                    <i className="fab fa-facebook-f" />
-                                                </a>
-                                                <a className="btn btn-xxs btn-circle btn-light font-size-xxxs text-gray-350" href="#!">
-                                                    <i className="fab fa-pinterest-p" />
-                                                </a>
-                                            </p> */}
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </section>
+            <section className="pt-11">
+                <div className="container">
+                    <div className="row">
+                        <div className="col-12">
+                            {/* Nav */}
+                            <div className="nav nav-tabs nav-overflow justify-content-start justify-content-md-center border-bottom">
+                                <a className="nav-link active" data-toggle="tab" href="#descriptionTab">
+                                    Description
+                                </a>
+                                {/* <a className="nav-link" data-toggle="tab" href="#sizeTab">
+                                    Size &amp; Fit
+                                </a>
+                                <a className="nav-link" data-toggle="tab" href="#shippingTab">
+                                    Shipping &amp; Return
+                                </a> */}
+                            </div>
+                            {/* Content */}
+                            <div className="tab-content">
+                                <div className="tab-pane fade show active" id="descriptionTab">
+                                    <div className="row justify-content-center py-9">
+                                        <div className="col-12 col-lg-10 col-xl-8">
+                                            <div className="row">
+                                                <div className="col-12">
+                                                    {/* Text */}
+                                                    <p className="text-gray-500">
+                                                        {data?.data.description}
+                                                    </p>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                )}
-            </div>
-        </section>
+                </div>
+            </section>
+        </>
     )
 }
 

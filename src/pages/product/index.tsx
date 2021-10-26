@@ -16,6 +16,7 @@ import { Breadcrumbs } from 'components/Breadcrumbs'
 import { title } from 'process'
 import cateService from 'services/cateService'
 import { categoryConfig } from './categoryConfig'
+import { useRouteMatch } from 'react-router'
 
 export type FilterQuery = {
     // page: string,
@@ -37,6 +38,12 @@ const ProductPage: React.FC = () => {
     let queryUrl = convertQueryURLToObject<FilterQuery>()
     // console.log("queryUrl: ", queryUrl)
 
+    let { url } = useRouteMatch()
+
+    let [category, setCategory] = useState<CategoryTree>()
+
+    let [subCate, setSubCate] = useState<CategoryTree>()
+
     useEffect(() => {
 
         (async () => {
@@ -44,6 +51,10 @@ const ProductPage: React.FC = () => {
             setData(list)
             let cateList = await cateService.getCategory()
             setCateData(cateList.data)
+
+            let category = cateList.data.find(e => e.id === queryUrl.CategoryId)
+            setCategory(category)
+            setSubCate(category?.subCategories?.find(e => e.id === queryUrl.SubCategoryId))
         })()
         // dispatch(fetchProductsAction(queryUrl))
         // setData(product.products)
@@ -75,16 +86,23 @@ const ProductPage: React.FC = () => {
                                 {/* Heading */}
                                 <h3 className="mb-1">Product</h3>
                                 {/* Breadcrumb */}
-                                {/* <Breadcrumbs list={[
+                                <Breadcrumbs list={[
                                     {
                                         title: 'Home',
                                         link: '/'
                                     },
-                                    {
+                                    ...(category ? [{
+                                        title: category.name,
+                                        link: `${url}?CategoryId=${category.id}`
+                                    }] : [{
                                         title: 'Product',
                                         link: '/product'
-                                    }
-                                ]}></Breadcrumbs> */}
+                                    }]),
+                                    ...(subCate ? [{
+                                        title: subCate.name,
+                                        link: ''
+                                    }] : [])
+                                ]} />
                             </div>
                             <div className="col-12 col-md-auto">
                                 {/* Select */}

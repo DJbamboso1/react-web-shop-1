@@ -69,7 +69,7 @@ export const SearchModal: React.FC = () => {
                     </div>
                     {/* Body: Form */}
                     <div className="modal-body">
-                        <form onSubmit={handleSubmit(submit)}>
+                        <form onChange={handleSubmit(submit)}>
                             {/* <div className="form-group">
                                 <label className="sr-only" htmlFor="modalSearchCategories">Categories:</label>
                                 <select className="custom-select" id="modalSearchCategories">
@@ -90,7 +90,7 @@ export const SearchModal: React.FC = () => {
                         </form>
                     </div>
                     {/* Body: Results (add `.d-none` to disable it) */}
-                    <div className="modal-body border-top font-size-sm">
+                    <div className="modal-body border-top font-size-sm" >
                         {/* Heading */}
                         <p>Search Results:</p>
                         {/* Items */}
