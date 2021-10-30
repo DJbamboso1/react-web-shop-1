@@ -8,7 +8,11 @@ export type State = {
         errors: null,
         data?: {
             id: string,
-            roleId: string,
+            role: {
+                id: string,
+                name: string
+            },
+            actorId: string,
             username: string,
             displayName: string,
             avatar: null,

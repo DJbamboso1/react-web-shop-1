@@ -6,7 +6,7 @@ import Flickity from 'react-flickity-component'
 import { useDispatch } from 'react-redux'
 import { useCartNumber } from 'store/selector'
 import { addToCart, cartDecrement, cartIncrement } from 'store/actions/cartAction'
-import { calculateTotal, getPricePerPro } from 'utils'
+import { calculateTotal, currency, getPricePerPro } from 'utils'
 import { style } from '@mui/system'
 
 const ProductDetail: React.FC = () => {
@@ -27,16 +27,6 @@ const ProductDetail: React.FC = () => {
 
     console.log('num: ', num)
 
-
-    const _changeNumber = (ev: React.ChangeEvent<HTMLInputElement>) => {
-        ev.preventDefault()
-        if (num > parseInt(ev.currentTarget.value)) {
-            dispatch(cartDecrement(data?.data.id || ''))
-        } else {
-            dispatch(cartIncrement(data?.data.id || ''))
-        }
-
-    }
     return (
         <>
             <section style={{ padding: '40px 0px' }}>
@@ -125,7 +115,12 @@ const ProductDetail: React.FC = () => {
                                         {/* Price */}
                                         <div className="mb-7">
                                             {/* <span className="font-size-lg font-weight-bold text-gray-350 text-decoration-line-through">$115.00</span> */}
-                                            <span className="ml-1 font-size-h5 font-weight-bolder text-primary">{num > 0 ? getPricePerPro(data.data, num).toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) : data.data.listPrice[0].value.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span>
+                                        
+                                            {
+                                                data && ( (data.data.listPrice.length > 0) ?
+                                                `${data.data.listPrice.length > 1 ? currency(data.data.listPrice[data.data.listPrice.length - 1].value) + ' - ' : ''}${currency(data.data.listPrice[0].value)}  `
+                                                : <h6 style={{ color: 'red' }}>No price</h6> )
+                                            }
                                         </div>
 
                                         <table style={{ overflowX: 'auto' }}>
@@ -136,8 +131,8 @@ const ProductDetail: React.FC = () => {
                                             {data.data.listPrice.map(price => {
                                                 return (
                                                     <tr>
-                                                        <th>{price.volume}</th>
-                                                        <th>{price.value}</th>
+                                                        <th>{`>= ${price.volume} items`}</th>
+                                                        <th> {price.value}</th>
                                                     </tr>
                                                 )
                                             })}
@@ -158,9 +153,9 @@ const ProductDetail: React.FC = () => {
                                                     </div> */}
                                                     <div className="col-12 col-lg" style={{ flexBasis: num === 0 ? 'unset' : 0 }}>
                                                         {/* Submit */}
-                                                        <Link type="submit" to='#' className="btn btn-block btn-dark mb-2" onClick={() => { data && (data.data.listPrice.length > 0) && dispatch(addToCart(data.data)) }}>
+                                                        <button type="submit" className="btn btn-block btn-dark mb-2" onClick={(ev) => { ev.preventDefault(); data && (data.data.listPrice.length > 0) && dispatch(addToCart(data.data)) }}>
                                                             Add to Cart <i className="fe fe-shopping-cart ml-2" />
-                                                        </Link>
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>

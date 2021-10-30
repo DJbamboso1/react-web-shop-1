@@ -50,8 +50,8 @@ export const getPrice = createSelector(getCartProduct, (list) => {
 
 // total
 
-const getTotal = createSelector(getSubtotal, getTax, (subtotal, tax) => {
-    return subtotal * tax  + subtotal
+const getTotal = createSelector(getSubtotal, (subtotal) => {
+    return subtotal
 })
 
 export const useTotal = () => useSelector(getTotal)

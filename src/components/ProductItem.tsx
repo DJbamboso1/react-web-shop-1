@@ -13,10 +13,11 @@ export const ProductItem: React.FC<{ product: Product01, num?: number }> = ({ pr
     const dispatch = useDispatch()
     const _changeNumber = (ev: React.ChangeEvent<HTMLInputElement>) => {
         if (!num) return
-        if (num > parseInt(ev.currentTarget.value)) {
-            dispatch(cartDecrement(product.id))
-        } else {
-            dispatch(cartIncrement(product.id))
+        let offset = num - parseInt(ev.currentTarget.value)
+        if (offset > 0) {
+            dispatch(cartDecrement( { id: product.id, num: offset } ))
+        } else if (offset < 0) {
+            dispatch(cartIncrement( { id: product.id, num: Math.abs(offset) } ))
         }
 
     }

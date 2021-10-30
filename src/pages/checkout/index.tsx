@@ -1,53 +1,93 @@
+import { Checkin, Checkout, Payment } from "@types"
 import { ProductItem } from "components"
 import { useForm } from "core"
-import React, { useState } from "react"
-import { useSelector } from "react-redux"
-import { Redirect } from "react-router"
+import React, { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { Redirect } from "react-router-dom"
 import { getSubtotal, getTaxPrice, useCart, useCartNumber, useTotal } from "store/selector"
 import { currency } from "utils"
 import { TextField } from "./components"
+import { paymentService } from '../../services/paymentService'
+import { StateStore } from "store"
+import { stringify } from "querystring"
+import { formGroupClasses } from "@mui/material"
+import { cartCheckout } from "store/actions/cartAction"
 
 type Form = {
-    firstName: string,
-    lastName: string,
     email: string,
     address: string,
-    phone: string,
-    address2: string,
-    phone2: string
+    phoneNumber: string,
+    displayName: string
 }
 
-const Checkout: React.FC = () => {
+let url = process.env.LINK_URL || ''
 
+const CheckoutComponent: React.FC = () => {
+
+    let { user } = useSelector((store: StateStore) => store.auth)
     const { list } = useCart()
-    
+
     const total = useTotal()
-    const taxPrice = useSelector(getTaxPrice)
-    const subTotal = useSelector(getSubtotal)
+
     const cartNumber = useCartNumber()
-    const [shippingPrice, setShippingPrice] = useState(35000)
-    const [isDifferentAddress, setIsDifferentAddress] = useState(false)
-    const { error, form, handleSubmit, register } = useForm<Form>()
-    
+    // const [shippingPrice, setShippingPrice] = useState(35000)
+
+    const { error, form, handleSubmit, register } = useForm<Form>(user?.data)
+
+    const [paymentMethod, setPaymentMethod] = useState<Payment>()
+
+    const [payment, setPayment] = useState('')
+
+    const [result, setResult] = useState<Checkout>()
+
+    const [actor, setActor] = useState('')
+    useEffect(() => {
+        (async () => {
+            let payment = await paymentService.getAllPayments()
+            // console.log('PAYMENT: ', payment.data)
+            setPaymentMethod(payment)
+            setPayment(payment.data[0].id)
+        })()
+        if (user && user.data) {
+            setActor(user.data.actorId)
+        }
+    }, [])
+
+    // console.log('PAYMENT METHOD: ', paymentMethod)
+
     if (list.length === 0) {
-        
         return <Redirect to="/product" />
     }
 
     const formSubmit = (form: Form) => {
-        console.log('thanh cong')
-        return (
-            <Redirect to="/product"/>
-        )
+        let cart = []
+        for (let i = 0; i < list.length; i++) {
+            cart.push({ id: list[i].id, quantity: list[i].num })
+        };
+        let checkoutObj: Checkin
+        checkoutObj = {
+            cart: cart,
+            paymentMethodId: payment,
+            retailerId: actor,
+            shippingAddress: form.address,
+            redirectUrl: url + '/product'
+        };
+        
+        (async () => {
+            let obj = await paymentService.checkout(checkoutObj)    
+            setResult(obj)
+        })()
     }
-
-    const changeShipping = (ev: React.ChangeEvent<HTMLInputElement>) => {
-        let value = ev.currentTarget.value
-        setShippingPrice(parseInt(value))
-    }
-
-
     
+    if (result && result.data.paymentResponse !== null) {
+        window.location.href = result.data.paymentResponse.payUrl
+    }
+
+    const changePaymentMethod = (ev: React.ChangeEvent<HTMLInputElement>) => {
+        let value = ev.currentTarget.value
+        console.log(value)
+        setPayment(value)
+    }
 
     return (
         <section className="pt-7 pb-12">
@@ -69,73 +109,47 @@ const Checkout: React.FC = () => {
                             {/* Form */}
 
                             {/* Heading */}
-                            <h6 className="mb-7">Billing Details</h6>
+                            <h6 className="mb-7" style={{ fontWeight: 'bold' }}>Hóa đơn chi tiết</h6>
                             {/* Billing details */}
                             <div className="row mb-9">
-                                <TextField className="col-md-6" {...register('firstName', { required: true })} error={error.firstName} required label="First Name" placeholder="First Name" />
-                                <TextField className="col-md-6" {...register('lastName', { required: true })} error={error.lastName} required label="Last Name" placeholder="Last Name" />
+                                {/* <TextField className="col-md-6" {...register('firstName', { required: true })} error={error.firstName} required label="First Name" placeholder="First Name" />
+                                <TextField className="col-md-6" {...register('lastName', { required: true })} error={error.lastName} required label="Last Name" placeholder="Last Name" /> */}
+                                <TextField  {...register('displayName', { required: true })} error={error.displayName} required label="Full Name" placeholder="Last Name" />
                                 <TextField {...register('email', { required: true })} error={error.email} required label="Email" placeholder="Email" />
+                                <TextField {...register('phoneNumber', { required: true })} error={error.phoneNumber} required label="Phone" placeholder="Phone" />
                                 <TextField {...register('address', { required: true })} error={error.address} required label="Address" placeholder="Address" />
-                                <TextField {...register('phone', { required: true })} error={error.phone} required label="Phone" placeholder="Phone" />
                             </div>
-                            {/* <h6 className="mb-7">Shipping Details</h6>
+                            <h6 className="mb-7">Phương thức thanh toán</h6>
                             <div className="table-responsive mb-6">
                                 <table className="table table-bordered table-sm table-hover mb-0">
                                     <tbody>
-                                        <tr>
-                                            <td>
-                                                <div className="custom-control custom-radio">
-                                                    <input onChange={changeShipping} className="custom-control-input" checked={shippingPrice === 35000} id="checkoutShippingStandard" value={35000} name="shipping" type="radio" />
-                                                    <label className="custom-control-label text-body text-nowrap" htmlFor="checkoutShippingStandard">
-                                                        Standard Shipping
-                                                    </label>
-                                                </div>
-                                            </td>
-                                            <td>Delivery in 5 - 7 working days</td>
-                                            <td>{currency(35000)}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div className="custom-control custom-radio">
-                                                    <input onChange={changeShipping} className="custom-control-input" checked={shippingPrice === 40000} id="checkoutShippingExpress" value={40000} name="shipping" type="radio" />
-                                                    <label className="custom-control-label text-body text-nowrap" htmlFor="checkoutShippingExpress">
-                                                        Express Shipping
-                                                    </label>
-                                                </div>
-                                            </td>
-                                            <td>Delivery in 3 - 5 working days</td>
-                                            <td>{currency(40000)}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div className="custom-control custom-radio">
-                                                    <input onChange={changeShipping} className="custom-control-input" checked={shippingPrice === 50000} id="checkoutShippingShort" value={50000} name="shipping" type="radio" />
-                                                    <label className="custom-control-label text-body text-nowrap" htmlFor="checkoutShippingShort">
-                                                        1 - 2 Shipping
-                                                    </label>
-                                                </div>
-                                            </td>
-                                            <td>Delivery in 1 - 2 working days</td>
-                                            <td>{currency(50000)}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div className="custom-control custom-radio">
-                                                    <input onChange={changeShipping} className="custom-control-input" checked={shippingPrice === 0} id="checkoutShippingFree" value={0} name="shipping" type="radio" />
-                                                    <label className="custom-control-label text-body text-nowrap" htmlFor="checkoutShippingFree">
-                                                        Free Shipping
-                                                    </label>
-                                                </div>
-                                            </td>
-                                            <td>Living won't the He one every subdue
-                                                meat replenish face was you morning
-                                                firmament darkness.</td>
-                                            <td>{currency(0)}</td>
-                                        </tr>
+                                        {
+                                            paymentMethod && (paymentMethod.data.map(pm => {
+                                                return (
+                                                    <tr>
+                                                        <td>
+                                                            <div className="custom-control custom-radio">
+
+                                                                <input onChange={changePaymentMethod} className="custom-control-input" checked={payment === pm.id}
+                                                                    id={pm.id} value={pm.id} name="paymentMethodId" type="radio" />
+
+                                                                <label className="custom-control-label text-body text-nowrap" htmlFor={pm.id}>
+                                                                    {/* {console.log(pm.id)} */}
+                                                                    {pm.description}
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            }))
+                                        }
+
+
+
                                     </tbody>
                                 </table>
-                            </div> */}
-                            <div className="mb-9">
+                            </div>
+                            {/* <div className="mb-9">
                                 <div className="custom-control custom-checkbox">
                                     <input onChange={(ev) => setIsDifferentAddress(ev.currentTarget.checked)} checked={isDifferentAddress} className="custom-control-input" id="checkoutShippingAddress" type="checkbox" />
                                     <label className="custom-control-label font-size-sm" data-toggle="collapse" data-target="#checkoutShippingAddressCollapse" htmlFor="checkoutShippingAddress">
@@ -154,7 +168,7 @@ const Checkout: React.FC = () => {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                             {/*<h6 className="mb-7">Payment</h6>
                             <div className="list-group list-group-sm mb-7">
                                 <div className="list-group-item">
@@ -230,24 +244,29 @@ const Checkout: React.FC = () => {
                             {/* List group */}
                             <ul className="list-group list-group-lg list-group-flush-y list-group-flush-x mb-7">
                                 {
-                                    list.map(e => <ProductItem key={e.product.id} product={e.product} num={e.num}/>)
+                                    list.map(e => {
+
+                                        return (
+                                            <ProductItem key={e.product.id} product={e.product} num={e.num} />
+                                        )
+                                    })
                                 }
                             </ul>
                             {/* Card */}
                             <div className="card mb-9 bg-light">
                                 <div className="card-body">
                                     <ul className="list-group list-group-sm list-group-flush-y list-group-flush-x">
-                                        <li className="list-group-item d-flex">
+                                        {/* <li className="list-group-item d-flex">
                                             <span>Subtotal</span> <span className="ml-auto font-size-sm">{currency(subTotal)}</span>
-                                        </li>
-                                        <li className="list-group-item d-flex">
-                                            <span>Tax</span> <span className="ml-auto font-size-sm">{currency(taxPrice)}</span>
-                                        </li>
-                                        <li className="list-group-item d-flex">
+                                        </li> */}
+                                        {/* <li className="list-group-item d-flex">
+                                            <span>id: </span> <span className="ml-auto font-size-sm">{payment}</span>
+                                        </li> */}
+                                        {/* <li className="list-group-item d-flex">
                                             <span>Shipping</span> <span className="ml-auto font-size-sm">{currency(shippingPrice)}</span>
-                                        </li>
+                                        </li> */}
                                         <li className="list-group-item d-flex font-size-lg font-weight-bold">
-                                            <span>Total</span> <span className="ml-auto">{currency(total + shippingPrice)}</span>
+                                            <span>Total</span> <span className="ml-auto">{currency(total)}</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -264,10 +283,12 @@ const Checkout: React.FC = () => {
                             </button>
                         </div>
                     </div>
+
+
                 </form>
             </div >
         </section >
     )
 }
 
-export default Checkout
+export default CheckoutComponent

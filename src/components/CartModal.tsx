@@ -77,7 +77,7 @@ export const CartModal: React.FC = () => {
                                 <strong className="mx-auto">Your Cart ({list.length})</strong>
                             </div>
                             {/* Body */}
-                            <div className="modal-body flex-grow-0 my-auto">
+                            <div className="modal-body fldsaex-grow-0 my-auto">
                                 {/* Heading */}
                                 <h6 className="mb-7 text-center">Your cart is empty 😞</h6>
                                 {/* Button */}
@@ -104,17 +104,25 @@ const CartItem: React.FC<{
 }> = ({ num, product }) => {
 
     const dispatch = useDispatch()
-    const _changeNumber = (ev: React.ChangeEvent<HTMLInputElement>) => {
 
-        if (num > parseInt(ev.currentTarget.value)) {
-            dispatch(cartDecrement(product.id))
+    const _changeNumber = (ev: React.ChangeEvent<HTMLInputElement>) => {
+        console.log(ev.currentTarget.value)
+        if (ev.currentTarget.value === '') {
+
         } else {
-            dispatch(cartIncrement(product.id))
+            let offset = num - parseInt(ev.currentTarget.value || '0')
+            console.log(offset)
+            if (offset > 0) {
+                dispatch(cartDecrement({ id: product.id, num: offset }))
+            } else if (offset < 0) {
+                dispatch(cartIncrement({ id: product.id, num: Math.abs(offset) }))
+            }
         }
+
 
     }
 
-    let { id, distributor, subCategory, description, image, minQuantity, name, status } = product
+    let { id, distributor, subCategory, description, image, minQuantity, name, status, listPrice } = product
     // console.log(thumbnail_url)
     return (
         <li className="list-group-item">
@@ -128,9 +136,9 @@ const CartItem: React.FC<{
                 <div className="col-8">
                     {/* Title */}
                     <p className="font-size-sm font-weight-bold mb-6">
-                        <Link className="text-body" to={`product/${product.id}`}>{product?.name} ({product && product.listPrice.length > 0 ? product.listPrice[0].volume + ' items' : '0 item'})</Link> <br />
+                        <Link className="text-body" to={`product/${id}`}>{name} ({listPrice.length > 0 ? listPrice[0].volume + ' items' : '0 item'})</Link> <br />
                         <span className="text-muted">
-                            {getPricePerPro(product, num)}
+                            {`${currency(getPricePerPro(product, num))} / item`}
                             {/* {product && ((product.listPrice.length > 0) ?
                                 <>
                                     {
@@ -153,9 +161,12 @@ const CartItem: React.FC<{
                     {/*Footer */}
                     <div className="d-flex align-items-center">
                         {/* Select */}
-                        <input autoComplete="false" onChange={_changeNumber} type="number" className="cart-input-num" value={num} />
+                        <input autoComplete="false" onChange={_changeNumber} type="number" className="cart-input-num" value={num} min={minQuantity} />
                         {/* Remove */}
-                        <a onClick={() => dispatch(cartRemove(id))} className="font-size-xs text-gray-400 ml-auto" href="">
+                        <a onClick={(ev) => {
+                            ev.preventDefault()
+                            dispatch(cartRemove(id))
+                        }} className="font-size-xs text-gray-400 ml-auto" href="">
                             <i className="fe fe-x" /> Remove
                         </a>
                     </div>

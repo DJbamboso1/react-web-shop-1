@@ -5,7 +5,7 @@ type Objected = {
 export const convertQueryURLToObject = <T extends Objected>(): Partial<T> => {
     try {
         var search = window.location.search.substring(1);
-        console.log('search: ' + search)
+        // console.log('search: ' + search)
         return JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}')
     } catch(error: any) {
         return {} as T

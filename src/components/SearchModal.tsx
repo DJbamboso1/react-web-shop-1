@@ -28,7 +28,7 @@ export const SearchModal: React.FC = () => {
 
     let [searchVal, setSearchVal] = useState({})
 
-    console.log('objectUrl: ', objectURL)
+    // console.log('objectUrl: ', objectURL)
 
     useEffect(() => {
         if (openSearch) {
@@ -52,8 +52,6 @@ export const SearchModal: React.FC = () => {
         setSearchVal(form)
     }
 
-    console.log('SEARCH: ', searchVal)
-    console.log('LIST SEARCH PRODUCT: ', data)
 
     return ReactDOM.createPortal(
         <div onClick={(ev) => { dispatch(toggleSearch(false)) }} className={`modal fixed-right fade ${openSearch ? 'show' : ''}`} style={{ display: openSearch ? 'block' : 'none' }} id="modalSearch" tabIndex={-1} role="dialog" aria-hidden="true" >
@@ -68,8 +66,9 @@ export const SearchModal: React.FC = () => {
                         <strong className="mx-auto">Search Products</strong>
                     </div>
                     {/* Body: Form */}
-                    <div className="modal-body">
-                        <form onChange={handleSubmit(submit)}>
+                    <form onChange={handleSubmit(submit)}>
+                        <div className="modal-body">
+
                             {/* <div className="form-group">
                                 <label className="sr-only" htmlFor="modalSearchCategories">Categories:</label>
                                 <select className="custom-select" id="modalSearchCategories">
@@ -87,50 +86,51 @@ export const SearchModal: React.FC = () => {
                                     </button>
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                    {/* Body: Results (add `.d-none` to disable it) */}
-                    <div className="modal-body border-top font-size-sm" >
-                        {/* Heading */}
-                        <p>Search Results:</p>
-                        {/* Items */}
 
-                        {
-                            data && data.data.length > 0 ? data.data.map(pro => {
-                                return (
-                                    <div className="row align-items-center position-relative mb-5">
-                                        <div className="col-4 col-md-3">
-                                            {/* Image */}
-                                            <Link to={`/product/${pro.id}`}>
-                                                <img className="img-fluid" src={pro.image} alt="..." onClick={(ev) => { dispatch(toggleSearch(false)) }} />
-                                            </Link>
+                        </div>
+                        {/* Body: Results (add `.d-none` to disable it) */}
+                        <div className="modal-body border-top font-size-sm" >
+                            {/* Heading */}
+                            <p>Search Results:</p>
+                            {/* Items */}
 
+                            {
+                                data && data.data.length > 0 ? data.data.map(pro => {
+                                    return (
+                                        <div className="row align-items-center position-relative mb-5">
+                                            <div className="col-4 col-md-3">
+                                                {/* Image */}
+                                                <Link to={`/product/${pro.id}`}>
+                                                    <img className="img-fluid" src={pro.image} alt="..." onClick={(ev) => { dispatch(toggleSearch(false)) }} />
+                                                </Link>
+
+                                            </div>
+                                            <div className="col position-static">
+                                                {/* Text */}
+                                                <p className="mb-0 font-weight-bold">
+                                                    <Link className="stretched-link text-body" to={`/product/${pro.id}`} onClick={(ev) => { dispatch(toggleSearch(false)) }}>{pro.name} ({pro.listPrice[0].volume})</Link> <br />
+                                                    <span className="text-muted">{pro.listPrice[0].value}</span>
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div className="col position-static">
-                                            {/* Text */}
-                                            <p className="mb-0 font-weight-bold">
-                                                <Link className="stretched-link text-body" to={`/product/${pro.id}`} onClick={(ev) => { dispatch(toggleSearch(false)) }}>{pro.name} ({pro.listPrice[0].volume})</Link> <br />
-                                                <span className="text-muted">{pro.listPrice[0].value}</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                )
-                            }) : <div className=" modal-body">
-                                {/* Text */}
-                                <p className="mb-3 font-size-sm text-center">
-                                    Nothing matches your search
-                                </p>
-                                <p className="mb-0 font-size-sm text-center">
-                                    😞
-                                </p>
-                            </div>
-                        }
+                                    )
+                                }) : <div className=" modal-body">
+                                    {/* Text */}
+                                    <p className="mb-3 font-size-sm text-center">
+                                        Nothing matches your search
+                                    </p>
+                                    <p className="mb-0 font-size-sm text-center">
+                                        😞
+                                    </p>
+                                </div>
+                            }
 
-                        {/* Button */}
-                        <Link className="btn btn-link px-0 text-reset" to="/product" onClick={(ev) => { dispatch(toggleSearch(false)) }}>
-                            View All <i className="fe fe-arrow-right ml-2" />
-                        </Link>
-                    </div>
+                            {/* Button */}
+                            <button className="btn btn-link px-0 text-reset" type="submit"  onClick={(ev) => {  dispatch(toggleSearch(false))  }}>
+                                View All <i className="fe fe-arrow-right ml-2" />
+                            </button>
+                        </div>
+                    </form>
                     {/* Body: Empty (remove `.d-none` to disable it) */}
 
                 </div>

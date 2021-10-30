@@ -1,10 +1,11 @@
 import { Product, Product01, Categories } from "../../@types";
-import { CART_ADD_CART, CART_CLEAR_CART, CART_DECREMENT, CART_INCREMENT, CART_REMOVE, CART_TOGGLE_CART } from "../types";
+import { CART_ADD_CART, CART_CHECKOUT, CART_CLEAR_CART, CART_DECREMENT, CART_INCREMENT, CART_REMOVE, CART_TOGGLE_CART } from "../types";
 
 type CartStore = {
     openCart: boolean,
     list: {
         product: Product01,
+        id: string,
         num: number,
     }[],
     tax: number,
@@ -49,7 +50,8 @@ const cartReducer = (state = initState, action: PayloadAction): CartStore => {
                 }
             }
             state.list.push({
-                num: 1,
+                num: action.payload.minQuantity,
+                id: action.payload.id,
                 product: action.payload
             })
             return {
@@ -59,9 +61,9 @@ const cartReducer = (state = initState, action: PayloadAction): CartStore => {
 
         case CART_INCREMENT:
             {
-                let p = state.list.find(e => e.product.id === action.payload)
+                let p = state.list.find(e => e.product.id === action.payload.id)
                 if (p) {
-                    p.num++
+                    p.num += action.payload?.num || 1
                 }
                 return {
                     ...state,
@@ -70,16 +72,15 @@ const cartReducer = (state = initState, action: PayloadAction): CartStore => {
             }
         case CART_DECREMENT:
             {
-                let p = state.list.find(e => e.product.id === action.payload)
+                let p = state.list.find(e => e.product.id === action.payload.id)
                 if (p) {
-                    p.num--
-
-                    if (p.num === 0) {
-                        let i = state.list.findIndex(e => e.product.id === action.payload)
-                        if (i !== -1) {
-                            state.list.splice(i, 1)
-                        }
-                    }
+                    p.num -= action.payload?.num || 1
+                    // if (p.num === 0) {
+                    //     let i = state.list.findIndex(e => e.product.id === action.payload.id)
+                    //     if (i !== -1) {
+                    //         state.list.splice(i, 1)
+                    //     }
+                    // }
                 }
                 return {
                     ...state,
@@ -102,6 +103,14 @@ const cartReducer = (state = initState, action: PayloadAction): CartStore => {
             return {
                 ...state,
                 list: []
+            }
+
+        case CART_CHECKOUT:
+            {
+                return {
+                    ...state,
+                    list: []
+                }
             }
     }
     return state

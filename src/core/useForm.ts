@@ -61,7 +61,7 @@ export function useForm<T extends Object>(initvalue = {}): UseFormReturn<T> {
                 form[name] = ev.currentTarget.checked ? value : ''
             } else {
                 form[name] = ev.currentTarget.checked
-                console.log(value)
+                // console.log(value)
             }
 
         } else {
@@ -123,7 +123,7 @@ export function useForm<T extends Object>(initvalue = {}): UseFormReturn<T> {
         if (!form[name]) {
             form[name] = ''
         }
-        console.log(form)
+        // console.log(form)
         if (rule) {
 
             initRule[name] = rule

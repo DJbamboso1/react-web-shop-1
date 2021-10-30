@@ -29,7 +29,7 @@ class Http {
     
     post<T>(url: string, form?: any): Promise<T>{
         let requestInit = this._setupHeader({ body: form, method: 'POST' })
-        return fetch(url, requestInit).then(res => res.json())
+        return fetch(url, requestInit).then(res => (res.status === 200) ? res.json() : null)
     }
 
     put(){}
