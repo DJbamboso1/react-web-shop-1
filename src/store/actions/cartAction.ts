@@ -1,5 +1,5 @@
 import { Product01, Categories, Checkin } from "../../@types";
-import { CART_ADD_CART, CART_CHECKOUT, CART_CHECK_LOGIN, CART_DECREMENT, CART_INCREMENT, CART_REMOVE, CART_TOGGLE_CART } from "../types";
+import { CART_ADD_CART, CART_CHECKOUT, CART_CHECK_LOGIN, CART_CLEAR_CART, CART_DECREMENT, CART_INCREMENT, CART_REMOVE, CART_TOGGLE_CART } from "../types";
 
  export function toggleCart(flag?: boolean) {
      return {
@@ -40,5 +40,11 @@ export function cartCheckout( param: any) {
     return {
         type: CART_CHECKOUT,
         payload: param
+    }
+}
+
+export function cartRemoveAll() {
+    return {
+        type: CART_CLEAR_CART,
     }
 }

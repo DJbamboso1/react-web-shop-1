@@ -1,21 +1,27 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { StateStore } from 'store'
 import { useForm } from 'core'
 import ErrorInput from 'components/ErrorInput'
+import { User } from '@types'
+import authService from 'services/authService'
+import { data } from 'flickity'
 
-type Form = {
-    displayName: string,
-    email: string,
+type Form = User['data']
+const AccountInfo: React.FC = () => {
+
     
-
-}
-
-const AccountInfo:React.FC = () => {
+    let { register, setForm, handleSubmit, error, form } = useForm<Form>()
     let { user } = useSelector((store: StateStore) => store.auth)
-
-    
-    let { register, form, handleSubmit, error } = useForm<Form>(user?.data)
+    useEffect(() => {
+        (async () => {
+            if (user?.data) {
+                let inf = await authService.getInfo(user.data.id)
+                // setInfo(inf)
+                setForm(inf.data)
+            }
+        })()
+    }, [])
 
 
     const submit = (form: Form) => {
@@ -30,17 +36,17 @@ const AccountInfo:React.FC = () => {
                         <label htmlFor="accountFirstName">
                             Full Name *
                         </label>
-                        <input className="form-control form-control-sm" id="accountFirstName" type="text" placeholder="First Name *" {...register('displayName', {required: true} )}  />
+                        <input className="form-control form-control-sm" id="accountFirstName" type="text" placeholder="First Name *" {...register('displayName')} />
                     </div>
                 </div>
-                <ErrorInput error={error.displayName}/>
+                <ErrorInput error={error.displayName} />
                 <div className="col-12">
                     {/* Email */}
                     <div className="form-group">
                         <label htmlFor="accountEmail">
                             Email Address *
                         </label>
-                        <input className="form-control form-control-sm" id="accountEmail" type="email" placeholder="Email Address *"   {...register('email', {required: true, pattern: 'email'} )}/>
+                        <input className="form-control form-control-sm" id="accountEmail" type="email" placeholder="Email Address *"   {...register('email', { pattern: 'email' })} />
                     </div>
                 </div>
                 <div className="col-12 col-md-6">
@@ -49,7 +55,7 @@ const AccountInfo:React.FC = () => {
                         <label htmlFor="accountPassword">
                             Current Password *
                         </label>
-                        <input className="form-control form-control-sm" id="accountPassword" type="password" placeholder="Current Password *"  />
+                        <input className="form-control form-control-sm" id="accountPassword" type="password" placeholder="Current Password *" />
                     </div>
                 </div>
                 <div className="col-12 col-md-6">
@@ -58,7 +64,7 @@ const AccountInfo:React.FC = () => {
                         <label htmlFor="AccountNewPassword">
                             New Password *
                         </label>
-                        <input className="form-control form-control-sm" id="AccountNewPassword" type="password" placeholder="New Password *"  />
+                        <input className="form-control form-control-sm" id="AccountNewPassword" type="password" placeholder="New Password *" />
                     </div>
                 </div>
                 <div className="col-12 col-lg-6">

@@ -2,6 +2,7 @@ export const FETCH_LOGIN = 'FETCH_LOGIN'
 export const LOGIN = 'LOGIN'
 export const AUTH_LOGOUT = 'AUTH_LOGOUT'
 export const LOGIN_ERROR = 'LOGIN_ERROR' 
+export const AUTH_GET_INFO = 'AUTH_GET_INFO'
 
 export const CART_TOGGLE_CART = 'cart/toggleCart' 
 export const CART_ADD_CART = 'cart/addCart' 

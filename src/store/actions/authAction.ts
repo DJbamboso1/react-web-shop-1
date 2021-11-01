@@ -1,4 +1,4 @@
-import { AUTH_LOGOUT, FETCH_LOGIN, LOGIN } from "store/types";
+import { AUTH_GET_INFO, AUTH_LOGOUT, FETCH_LOGIN, LOGIN } from "store/types";
 
 type User = {
     username: string,
@@ -10,6 +10,13 @@ export const authFetchAction = (user: User) => {
     return {
         type: FETCH_LOGIN,
         payload: user
+    }
+}
+
+export const authGetInfo = (id: string) => {
+    return {
+        type: AUTH_GET_INFO,
+        payload: id
     }
 }
 

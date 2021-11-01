@@ -1,7 +1,6 @@
+import { User } from "@types"
 import { http } from "core"
 let API = process.env.REACT_APP_API_KEY_SHOP || ''
-
-
 
 const authService = {
     async login(user: { username: string, password: string }) {
@@ -19,7 +18,12 @@ const authService = {
         //     // } 
         // })
         return http.post(url, user)
+    },
+
+    async getInfo(id: string) {
+        let url = API + '/user/' + id
+        return http.get<User>(url)
     }
 }
 
-export default authService 
+export default authService

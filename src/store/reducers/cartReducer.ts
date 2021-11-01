@@ -100,18 +100,13 @@ const cartReducer = (state = initState, action: PayloadAction): CartStore => {
                 }
             }
         case CART_CLEAR_CART:
-            return {
-                ...state,
-                list: []
-            }
-
-        case CART_CHECKOUT:
             {
                 return {
                     ...state,
                     list: []
                 }
             }
+
     }
     return state
 }

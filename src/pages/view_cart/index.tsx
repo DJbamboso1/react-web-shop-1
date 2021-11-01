@@ -10,7 +10,7 @@ const ViewCart: React.FC = () => {
 
     let { list } = useCart()
     let total = useTotal()
-    let taxPrice = useSelector(getTaxPrice)
+    // let taxPrice = useSelector(getTaxPrice)
     const subTotal = useSelector(getSubtotal)
 
     if (list.length === 0) {
@@ -70,9 +70,9 @@ const ViewCart: React.FC = () => {
                                     <li className="list-group-item d-flex">
                                         <span>Subtotal</span> <span className="ml-auto font-size-sm">{currency(subTotal)}</span>
                                     </li>
-                                    <li className="list-group-item d-flex">
+                                    {/* <li className="list-group-item d-flex">
                                         <span>Tax</span> <span className="ml-auto font-size-sm">{currency(taxPrice)}</span>
-                                    </li>
+                                    </li> */}
                                     <li className="list-group-item d-flex font-size-lg font-weight-bold">
                                         <span>Total</span> <span className="ml-auto font-size-sm">{currency(total)}</span>
                                     </li>

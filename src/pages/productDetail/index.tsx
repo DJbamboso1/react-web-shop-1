@@ -132,7 +132,7 @@ const ProductDetail: React.FC = () => {
                                                 return (
                                                     <tr>
                                                         <th>{`>= ${price.volume} items`}</th>
-                                                        <th> {price.value}</th>
+                                                        <th> {currency(price.value)}</th>
                                                     </tr>
                                                 )
                                             })}

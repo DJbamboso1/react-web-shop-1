@@ -8,6 +8,7 @@ import vn from './locale/vn/index.json'
 import {CartModal} from './components/CartModal'
 import saga from 'store/saga';
 import { SearchModal } from 'components';
+import { LinearProgress } from '@mui/material'
 
 let $header = document.querySelector('#header')
 
@@ -26,7 +27,7 @@ ReactDOM.render(
   <React.StrictMode>
     <AppProvider reducers={reducers} translate={{ en, vn }} language="en" saga={saga}>
         
-      <Suspense fallback={<div>Loading....</div>}>
+      <Suspense fallback={<LinearProgress/>}>
         {routerConfig(routers)}
         <CartModal/>
         <SearchModal/>

@@ -136,7 +136,7 @@ const CartItem: React.FC<{
                 <div className="col-8">
                     {/* Title */}
                     <p className="font-size-sm font-weight-bold mb-6">
-                        <Link className="text-body" to={`product/${id}`}>{name} ({listPrice.length > 0 ? listPrice[0].volume + ' items' : '0 item'})</Link> <br />
+                        <Link className="text-body" to={`product/${id}`}>{name} </Link> <br />  {/* window.location.href = result.data.paymentResponse.payUrl */}              
                         <span className="text-muted">
                             {`${currency(getPricePerPro(product, num))} / item`}
                             {/* {product && ((product.listPrice.length > 0) ?

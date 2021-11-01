@@ -36,19 +36,11 @@ export function* loginGetCart() {
     // neu ko -> goi api get cart cua user do va update cart local
 }
 
-export function* checkout(action: any): any {
-    try {
-        let obj = yield call(paymentService.checkout, action)
-        console.log('Check CHECKOUT')
-    } catch (e) {
 
-    }
-}
 
 export function* cartRootSaga() {
     yield takeLatest(LOGIN, loginGetCart)
     yield takeLatest(AUTH_LOGOUT, clearCart)
     yield takeEvery(CART_CHECK_LOGIN, AddCartCheckLogin)
     yield takeLatest([CART_ADD_CART, CART_REMOVE, CART_INCREMENT, CART_DECREMENT, CART_CLEAR_CART], changeCart)
-    yield  takeLatest(CART_CHECKOUT, checkout)
 }

@@ -17,6 +17,7 @@ import { title } from 'process'
 import cateService from 'services/cateService'
 import { categoryConfig } from './categoryConfig'
 import { useRouteMatch } from 'react-router'
+import { useCart } from 'store/selector'
 
 export type FilterQuery = {
     // page: string,
@@ -30,6 +31,8 @@ export type FilterQuery = {
 
 const ProductPage: React.FC = () => {
 
+    const { list } = useCart()
+    console.log('LIST: ', list )
 
     let [data, setData] = useState<PaginateData<Product01>>()
 

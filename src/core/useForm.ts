@@ -39,17 +39,19 @@ type UseFormReturn<T> = {
     handleSubmit: Function,
     form: T,
     error: ErrorState<T>,
-    // setForm: React.Dispatch<T>
+    setForm: React.Dispatch<T>
 }
 
 
 
 export function useForm<T extends Object>(initvalue = {}): UseFormReturn<T> {
-
+    console.log(initvalue)
     let [form, setForm] = useState<any>(initvalue || {})
     let [error, setError] = useState<ErrorState<T>>({})
     let [initRule] = useState<RuleState<T>>({})
     let [initMessage] = useState<MessageState<T>>({})
+
+    console.log(form)
 
     function inputChange(ev: ChangeEvent<HTMLInputElement>) {
         let name = ev.currentTarget.name
@@ -153,7 +155,7 @@ export function useForm<T extends Object>(initvalue = {}): UseFormReturn<T> {
     }
 
     return {
-        // setForm,
+        setForm,
         register,
         handleSubmit,
         form,

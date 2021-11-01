@@ -1,6 +1,5 @@
 import React, { lazy } from 'react'
 import Account from '../pages/account'
-
 import Home from '../pages/home'
 import MainLayout from 'pages/_layout/MainLayout'
 import Page404 from '../pages/404'
@@ -8,6 +7,8 @@ import { RouterParam } from 'core'
 import AccountLayout from 'pages/account/_layout'
 import AuthLayout from 'pages/_layout/AuthLayout'
 import ProductPage from 'pages/product'
+
+
 
 export const routers: RouterParam[] = [
     {
@@ -54,6 +55,10 @@ export const routers: RouterParam[] = [
                         path: '/wishlist',
                         component: lazy(() => import('../pages/account/wishList'))
                     },
+                    {
+                        path: '/session',
+                        component: lazy(() => import('../pages/account/accountSession'))
+                    }
                 ]
             },
             {
@@ -67,10 +72,20 @@ export const routers: RouterParam[] = [
                 component: lazy(() => import('../pages/view_cart')),
                 exact: true
             },
-            {
+            {           
                 path: '/checkout',
-                component: lazy(() => import('../pages/checkout')),
+                component: lazy(() => import('../pages/checkout')), 
                 exact: true
+            },
+            {
+                path: '/order-complete',
+                component: lazy(() => import('../pages/checkoutComplete')),
+                auth: true,
+            },
+            {
+                path: '/order-complete/:slug',
+                component: lazy(() => import('../pages/checkoutComplete')),
+                auth: true,
             },
             {
                 path: '/product/:slug',

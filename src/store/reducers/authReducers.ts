@@ -1,4 +1,5 @@
-import { AUTH_LOGOUT, FETCH_LOGIN, LOGIN, LOGIN_ERROR } from "store/types"
+import { User } from "@types";
+import { AUTH_GET_INFO, AUTH_LOGOUT, FETCH_LOGIN, LOGIN, LOGIN_ERROR } from "store/types"
 
 
 export type State = {
@@ -22,15 +23,18 @@ export type State = {
         }
     },
     login: boolean,
-    errorMsg?: ''
+    errorMsg?: '',
+    
 }
 
 type PayloadAction = {
     type: string,
-    payload: State['user'] 
+    payload: State['user']
 }
 
 let user: State['user'];
+
+
 
 try {
     user = JSON.parse(localStorage.getItem('login') || '')
@@ -41,7 +45,7 @@ try {
 const initState: State = {
     user,
     login: !!user,
-    errorMsg: ""
+    errorMsg: "",
 }
 
 
@@ -68,6 +72,7 @@ const authReducer = (state = initState, action: PayloadAction): State => {
                 errorMsg: action.payload?.message
             } as State
         }
+        
     }
     return state
 }

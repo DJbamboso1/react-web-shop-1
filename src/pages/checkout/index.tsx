@@ -1,4 +1,4 @@
-import { Checkin, Checkout, Payment } from "@types"
+import { Checkin, Checkout, Payment, User } from "@types"
 import { ProductItem } from "components"
 import { useForm } from "core"
 import React, { useEffect, useState } from "react"
@@ -11,18 +11,16 @@ import { paymentService } from '../../services/paymentService'
 import { StateStore } from "store"
 import { stringify } from "querystring"
 import { formGroupClasses } from "@mui/material"
-import { cartCheckout } from "store/actions/cartAction"
+import { cartCheckout, cartRemove, cartRemoveAll } from "store/actions/cartAction"
+import authService from "services/authService"
 
-type Form = {
-    email: string,
-    address: string,
-    phoneNumber: string,
-    displayName: string
-}
+type Form = User['data']
 
-let url = process.env.LINK_URL || ''
+let url = process.env.REACT_APP_LINK_URL || ''
 
 const CheckoutComponent: React.FC = () => {
+
+    
 
     let { user } = useSelector((store: StateStore) => store.auth)
     const { list } = useCart()
@@ -32,7 +30,7 @@ const CheckoutComponent: React.FC = () => {
     const cartNumber = useCartNumber()
     // const [shippingPrice, setShippingPrice] = useState(35000)
 
-    const { error, form, handleSubmit, register } = useForm<Form>(user?.data)
+    const { error, form, handleSubmit, register, setForm } = useForm<Form>(user?.data)
 
     const [paymentMethod, setPaymentMethod] = useState<Payment>()
 
@@ -41,23 +39,26 @@ const CheckoutComponent: React.FC = () => {
     const [result, setResult] = useState<Checkout>()
 
     const [actor, setActor] = useState('')
+
+    
     useEffect(() => {
         (async () => {
-            let payment = await paymentService.getAllPayments()
-            // console.log('PAYMENT: ', payment.data)
-            setPaymentMethod(payment)
-            setPayment(payment.data[0].id)
+            if (user && user.data) {
+                let payment = await paymentService.getAllPayments()
+                // console.log('PAYMENT: ', payment.data)
+                setPaymentMethod(payment)
+                setPayment(payment.data[0].id)
+                let inf = await authService.getInfo(user.data.id)
+                // setInfo(inf)
+                setForm(inf.data)
+                setActor(user.data.actorId)
+            }
         })()
-        if (user && user.data) {
-            setActor(user.data.actorId)
-        }
     }, [])
 
-    // console.log('PAYMENT METHOD: ', paymentMethod)
+    console.log('LIST: ', list)
 
-    if (list.length === 0) {
-        return <Redirect to="/product" />
-    }
+    
 
     const formSubmit = (form: Form) => {
         let cart = []
@@ -70,18 +71,25 @@ const CheckoutComponent: React.FC = () => {
             paymentMethodId: payment,
             retailerId: actor,
             shippingAddress: form.address,
-            redirectUrl: url + '/product'
+            redirectUrl: `${url + '/order-complete'}`
         };
-        
+
         (async () => {
-            let obj = await paymentService.checkout(checkoutObj)    
+            let obj = await paymentService.checkout(checkoutObj)
             setResult(obj)
         })()
     }
-    
-    if (result && result.data.paymentResponse !== null) {
-        window.location.href = result.data.paymentResponse.payUrl
+    if (result) {
+        // let id = result.data.paymentResponse.orderId
+        if (result.data.paymentResponse !== null) {
+            window.location.href = result.data.paymentResponse.payUrl
+        } else {
+            return <Redirect to={`/order-complete/${result.data.sessionId}`} />
+        }
     }
+    // } else {
+    //     return <Redirect to='/product' />
+    // }
 
     const changePaymentMethod = (ev: React.ChangeEvent<HTMLInputElement>) => {
         let value = ev.currentTarget.value
@@ -114,9 +122,9 @@ const CheckoutComponent: React.FC = () => {
                             <div className="row mb-9">
                                 {/* <TextField className="col-md-6" {...register('firstName', { required: true })} error={error.firstName} required label="First Name" placeholder="First Name" />
                                 <TextField className="col-md-6" {...register('lastName', { required: true })} error={error.lastName} required label="Last Name" placeholder="Last Name" /> */}
-                                <TextField  {...register('displayName', { required: true })} error={error.displayName} required label="Full Name" placeholder="Last Name" />
-                                <TextField {...register('email', { required: true })} error={error.email} required label="Email" placeholder="Email" />
-                                <TextField {...register('phoneNumber', { required: true })} error={error.phoneNumber} required label="Phone" placeholder="Phone" />
+                                <TextField {...register('displayName', { required: true })} error={error.displayName} required label="Full Name" placeholder="Last Name" disable />
+                                <TextField {...register('email', { required: true })} error={error.email} required label="Email" placeholder="Email" disable />
+                                <TextField {...register('phoneNumber', { required: true })} error={error.phoneNumber} required label="Phone" placeholder="Phone" disable />
                                 <TextField {...register('address', { required: true })} error={error.address} required label="Address" placeholder="Address" />
                             </div>
                             <h6 className="mb-7">Phương thức thanh toán</h6>

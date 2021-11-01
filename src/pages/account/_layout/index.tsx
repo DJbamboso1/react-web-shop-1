@@ -31,8 +31,8 @@ const AccountLayout: React.FC = ({ children }) => {
                                     <NavLink className="list-group-item list-group-item-action dropright-toggle " to="/account/info">
                                         Personal Info
                                     </NavLink>
-                                    <NavLink className="list-group-item list-group-item-action dropright-toggle " to="/account/orders"> {/*active*/}
-                                        Orders
+                                    <NavLink className="list-group-item list-group-item-action dropright-toggle " to="/account/session"> {/*active*/}
+                                        Sessions
                                     </NavLink>
                                     {/* <NavLink className="list-group-item list-group-item-action dropright-toggle " to="/account/wishlist">
                                         Wishlist
