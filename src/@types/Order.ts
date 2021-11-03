@@ -41,7 +41,19 @@ export interface OrderDetail {
         orderId: string,
         orderPrice: number,
         quantity: number
-      },
-     
-    
+      }[]
   }
+
+  export interface Order1 {
+    succeeded: boolean,
+    message: String,
+    errors: null,
+    data:
+    {
+        id: string,
+        sessionId: string,
+        distributorId: string,
+        orderCost: number,
+        status: number
+    }
+}

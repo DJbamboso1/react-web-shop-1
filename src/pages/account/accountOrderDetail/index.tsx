@@ -1,156 +1,158 @@
-import React from 'react'
+import { Order1, OrderDetail } from '@types'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router'
+import { Link } from 'react-router-dom'
+import { orderService } from 'services/orderService'
+import { getSubtotal, useCartNumber, useTotal } from 'store/selector'
+import { currency } from 'utils'
+
+type FilterQuery = {
+    OrderId?: string,
+    OrderPrice?: string,
+    Quantity?: string,
+    PageNumber?: string,
+    PageSize?: string
+}
 
 const AccountOrderDetail: React.FC = () => {
+    let { slug } = useParams<{ slug: string }>()
+    let [orderDetail, setOrderDetail] = useState<OrderDetail>()
+    let [order, setOrder] = useState<Order1>()
+
+    let Subtotal = useTotal()
+    useEffect(() => {
+        (async () => {
+            let obj: FilterQuery = {
+                OrderId: slug
+            }
+            let ordDetail = await orderService.getOrderDetail(obj)
+            setOrderDetail(ordDetail)
+            let ord = await orderService.getOrderById(slug)
+            setOrder(ord)
+        })()
+    }, [])
     return (
         <div>
             <div className="card card-lg mb-5 border">
                 <div className="card-body pb-0">
                     {/* Info */}
-                    <div className="card card-sm">
-                        <div className="card-body bg-light">
-                            <div className="row">
-                                <div className="col-6 col-lg-3">
-                                    {/* Heading */}
-                                    <h6 className="heading-xxxs text-muted">Order No:</h6>
-                                    {/* Text */}
-                                    <p className="mb-lg-0 font-size-sm font-weight-bold">
-                                        673290789
-                                    </p>
-                                </div>
-                                <div className="col-6 col-lg-3">
-                                    {/* Heading */}
-                                    <h6 className="heading-xxxs text-muted">Shipped date:</h6>
-                                    {/* Text */}
-                                    <p className="mb-lg-0 font-size-sm font-weight-bold">
-                                        <time dateTime="2019-10-01">
-                                            01 Oct, 2019
-                                        </time>
-                                    </p>
-                                </div>
-                                <div className="col-6 col-lg-3">
-                                    {/* Heading */}
-                                    <h6 className="heading-xxxs text-muted">Status:</h6>
-                                    {/* Text */}
-                                    <p className="mb-0 font-size-sm font-weight-bold">
-                                        Awating Delivery
-                                    </p>
-                                </div>
-                                <div className="col-6 col-lg-3">
-                                    {/* Heading */}
-                                    <h6 className="heading-xxxs text-muted">Order Amount:</h6>
-                                    {/* Text */}
-                                    <p className="mb-0 font-size-sm font-weight-bold">
-                                        $259.00
-                                    </p>
+                    {
+                        order?.data &&
+                        <div className="card card-sm">
+                            <div className="card-body bg-light">
+                                <div className="row">
+                                    <div className="col-6 col-lg-3">
+                                        {/* Heading */}
+                                        <h6 className="heading-xxxs text-muted">Order No:</h6>
+                                        {/* Text */}
+                                        <p className="mb-lg-0 font-size-sm font-weight-bold">
+                                            {order.data.id}
+                                        </p>
+                                    </div>
+                                    <div className="col-6 col-lg-3">
+                                        {/* Heading */}
+                                        <h6 className="heading-xxxs text-muted">Distributor:</h6>
+                                        {/* Text */}
+                                        <p className="mb-lg-0 font-size-sm font-weight-bold">
+                                            <time dateTime="2019-09-25">
+                                                {order.data.distributorId}
+                                            </time>
+                                        </p>
+                                    </div>
+                                    <div className="col-6 col-lg-3">
+                                        {/* Heading */}
+                                        <h6 className="heading-xxxs text-muted">Status:</h6>
+                                        {/* Text */}
+                                        <p className="mb-0 font-size-sm font-weight-bold">
+                                            {order.data.status === -1 ? 'Đang thành tiền' : (order.data.status === 0 ? 'Hủy' : (order.data.status === 1 ? 'Đã thành tiền' : (order.data.status === 2 ? 'Chưa thành tiền' : '')))}
+                                        </p>
+                                    </div>
+                                    <div className="col-6 col-lg-3">
+                                        {/* Heading */}
+                                        <h6 className="heading-xxxs text-muted">Order Amount:</h6>
+                                        {/* Text */}
+                                        <p className="mb-0 font-size-sm font-weight-bold">
+                                            {currency(order.data.orderCost)}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    }
                 </div>
                 <div className="card-footer">
                     {/* Heading */}
-                    <h6 className="mb-7">Order Items (3)</h6>
+                    <h6 className="mb-7">Order Items ({orderDetail?.data.length})</h6>
                     {/* Divider */}
                     <hr className="my-5" />
                     {/* List group */}
                     <ul className="list-group list-group-lg list-group-flush-y list-group-flush-x">
-                        <li className="list-group-item">
-                            <div className="row align-items-center">
-                                <div className="col-4 col-md-3 col-xl-2">
-                                    {/* Image */}
-                                    <a href="product.html"><img src="/img/products/product-6.jpg" alt="..." className="img-fluid" /></a>
-                                </div>
-                                <div className="col">
-                                    {/* Title */}
-                                    <p className="mb-4 font-size-sm font-weight-bold">
-                                        <a className="text-body" href="product.html">Cotton floral print Dress x 1</a> <br />
-                                        <span className="text-muted">$40.00</span>
-                                    </p>
-                                    {/* Text */}
-                                    <div className="font-size-sm text-muted">
-                                        Size: M <br />
-                                        Color: Red
+                        {orderDetail?.data && orderDetail.data.map(ordDetail => {
+                            return (
+                                <li className="list-group-item">
+                                    <div className="row align-items-center">
+                                        <div className="col-4 col-md-3 col-xl-2">
+                                            {/* Image */}
+                                            <Link to={`/product/${ordDetail.product.id}`}>
+                                                <img src={ordDetail.product.image} alt="..." className="img-fluid" />
+                                            </Link>
+                                        </div>
+                                        <div className="col">
+                                            {/* Title */}
+                                            <p className="mb-4 font-size-sm font-weight-bold">
+                                                <Link className="text-body" to={`/product/${ordDetail.product.id}`}>{ordDetail.product.id}</Link> <br />
+                                                <span className="text-muted">{currency(ordDetail.orderPrice)}</span>
+                                            </p>
+                                            {/* Text */}
+                                            <div className="font-size-sm text-muted">
+                                                Quantity: {ordDetail.quantity}
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li className="list-group-item">
-                            <div className="row align-items-center">
-                                <div className="col-4 col-md-3 col-xl-2">
-                                    {/* Image */}
-                                    <a href="product.html"><img src="/img/products/product-10.jpg" alt="..." className="img-fluid" /></a>
-                                </div>
-                                <div className="col">
-                                    {/* Title */}
-                                    <p className="mb-4 font-size-sm font-weight-bold">
-                                        <a className="text-body" href="product.html">Suede cross body Bag x 1</a> <br />
-                                        <span className="text-muted">$49.00</span>
-                                    </p>
-                                    {/* Text */}
-                                    <div className="font-size-sm text-muted">
-                                        Color: Brown
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li className="list-group-item">
-                            <div className="row align-items-center">
-                                <div className="col-4 col-md-3 col-xl-2">
-                                    {/* Image */}
-                                    <a href="product.html"><img src="/img/products/product-48.jpg" alt="..." className="img-fluid" /></a>
-                                </div>
-                                <div className="col">
-                                    {/* Title */}
-                                    <p className="mb-4 font-size-sm font-weight-bold">
-                                        <a className="text-body" href="product.html">Sweatshirt with Pocket</a> <br />
-                                        <span className="text-muted">$39.00</span>
-                                    </p>
-                                    {/* Text */}
-                                    <div className="font-size-sm text-muted">
-                                        Size: L <br />
-                                        Color: Pink
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
+                                </li>
+                            )
+                        })
+                        }
                     </ul>
                 </div>
             </div>
             {/* Total */}
-            <div className="card card-lg mb-5 border">
-                <div className="card-body">
-                    {/* Heading */}
-                    <h6 className="mb-7">Order Total</h6>
-                    {/* List group */}
-                    <ul className="list-group list-group-sm list-group-flush-y list-group-flush-x">
-                        <li className="list-group-item d-flex">
+            {
+                order?.data && <div className="card card-lg mb-5 border">
+                    <div className="card-body">
+                        {/* Heading */}
+                        <h6 className="mb-7">Order Total</h6>
+                        {/* List group */}
+                        <ul className="list-group list-group-sm list-group-flush-y list-group-flush-x">
+                            {/* <li className="list-group-item d-flex">
                             <span>Subtotal</span>
                             <span className="ml-auto">$128.00</span>
-                        </li>
-                        <li className="list-group-item d-flex">
+                        </li> */}
+                            {/* <li className="list-group-item d-flex">
                             <span>Tax</span>
                             <span className="ml-auto">$0.00</span>
-                        </li>
-                        <li className="list-group-item d-flex">
+                        </li> */}
+                            {/* <li className="list-group-item d-flex">
                             <span>Shipping</span>
                             <span className="ml-auto">$8.00</span>
-                        </li>
-                        <li className="list-group-item d-flex font-size-lg font-weight-bold">
-                            <span>Total</span>
-                            <span className="ml-auto">$136.00</span>
-                        </li>
-                    </ul>
+                        </li> */}
+                            <li className="list-group-item d-flex font-size-lg font-weight-bold">
+                                <span>Total</span>
+                                <span className="ml-auto">{currency(order.data.orderCost)}</span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
+            }
             {/* Details */}
-            <div className="card card-lg border">
+            {/* <div className="card card-lg border">
                 <div className="card-body">
-                    {/* Heading */}
+                    
                     <h6 className="mb-7">Billing &amp; Shipping Details</h6>
-                    {/* Content */}
+                   
                     <div className="row">
                         <div className="col-12 col-md-4">
-                            {/* Heading */}
+                           
                             <p className="mb-4 font-weight-bold">
                                 Billing Address:
                             </p>
@@ -163,7 +165,7 @@ const AccountOrderDetail: React.FC = () => {
                             </p>
                         </div>
                         <div className="col-12 col-md-4">
-                            {/* Heading */}
+                           
                             <p className="mb-4 font-weight-bold">
                                 Shipping Address:
                             </p>
@@ -176,7 +178,7 @@ const AccountOrderDetail: React.FC = () => {
                             </p>
                         </div>
                         <div className="col-12 col-md-4">
-                            {/* Heading */}
+                            
                             <p className="mb-4 font-weight-bold">
                                 Shipping Method:
                             </p>
@@ -184,7 +186,7 @@ const AccountOrderDetail: React.FC = () => {
                                 Standart Shipping <br />
                                 (5 - 7 days)
                             </p>
-                            {/* Heading */}
+                            
                             <p className="mb-4 font-weight-bold">
                                 Payment Method:
                             </p>
@@ -194,7 +196,7 @@ const AccountOrderDetail: React.FC = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 }

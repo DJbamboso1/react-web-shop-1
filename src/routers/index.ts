@@ -47,8 +47,13 @@ export const routers: RouterParam[] = [
                         exact: true,
                     },
                     {
-                        path: '/orders',
+                        path: '/orders/:slug',
                         component: lazy(() => import('../pages/account/accountOrders')),
+                        exact: true,
+                    },
+                    {
+                        path: '/orderDetail/:slug',
+                        component: lazy(() => import('../pages/account/accountOrderDetail')),
                         exact: true,
                     },
                     {
@@ -58,7 +63,8 @@ export const routers: RouterParam[] = [
                     {
                         path: '/session',
                         component: lazy(() => import('../pages/account/accountSession'))
-                    }
+                    },
+
                 ]
             },
             {
@@ -81,11 +87,13 @@ export const routers: RouterParam[] = [
                 path: '/order-complete',
                 component: lazy(() => import('../pages/checkoutComplete')),
                 auth: true,
+                exact: true
             },
             {
                 path: '/order-complete/:slug',
                 component: lazy(() => import('../pages/checkoutComplete')),
                 auth: true,
+                exact: true
             },
             {
                 path: '/product/:slug',

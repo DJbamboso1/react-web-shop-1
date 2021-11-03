@@ -6,11 +6,16 @@ import { Session } from '../../../@types'
 import { sessionService } from '../../../services/sessionService'
 import { StateStore } from "../../../store"
 
-export type FilterQuery = {
+type FilterQuery = {
     // page: string,
     RetailerId?: string
     PaymentMethodId?: string
 }
+
+type StateProp = {
+    loading: boolean,
+    session: Session,
+  }
 
 const AccountSession: React.FC = () => {
     let { user } = useSelector((store: StateStore) => store.auth)
@@ -22,7 +27,6 @@ const AccountSession: React.FC = () => {
                     RetailerId: user.data.actorId
                 }
                 let sess = await sessionService.getAllSession(obj)
-                console.log('SESSION: ', sess)
                 setSession(sess)
             }
         })()
@@ -34,7 +38,7 @@ const AccountSession: React.FC = () => {
                 {
                     session && session.data.map(s => {
                         return (
-                            <Link className="card-body pb-0" to={`/account/orders/${s.id}`}>
+                            <Link style={{color: 'black'}} className="card-body pb-0" to={`/account/orders/${s.id}`}>
                                 {/* Info */}
                                 <div className="card card-sm">
                                     <div className="card-body bg-light">
@@ -62,7 +66,7 @@ const AccountSession: React.FC = () => {
                                                 <h6 className="heading-xxxs text-muted">Status:</h6>
                                                 {/* Text */}
                                                 <p className="mb-0 font-size-sm font-weight-bold">
-                                                    {s.status}
+                                                {s.status === -1 ? 'Đang thành tiền' : (s.status === 0 ? 'Hủy' : (s.status === 1 ? 'Đã thành tiền' : (s.status === 2 ? 'Chưa thành tiền' : ''))) }
                                                 </p>
                                             </div>
                                             <div className="col-6 col-lg-3">

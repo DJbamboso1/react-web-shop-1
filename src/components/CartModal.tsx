@@ -107,8 +107,9 @@ const CartItem: React.FC<{
 
     const _changeNumber = (ev: React.ChangeEvent<HTMLInputElement>) => {
         console.log(ev.currentTarget.value)
-        if (ev.currentTarget.value === '') {
-
+        if (ev.currentTarget.value === '' || parseInt(ev.currentTarget.value) <  product.minQuantity ) {
+            dispatch(cartDecrement({ id: product.id, num: num }))
+            ev.currentTarget.value = product.minQuantity.toString()
         } else {
             let offset = num - parseInt(ev.currentTarget.value || '0')
             console.log(offset)
@@ -161,7 +162,7 @@ const CartItem: React.FC<{
                     {/*Footer */}
                     <div className="d-flex align-items-center">
                         {/* Select */}
-                        <input autoComplete="false" onChange={_changeNumber} type="number" className="cart-input-num" value={num} min={minQuantity} />
+                        <input autoComplete="false" onBlur={_changeNumber} onClick={_changeNumber as any} type="number" className="cart-input-num" defaultValue={num} min={minQuantity} />
                         {/* Remove */}
                         <a onClick={(ev) => {
                             ev.preventDefault()

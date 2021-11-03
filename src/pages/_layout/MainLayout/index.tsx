@@ -41,6 +41,8 @@ const MainLayout: React.FC = ({ children }) => {
         }
     })
 
+    console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+
     return (
         <>
             <div id='header' style={{position: 'fixed' , width: '100%', zIndex: 1000 }}>

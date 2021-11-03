@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { StateStore } from 'store'
 import { useForm } from 'core'
@@ -8,12 +8,21 @@ import authService from 'services/authService'
 import { data } from 'flickity'
 
 type Form = User['data']
+
+const TYPE_MALE = 0
+const TYPE_FEMALE = 1
+
 const AccountInfo: React.FC = () => {
 
-    
+    let [countDay, setCountDay] = useState<number>(0)
+
+    let monthRef = useRef<any>()
+    let yearRef = useRef<any>()
+
     let { register, setForm, handleSubmit, error, form } = useForm<Form>()
     let { user } = useSelector((store: StateStore) => store.auth)
     useEffect(() => {
+        changeDate();
         (async () => {
             if (user?.data) {
                 let inf = await authService.getInfo(user.data.id)
@@ -23,10 +32,17 @@ const AccountInfo: React.FC = () => {
         })()
     }, [])
 
+    function changeDate() {
+        let month = monthRef.current.value
+        let year = yearRef.current.value
+        let date = new Date(year, month, 0)
+        setCountDay(date.getDate())
+    }
 
     const submit = (form: Form) => {
         console.log(form)
     }
+    let yearNow = new Date().getFullYear()
     return (
         <form onSubmit={handleSubmit(submit)}>
             <div className="row">
@@ -80,9 +96,9 @@ const AccountInfo: React.FC = () => {
                                     Date
                                 </label>
                                 <select className="custom-select custom-select-sm" id="accountDate">
-                                    <option>10</option>
-                                    <option>11</option>
-                                    <option selected>12</option>
+                                    {
+                                        [...Array(countDay)].map((e, i) => <option value={i + 1}>{i + 1}</option>)
+                                    }
                                 </select>
                             </div>
                             <div className="col">
@@ -90,10 +106,10 @@ const AccountInfo: React.FC = () => {
                                 <label className="sr-only" htmlFor="accountMonth">
                                     Month
                                 </label>
-                                <select className="custom-select custom-select-sm" id="accountMonth">
-                                    <option>January</option>
-                                    <option selected>February</option>
-                                    <option>March</option>
+                                <select className="custom-select custom-select-sm" id="accountMonth" ref={monthRef} onChange={changeDate}>
+                                    {
+                                        [...Array(12)].map((e, i) => <option value={i + 1}>{i + 1}</option>)
+                                    }
                                 </select>
                             </div>
                             <div className="col-auto">
@@ -101,10 +117,13 @@ const AccountInfo: React.FC = () => {
                                 <label className="sr-only" htmlFor="accountYear">
                                     Year
                                 </label>
-                                <select className="custom-select custom-select-sm" id="accountYear">
-                                    <option>1990</option>
+                                <select className="custom-select custom-select-sm" id="accountYear" ref={yearRef} onChange={changeDate}>
+                                    {
+                                        [...Array(50)].map((e, i) => <option value={yearNow - i}>{yearNow - i}</option>)
+                                    }
+                                    {/* <option>1990</option>
                                     <option selected>1991</option>
-                                    <option>1992</option>
+                                    <option>1992</option> */}
                                 </select>
                             </div>
                         </div>
@@ -115,10 +134,10 @@ const AccountInfo: React.FC = () => {
                     <div className="form-group mb-8">
                         <label>Gender</label>
                         <div className="btn-group-toggle" data-toggle="buttons">
-                            <label className="btn btn-sm btn-outline-border active">
-                                <input type="radio" name="gender" defaultChecked /> Male
+                            <label className={`btn btn-sm btn-outline-border ${form.sex === TYPE_MALE ? 'active': ''}`} onClick={e => setForm({...form, sex: TYPE_MALE})}>
+                                <input type="radio" name="gender"  /> Male
                             </label>
-                            <label className="btn btn-sm btn-outline-border">
+                            <label className={`btn btn-sm btn-outline-border ${form.sex === TYPE_FEMALE ? 'active': ''}`} onClick={e => setForm({...form, sex: TYPE_FEMALE})}>
                                 <input type="radio" name="gender" /> Female
                             </label>
                         </div>

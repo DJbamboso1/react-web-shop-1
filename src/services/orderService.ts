@@ -1,7 +1,7 @@
 import { convertObjectToQueryURL } from "../utils"
 import { http } from "../core"
 import { Session } from "../@types/Session"
-import { Order, OrderDetail } from "../@types/Order"
+import { Order, OrderDetail, Order1 } from "../@types/Order"
 
 let API = process.env.REACT_APP_API_KEY_SHOP || ''
 
@@ -14,5 +14,10 @@ export const orderService = {
     getOrderDetail(filter?: Object) {
         let url = API + '/order/product' + (filter ? ('?' + convertObjectToQueryURL(filter)) : '')
         return http.get<OrderDetail>(url)
+    },
+
+    getOrderById(id: string) {
+        let url = API + '/order/' + id
+        return http.get<Order1>(url)
     }
 }

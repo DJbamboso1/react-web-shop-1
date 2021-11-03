@@ -74,7 +74,10 @@ const cartReducer = (state = initState, action: PayloadAction): CartStore => {
             {
                 let p = state.list.find(e => e.product.id === action.payload.id)
                 if (p) {
-                    p.num -= action.payload?.num || 1
+                    p.num -= typeof action.payload?.num !== 'undefined' ?  action.payload?.num : 1
+                    if( p.num < p.product.minQuantity) {
+                        p.num = p.product.minQuantity
+                    }
                     // if (p.num === 0) {
                     //     let i = state.list.findIndex(e => e.product.id === action.payload.id)
                     //     if (i !== -1) {

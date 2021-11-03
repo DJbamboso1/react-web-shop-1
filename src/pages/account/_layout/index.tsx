@@ -6,6 +6,7 @@ import { authLogoutAction } from 'store/actions/authAction'
 const AccountLayout: React.FC = ({ children }) => {
     function navbarHandle(event: any) {
         event.preventDefault()
+        
 
     }
     const dispatch = useDispatch()

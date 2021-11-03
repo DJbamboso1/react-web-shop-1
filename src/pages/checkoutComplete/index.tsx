@@ -1,6 +1,10 @@
-import React from 'react'
+import { Session, Session1 } from '@types'
+import { history } from 'core'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
+import { orderService } from 'services/orderService'
+import { sessionService } from 'services/sessionService'
 import { cartRemoveAll } from 'store/actions/cartAction'
 import { convertQueryURLToObject } from '../../utils'
 
@@ -23,11 +27,29 @@ export type FilterQuery = {
 
 const CheckoutCompleteComponent: React.FC = () => {
     let dispatch = useDispatch()
-    
+
     let queryUrl = convertQueryURLToObject<FilterQuery>()
+    let [check, setCheck] = useState<boolean>()
+    let [session, setSession] = useState<Session1>()
     console.log(queryUrl)
-    let slug = useParams()
-    
+    let { slug } = useParams<{ slug: string }>()
+    useEffect(() => {
+        (async () => {
+            if (queryUrl.orderId) {
+                let obj = await sessionService.getSessionById(queryUrl.orderId)
+                if (obj) {
+                    setSession(obj)
+                }
+            } else if (slug) {
+                let obj = await sessionService.getSessionById(slug)
+                if (obj) {
+                    setSession(obj)
+                }
+            }
+        })()
+    }, [check])
+
+
 
     return (
         <section className="py-12">
@@ -35,19 +57,22 @@ const CheckoutCompleteComponent: React.FC = () => {
                 <div className="row justify-content-center">
                     <div className="col-12 col-md-10 col-lg-8 col-xl-6 text-center">
                         {/* Icon */}
-                        <div className="mb-7 font-size-h1">❤️</div>
+                        <div className="mb-7 font-size-h1">{session  ? '❤️' : '😞'}</div>
                         {/* Heading */}
-                        <h2 className="mb-5">Your Order is Completed!</h2>
+                        <h2 className="mb-5">Your Order { session ? 'is Completed!' : 'failed' }</h2>
                         {/* Text */}
-                        <p className="mb-7 text-gray-500">
-                            Your order <span className="text-body text-decoration-underline">{slug ? slug : queryUrl.orderId}</span> has been completed. Your order
-                            details
-                            are shown for your personal accont.
-                        </p>
+                        {
+                            session ? (<>
+                                <p className="mb-7 text-gray-500">
+                                    Your session <span className="text-body text-decoration-underline">{slug ? slug : queryUrl.orderId}</span> has been completed.
+                                </p>
+                                <Link className="btn btn-dark" to='#' onClick={() => {history.push(`/account/orders/${session?.data.id}`)}}>
+                                    View My Session
+                                </Link>
+                            </>) : ''
+                        }
                         {/* Button */}
-                        <a className="btn btn-dark" href="#!">
-                            View My Orders
-                        </a>
+
                     </div>
                 </div>
             </div>

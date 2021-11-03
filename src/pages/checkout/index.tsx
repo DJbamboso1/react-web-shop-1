@@ -1,6 +1,6 @@
 import { Checkin, Checkout, Payment, User } from "@types"
 import { ProductItem } from "components"
-import { useForm } from "core"
+import { history, useForm } from "core"
 import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Redirect } from "react-router-dom"
@@ -20,7 +20,7 @@ let url = process.env.REACT_APP_LINK_URL || ''
 
 const CheckoutComponent: React.FC = () => {
 
-    
+    let dispatch = useDispatch()
 
     let { user } = useSelector((store: StateStore) => store.auth)
     const { list } = useCart()
@@ -40,7 +40,7 @@ const CheckoutComponent: React.FC = () => {
 
     const [actor, setActor] = useState('')
 
-    
+
     useEffect(() => {
         (async () => {
             if (user && user.data) {
@@ -58,7 +58,7 @@ const CheckoutComponent: React.FC = () => {
 
     console.log('LIST: ', list)
 
-    
+
 
     const formSubmit = (form: Form) => {
         let cart = []
@@ -73,20 +73,20 @@ const CheckoutComponent: React.FC = () => {
             shippingAddress: form.address,
             redirectUrl: `${url + '/order-complete'}`
         };
-
         (async () => {
             let obj = await paymentService.checkout(checkoutObj)
-            setResult(obj)
+            if (obj) {
+                dispatch(cartRemoveAll())
+                localStorage.removeItem('cart')
+                if (obj.data.paymentResponse !== null) {
+                    window.location.href = obj.data.paymentResponse.payUrl
+                } else {
+                    history.push(`/order-complete/${obj.data.sessionId}`)
+                }
+            }
         })()
     }
-    if (result) {
-        // let id = result.data.paymentResponse.orderId
-        if (result.data.paymentResponse !== null) {
-            window.location.href = result.data.paymentResponse.payUrl
-        } else {
-            return <Redirect to={`/order-complete/${result.data.sessionId}`} />
-        }
-    }
+
     // } else {
     //     return <Redirect to='/product' />
     // }
@@ -95,6 +95,11 @@ const CheckoutComponent: React.FC = () => {
         let value = ev.currentTarget.value
         console.log(value)
         setPayment(value)
+    }
+
+
+    if (list.length === 0) {
+        return <Redirect to='/product'/>
     }
 
     return (
