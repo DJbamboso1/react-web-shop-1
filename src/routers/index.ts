@@ -14,14 +14,24 @@ export const routers: RouterParam[] = [
     {
         path: '/',
         component: lazy(() => import('../pages/authenicate/login')),
-        auth: false,
+        // auth: false,
         exact: true,
     },
     {
         path: '/register',
         component: lazy(() => import('../pages/authenicate/register')),
-        auth: false,
+        // auth: false,
         exact: true,
+    },
+    {
+        auth: 'Distributor',
+        path: '/home',
+        component: Home,
+        exact: true
+    },
+    {
+        path: '/404',
+        component: Page404
     },
     {
         component: MainLayout,
@@ -99,12 +109,7 @@ export const routers: RouterParam[] = [
             }
         ]
     },
-    {
-        auth: 'Distributor',
-        path: '/home',
-        component: Home,
-        exact: true
-    }
+    
 ]
 
 

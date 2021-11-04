@@ -51,27 +51,29 @@ const initState: State = {
 }
 
 
-const authReducer = (state = initState, action: any): State => {
-    
+const authReducer = (state = initState, action: PayloadAction): State => {
+    console.log('AAAAAAAAAAAAAAAAA: ' , action.payload?.data?.role.name)
     switch (action.type) {
         case LOGIN:
             return {
                 ...state,
                 user: action.payload,
-                login: true
-            } as State
-
+                login: true,
+                role: action.payload?.data?.role.name || ''
+            } 
         case AUTH_LOGOUT:
             return {
                 login: false,
                 user: undefined,
-                errorMsg: ""
+                errorMsg: "",
+                role: ''
             } as State
         case LOGIN_ERROR: {
             return {
                 ...state,
                 user: undefined,
-                errorMsg: action.payload?.message 
+                errorMsg: action.payload,
+                role: '' 
             } as State
         }
         

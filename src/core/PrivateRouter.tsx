@@ -16,10 +16,11 @@ const PrivateRouter: React.FC<PrivateRouterProp> = (props) => {
 
     if (login && role) {
         if( typeof auth === 'string' ) {
-            if ( role === auth) {
+            if (role === auth) {
                 return <Route {...props} />
             } else {
-                return <Redirect to="/" />
+                // return <Route path={props.path}><Redirect to="/" /></Route>
+                return <Redirect to='/404' />
             }
         }
         return <Route {...props}/>

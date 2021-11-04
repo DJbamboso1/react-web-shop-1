@@ -21,6 +21,15 @@ const Login: React.FC = () => {
 
     const dispatch = useDispatch()
 
+
+    const submit = (form: Form) => {
+        console.log(form)
+        dispatch(authFetchAction(form))
+
+    }
+    // let { login } = useSelector((store: StateStore) => store.auth)
+    console.log('Login: ', login)
+    console.log('role: ', role)
     if (login && role) {
         switch (role) {
             case 'Retailer': {
@@ -31,12 +40,6 @@ const Login: React.FC = () => {
             }
         }
     }
-    const submit = (form: Form) => {
-        console.log(form)
-        dispatch(authFetchAction(form))
-    }
-    // let { login } = useSelector((store: StateStore) => store.auth)
-
 
     return (
         <div className="card card-lg mb-10 mb-md-0" style={{ maxWidth: 700, margin: '0 auto' }}>
