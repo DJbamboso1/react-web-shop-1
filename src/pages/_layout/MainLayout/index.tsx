@@ -1,13 +1,13 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
+import { Redirect } from 'react-router-dom'
+import { StateStore } from 'store'
 import Footer from './components/Footer'
 import Header from './components/Header'
 import Navbar from './components/Navbar'
 
 const MainLayout: React.FC = ({ children }) => {
     function hoverEvent(event: any) {
-
-        // dropdown.current.classList.add('show','hovered')
-        // event.preventDefault()
         event.currentTarget.classList.add('hovered', 'show')
         document.querySelectorAll(".dropdown-toggle, dropdown-menu").forEach(e => {
             e.setAttribute("aria-expaned", 'true')
@@ -23,16 +23,12 @@ const MainLayout: React.FC = ({ children }) => {
             e.classList.remove('show')
         })
     }
-
-    
-    
     window.addEventListener('scroll', function () {
         let $header = document.querySelector('#header')
         let scrollTop = document.documentElement.scrollTop
         if ($header) {
             // console.log($header?.scrollHeight)
             let height = $header?.scrollHeight || 0
-            
             if (scrollTop > height) {
                 $header.classList.add('fixed')
             } else {
@@ -41,7 +37,10 @@ const MainLayout: React.FC = ({ children }) => {
         }
     })
 
-    console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+    // let { login , role } = useSelector((store: StateStore) => store.auth)
+    // if (login && role === 'Retailer') {
+    //     return <Redirect to='/product' />
+    // }
 
     return (
         <>

@@ -1,12 +1,27 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Route, Redirect } from 'react-router-dom'
+import {StateStore} from 'store'
 
-type PrivateRouterProp = any
+type PrivateRouterProp = {
+    auth?: string | boolean
+} & any
 
 const PrivateRouter: React.FC<PrivateRouterProp> = (props) => {
-    let {login} = useSelector((store: any) => store.auth) as any
-    if (login) {
+    let { login, role  } = useSelector((store: StateStore) => store.auth)
+    console.log('Role get from login: ', role)
+
+    let { auth } = props
+    console.log('AUTH: ', auth)
+
+    if (login && role) {
+        if( typeof auth === 'string' ) {
+            if ( role === auth) {
+                return <Route {...props} />
+            } else {
+                return <Redirect to="/" />
+            }
+        }
         return <Route {...props}/>
     }
     return (

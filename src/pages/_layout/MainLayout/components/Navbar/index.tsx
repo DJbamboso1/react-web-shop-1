@@ -58,7 +58,7 @@ const Navbar: React.FC<NavbarProp> = ({hoverEvent, mouseLeaveEvent}) => {
                     <ul className="navbar-nav mx-auto">
                         <li className="nav-item dropdown hovered" onMouseOver={hoverEvent} onMouseLeave={mouseLeaveEvent}>
                             {/* Toggle */}
-                            <Link className="nav-link" data-toggle="dropdown" to="/" aria-expanded="true">Home</Link>
+                            {/* <Link className="nav-link" data-toggle="dropdown" to="/" aria-expanded="true">Home</Link> */}
                             {/* Menu */}
                             {/* <div className="dropdown-menu">
                                 <HomeCard />
@@ -66,7 +66,7 @@ const Navbar: React.FC<NavbarProp> = ({hoverEvent, mouseLeaveEvent}) => {
                         </li>
                         <li className="nav-item dropdown position-static" onMouseOver={hoverEvent} onMouseLeave={mouseLeaveEvent}>
                             {/* Toggle */}
-                            <Link className="nav-link" data-toggle="dropdown" to="/product">{t('Product')}</Link>
+                            {/* <Link className="nav-link" data-toggle="dropdown" to="/product">{t('Product')}</Link> */}
                             {/* Menu */}
                             {/* <div className="dropdown-menu w-100">
                                 <CatalogCard />
@@ -111,7 +111,7 @@ const Navbar: React.FC<NavbarProp> = ({hoverEvent, mouseLeaveEvent}) => {
                             {/* <Link className="nav-link" to="/account/info">
                                 <i className="fe fe-user" />
                             </Link> */}
-                            <Link className="nav-link" to={login ? '/account/info' : '/auth/login'}>
+                            <Link className="nav-link" to={login ? '/account/info' : '/'}>
                                 <i className="fe fe-user" />
                             </Link>
                         </li>

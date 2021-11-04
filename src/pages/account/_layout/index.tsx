@@ -1,9 +1,11 @@
 import React, { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
-import { Link, NavLink } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, NavLink, Redirect } from 'react-router-dom'
+import { StateStore } from 'store'
 import { authLogoutAction } from 'store/actions/authAction'
 
 const AccountLayout: React.FC = ({ children }) => {
+
     function navbarHandle(event: any) {
         event.preventDefault()
         
@@ -14,6 +16,11 @@ const AccountLayout: React.FC = ({ children }) => {
         ev.preventDefault()
         dispatch(authLogoutAction())
     }, [])
+
+    // let { login } = useSelector((store: StateStore) => store.auth)
+    // if(!login) {
+    //     return <Redirect to='/'/>
+    // }
     return (
         <div className="account-layout">
             <section className="pt-7 pb-12">

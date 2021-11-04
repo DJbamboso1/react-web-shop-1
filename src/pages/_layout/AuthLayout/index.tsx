@@ -4,8 +4,10 @@ import { StateStore } from "store"
 
 
 const AuthLayout: React.FC = ({ children }) => {
-    let { login } = useSelector((store: StateStore) => store.auth)
-    if (login) return <Redirect to="/product" />
+    // let { login } = useSelector((store: StateStore) => store.auth)
+    // if (login) {
+    //     return <Redirect to="/product" />
+    // } 
 
     return (
         <section className="py-12">

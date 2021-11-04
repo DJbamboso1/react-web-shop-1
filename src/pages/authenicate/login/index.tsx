@@ -16,25 +16,33 @@ type Form = {
 
 const Login: React.FC = () => {
     let { t } = useTranslate()
-
+    let { errorMsg, login, role } = useSelector((store: StateStore) => store.auth)
     let { register, form, handleSubmit, error } = useForm<Form>()
-    
+
     const dispatch = useDispatch()
+
+    if (login && role) {
+        switch (role) {
+            case 'Retailer': {
+                return <Redirect to='/product' />
+            }
+            case 'Distributor': {
+                return <Redirect to='/home' />
+            }
+        }
+    }
     const submit = (form: Form) => {
         console.log(form)
         dispatch(authFetchAction(form))
     }
+    // let { login } = useSelector((store: StateStore) => store.auth)
 
-    
-
-    let {errorMsg} = useSelector((store: StateStore) => store.auth)
 
     return (
-
         <div className="card card-lg mb-10 mb-md-0" style={{ maxWidth: 700, margin: '0 auto' }}>
             <div className="card-body">
                 {/* Heading */}
-                <h6 className="mb-7">Returning Customer <ErrorInput error={errorMsg}/></h6>
+                <h6 className="mb-7">Returning Customer <ErrorInput error={errorMsg} /></h6>
                 {/* Form */}
                 <form onSubmit={handleSubmit(submit)}>
                     <div className="row">

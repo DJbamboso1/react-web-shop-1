@@ -23,13 +23,14 @@ export type State = {
         }
     },
     login: boolean,
-    errorMsg?: '',
-    
+    errorMsg?: string,
+    // permission: string[],
+    role: string
 }
 
 type PayloadAction = {
     type: string,
-    payload: State['user']
+    payload: State['user'] 
 }
 
 let user: State['user'];
@@ -46,10 +47,11 @@ const initState: State = {
     user,
     login: !!user,
     errorMsg: "",
+    role: user?.data?.role.name || ''
 }
 
 
-const authReducer = (state = initState, action: PayloadAction): State => {
+const authReducer = (state = initState, action: any): State => {
     
     switch (action.type) {
         case LOGIN:
@@ -57,19 +59,19 @@ const authReducer = (state = initState, action: PayloadAction): State => {
                 ...state,
                 user: action.payload,
                 login: true
-            }
+            } as State
 
         case AUTH_LOGOUT:
             return {
                 login: false,
                 user: undefined,
                 errorMsg: ""
-            }
+            } as State
         case LOGIN_ERROR: {
             return {
                 ...state,
                 user: undefined,
-                errorMsg: action.payload?.message
+                errorMsg: action.payload?.message 
             } as State
         }
         
