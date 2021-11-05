@@ -3,7 +3,8 @@ import { useSelector } from "react-redux"
 import { StateStore } from "../../store"
 import {createSelector} from 'reselect'
 import { listenerCount } from "process"
-import { calculateTotal } from "utils"
+
+import { Product01 } from "@types"
 
 export const useCart = () => useSelector((store: StateStore) => store.cart)
 
@@ -55,3 +56,31 @@ const getTotal = createSelector(getSubtotal, (subtotal) => {
 })
 
 export const useTotal = () => useSelector(getTotal)
+
+export const calculateTotal = ( product: Product01, num: number ) => {
+    let total = 0
+    if(product.listPrice[0]) {
+        total = product.listPrice[0].value * num
+    }
+    for (let i in product.listPrice) {
+        let item = product.listPrice[i]
+        if( num >= item.volume ) {
+           total = item.value * num
+        } 
+    }
+    return total
+}
+
+export const getPricePerPro = ( product: Product01, num: number ) => {
+    let total = 0
+    if(product.listPrice[0]) {
+        total = product.listPrice[0].value 
+    }
+    for (let i in product.listPrice) {
+        let item = product.listPrice[i]
+        if( num >= item.volume ) {
+           total = item.value 
+        } 
+    }
+    return total
+}

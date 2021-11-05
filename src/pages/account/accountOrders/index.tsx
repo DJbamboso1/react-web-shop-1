@@ -11,13 +11,12 @@ type FilterQuery = {
 }
 
 const AccountOrders: React.FC = () => {
-  let slug: any
-  slug = useParams()
+  let {slug } = useParams<{slug: string}>()
   let [order, setOrder] = useState<Order>()
   useEffect(() => {
     (async () => {
       let obj: FilterQuery = {
-        SessionId: slug.slug
+        SessionId: slug
       }
       let ord = await orderService.getAllOrder(obj)
       setOrder(ord)

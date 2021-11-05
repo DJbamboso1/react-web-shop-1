@@ -8,12 +8,12 @@ import { CategoryTree } from "../../@types/CategoryTree";
 
 export function categoryConfig(categories: CategoryTree[]) {
 
-    console.log('categories: ', categories)
+    // console.log('categories: ', categories)
     let objectURL = convertQueryURLToObject()
-    console.log('category: ', objectURL)
+    // console.log('category: ', objectURL)
     function _onClickHandle(e: React.MouseEvent, id: string) {
         e.currentTarget.classList.toggle('collapsed')
-        console.log('id: ', id)
+        // console.log('id: ', id)
         document.querySelector(`#${id}`)?.classList.toggle('show')
     }
     // return categories.map(cate => {

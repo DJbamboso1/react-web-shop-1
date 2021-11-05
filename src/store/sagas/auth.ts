@@ -6,7 +6,7 @@ import { AUTH_LOGOUT, FETCH_LOGIN, LOGIN_ERROR } from "../types";
 export function* fetchLogin(action: any): any {
     try {
         let user = yield call(authService.login, action.payload)
-        console.log(user)
+        // console.log(user)
         if (!user.data) {
             yield put({
                 type: LOGIN_ERROR,

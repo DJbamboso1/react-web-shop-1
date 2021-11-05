@@ -6,7 +6,8 @@ import Flickity from 'react-flickity-component'
 import { useDispatch } from 'react-redux'
 import { useCartNumber } from 'store/selector'
 import { addToCart, cartDecrement, cartIncrement } from 'store/actions/cartAction'
-import { calculateTotal, currency, getPricePerPro } from 'utils'
+import { currency } from 'utils'
+import { getPricePerPro, calculateTotal } from 'store/selector'
 import { style } from '@mui/system'
 
 const ProductDetail: React.FC = () => {
@@ -19,13 +20,13 @@ const ProductDetail: React.FC = () => {
     useEffect(() => {
         (async () => {
             let product = await productService.getProductById(slug.slug)
-            console.log(product)
+            // console.log(product)
             setData(product)
         })()
     }, [num])
     const dispatch = useDispatch()
 
-    console.log('num: ', num)
+    // console.log('num: ', num)
 
     return (
         <>

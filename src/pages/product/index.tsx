@@ -32,7 +32,7 @@ export type FilterQuery = {
 const ProductPage: React.FC = () => {
 
     const { list } = useCart()
-    console.log('LIST: ', list )
+    // console.log('LIST: ', list )
 
     let [data, setData] = useState<PaginateData<Product01>>()
 
@@ -63,7 +63,7 @@ const ProductPage: React.FC = () => {
         // setData(product.products)
     }, [queryUrl.PageNumber, queryUrl.CategoryId, queryUrl.SubCategoryId])
 
-    console.log("data: ", data)
+    // console.log("data: ", data)
 
     const total = data?.total as number
     const pageSize = data?.pageSize as number

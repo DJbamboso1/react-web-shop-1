@@ -13,7 +13,7 @@ export const Filter: React.FC<any> = ({ cateData }) => {
     // let queryUrl = convertQueryURLToObject()
     // console.log('cateData: ' , cateData)
 
-    console.log('cateData: ', cateData)
+    // console.log('cateData: ', cateData)
 
     return (
         <div className="col-12 col-md-4 col-lg-3">

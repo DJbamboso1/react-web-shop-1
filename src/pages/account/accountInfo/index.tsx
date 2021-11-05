@@ -40,7 +40,7 @@ const AccountInfo: React.FC = () => {
     }
 
     const submit = (form: Form) => {
-        console.log(form)
+        // console.log(form)
     }
     let yearNow = new Date().getFullYear()
     return (

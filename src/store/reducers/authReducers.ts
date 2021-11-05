@@ -52,7 +52,6 @@ const initState: State = {
 
 
 const authReducer = (state = initState, action: PayloadAction): State => {
-    console.log('AAAAAAAAAAAAAAAAA: ' , action.payload?.data?.role.name)
     switch (action.type) {
         case LOGIN:
             return {

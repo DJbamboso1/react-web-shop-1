@@ -45,13 +45,13 @@ type UseFormReturn<T> = {
 
 
 export function useForm<T extends Object>(initvalue = {}): UseFormReturn<T> {
-    console.log(initvalue)
+    // console.log(initvalue)
     let [form, setForm] = useState<any>(initvalue || {})
     let [error, setError] = useState<ErrorState<T>>({})
     let [initRule] = useState<RuleState<T>>({})
     let [initMessage] = useState<MessageState<T>>({})
 
-    console.log(form)
+    // console.log(form)
 
     function inputChange(ev: ChangeEvent<HTMLInputElement>) {
         let name = ev.currentTarget.name

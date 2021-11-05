@@ -6,6 +6,7 @@ let API = process.env.REACT_APP_API_KEY_SHOP || ''
 
 export const sessionService = {
     getAllSession(filter?: Object) {
+        console.log(filter)
         let url = API + '/session' + (filter ? ('?' + convertObjectToQueryURL(filter)) : '')
         return http.get<Session>(url)
     },

@@ -1,5 +1,5 @@
 import { Checkin, Checkout, Payment, User } from "@types"
-import { ProductItem } from "components"
+import { CartItem, ProductItem } from "components"
 import { history, useForm } from "core"
 import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
@@ -13,6 +13,7 @@ import { stringify } from "querystring"
 import { formGroupClasses } from "@mui/material"
 import { cartCheckout, cartRemove, cartRemoveAll } from "store/actions/cartAction"
 import authService from "services/authService"
+import { Breadcrumbs } from "components/Breadcrumbs"
 
 type Form = User['data']
 
@@ -56,7 +57,7 @@ const CheckoutComponent: React.FC = () => {
         })()
     }, [])
 
-    console.log('LIST: ', list)
+    // console.log('LIST: ', list)
 
 
 
@@ -93,7 +94,7 @@ const CheckoutComponent: React.FC = () => {
 
     const changePaymentMethod = (ev: React.ChangeEvent<HTMLInputElement>) => {
         let value = ev.currentTarget.value
-        console.log(value)
+        // console.log(value)
         setPayment(value)
     }
 
@@ -110,10 +111,24 @@ const CheckoutComponent: React.FC = () => {
                         {/* Heading */}
                         <h3 className="mb-4">Checkout</h3>
                         {/* Subheading */}
-                        <p className="mb-10">
+                        {/* <p className="mb-10">
                             Already have an account? <a className="font-weight-bold text-reset" href="#!">Click here to login</a>
-                        </p>
+                        </p> */}
                     </div>
+                    <Breadcrumbs list={[
+                        {
+                            title: 'Home',
+                            link: '/product'
+                        },
+                        {
+                            title: 'View cart',
+                            link: '/view-cart'
+                        },
+                        {
+                            title: 'Checkout',
+                            link: '/checkout'
+                        },
+                    ]} />
                 </div>
                 <form onSubmit={handleSubmit(formSubmit)}>
                     <div className="row">
@@ -251,7 +266,7 @@ const CheckoutComponent: React.FC = () => {
                         </div>
                         <div className="col-12 col-md-5 col-lg-4 offset-lg-1">
                             {/* Heading */}
-                            <h6 className="mb-7">Order Items ({cartNumber})</h6>
+                            <h6 className="mb-7">Order Items ({list.length})</h6>
                             {/* Divider */}
                             <hr className="my-7" />
                             {/* List group */}
@@ -260,7 +275,7 @@ const CheckoutComponent: React.FC = () => {
                                     list.map(e => {
 
                                         return (
-                                            <ProductItem key={e.product.id} product={e.product} num={e.num} />
+                                            <CartItem key={e.product.id} product={e.product} num={e.num} />
                                         )
                                     })
                                 }
@@ -290,14 +305,12 @@ const CheckoutComponent: React.FC = () => {
                                 your experience throughout this website, and for other purposes
                                 described in our privacy policy.
                             </p>
-                            {/* Button */}
+                            {/* Button */} 
                             <button type="submit" className="btn btn-block btn-dark">
                                 Place Order
                             </button>
                         </div>
                     </div>
-
-
                 </form>
             </div >
         </section >

@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import { StateStore } from 'store'
 import { authFetchAction } from 'store/actions/authAction'
 import { Redirect } from 'react-router-dom'
+import { orange } from '@mui/material/colors'
 
 
 
@@ -23,13 +24,12 @@ const Login: React.FC = () => {
 
 
     const submit = (form: Form) => {
-        console.log(form)
+        // console.log(form)
         dispatch(authFetchAction(form))
 
     }
     // let { login } = useSelector((store: StateStore) => store.auth)
-    console.log('Login: ', login)
-    console.log('role: ', role)
+
     if (login && role) {
         switch (role) {
             case 'Retailer': {
@@ -45,7 +45,7 @@ const Login: React.FC = () => {
         <div className="card card-lg mb-10 mb-md-0" style={{ maxWidth: 700, margin: '0 auto' }}>
             <div className="card-body">
                 {/* Heading */}
-                <h6 className="mb-7">Returning Customer <ErrorInput error={errorMsg} /></h6>
+                <h3 className="mb-7">Welcome to <span style={{color: 'orange'}}>GECKO !</span> <ErrorInput error={errorMsg} /></h3>
                 {/* Form */}
                 <form onSubmit={handleSubmit(submit)}>
                     <div className="row">
@@ -71,14 +71,9 @@ const Login: React.FC = () => {
                             </div>
                         </div>
                         <div className="col-12 col-md">
-                            {/* Remember */}
+
                             <div className="form-group">
-                                <div className="custom-control custom-checkbox">
-                                    <input className="custom-control-input" id="loginRemember" type="checkbox" />
-                                    <label className="custom-control-label" htmlFor="loginRemember">
-                                        Remember me
-                                    </label>
-                                </div>
+                                <p>{t(`Dont't have a account?`)} <Link to="/register">Register</Link></p>
                             </div>
                         </div>
                         <div className="col-12 col-md-auto">
@@ -88,9 +83,9 @@ const Login: React.FC = () => {
                                     Password?</a>
                             </div>
                         </div>
-                        <div className="col-12">
+                        {/* <div className="col-12">
                             <p>{t(`Dont't have a account?`)} <Link to="/auth/register">Register</Link></p>
-                        </div>
+                        </div> */}
                         <div className="col-12">
                             {/* Button */}
                             <button className="btn btn-sm btn-dark" type="submit">

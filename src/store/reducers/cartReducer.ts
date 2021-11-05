@@ -25,9 +25,9 @@ const initState: CartStore = {
 const cartReducer = (state = initState, action: PayloadAction): CartStore => {
     switch (action.type) {
         case CART_TOGGLE_CART: {
-            console.log('toggle toggle')
-            console.log('NOT undifined: ', action.payload)
-            console.log('state: ', state)
+            // console.log('toggle toggle')
+            // console.log('NOT undifined: ', action.payload)
+            // console.log('state: ', state)
             let flag = state.openCart
             if (typeof action.payload === 'undefined') {
                 flag = !flag

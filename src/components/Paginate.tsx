@@ -4,7 +4,7 @@ import { changeQueryURL, convertQueryURLToObject } from "utils";
 interface PaginateProp {
     currentPage: number
     totalPage: number
-    
+
 }
 export const Paginate: React.FC<PaginateProp> = ({ currentPage, totalPage }) => {
 
@@ -20,7 +20,13 @@ export const Paginate: React.FC<PaginateProp> = ({ currentPage, totalPage }) => 
 
 
         if (end - start < 4) {
-            if (start === 1) end = end + (currentPage + start)
+            if (start === 1) {
+                if (currentPage === 2) {
+                    end += (currentPage - 1)
+                } else {
+                    end += (currentPage + start)
+                }
+            }
             if (end === totalPage) start = (totalPage - 4)
 
             if (totalPage < 5) {

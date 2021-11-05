@@ -31,7 +31,7 @@ const CheckoutCompleteComponent: React.FC = () => {
     let queryUrl = convertQueryURLToObject<FilterQuery>()
     let [check, setCheck] = useState<boolean>()
     let [session, setSession] = useState<Session1>()
-    console.log(queryUrl)
+    // console.log(queryUrl)
     let { slug } = useParams<{ slug: string }>()
     useEffect(() => {
         (async () => {

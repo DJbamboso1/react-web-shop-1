@@ -22,14 +22,14 @@ const Register: React.FC = () => {
     const dispatch = useDispatch()
     const submit = (form: RegisterForm) => {
         // dispatch(authFetchAction(form))
-        console.log(form)
+        // console.log(form)
     }
 
     return (
         <div className="card card-lg" style={{ maxWidth: 700, margin: '0 auto' }}>
             <div className="card-body">
                 {/* Heading */}
-                <h6 className="mb-7">New Customer</h6>
+                <h6 className="mb-7">New Account</h6>
                 {/* Form */}
                 <form onSubmit={handleSubmit(submit)}>
                     <div className="row">
@@ -93,8 +93,7 @@ const Register: React.FC = () => {
                                 and Privacy and Cookie Policy.
                             </div>
                         </div>
-                        <div className="col-12 col-md">
-                            {/* Newsletter */}
+                        {/* <div className="col-12 col-md">
                             <div className="form-group">
                                 <div className="custom-control custom-checkbox">
                                     <input className="custom-control-input" id="registerNewsletter" type="checkbox" {...register('newLetter')} />
@@ -103,7 +102,7 @@ const Register: React.FC = () => {
                                     </label>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                         <div className="col-12">
                             <p>{t(`Have a account?`)} <Link to="/auth/login">Login</Link></p>
                         </div>

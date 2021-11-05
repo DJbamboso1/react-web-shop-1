@@ -1,4 +1,7 @@
 export interface Session {
+    pageNumber: number,
+    pageSize: number,
+    total: number,
     succeeded: true,
     message: string,
     errors: string,
