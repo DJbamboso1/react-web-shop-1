@@ -7,7 +7,8 @@ import { StateStore } from 'store'
 import { cartDecrement, cartIncrement, cartRemove, toggleCart } from 'store/actions/cartAction'
 import { getSubtotal, useCartNumber } from 'store/selector'
 import { useHistory } from 'react-router-dom'
-import { currency, getPricePerPro } from 'utils'
+import { currency } from 'utils'
+import { getPricePerPro } from 'store/selector'
 import { SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG } from 'constants'
 
 
@@ -32,7 +33,7 @@ export const CartModal: React.FC = () => {
     const _preventViewCart = useCallback((ev: React.MouseEvent) => {
         if (list.length === 0) {
             ev.preventDefault();
-            history.push('/product')
+            history.push('/')
         }
         dispatch(toggleCart(false))
     }, [list])
@@ -52,7 +53,7 @@ export const CartModal: React.FC = () => {
                             <strong className="mx-auto">Your Cart ({list.length})</strong>
                         </div>
                         {/* List group */}
-                        <ul className="list-group list-group-lg list-group-flush">
+                        <ul className="list-group list-group-lg list-group-flush" > {/*style={{overflow: 'auto', height: '55%' }} */}
                             {
                                 list.map(e => <CartItem key={e.product.id} {...e} />)
                             }
@@ -81,7 +82,7 @@ export const CartModal: React.FC = () => {
                                 {/* Heading */}
                                 <h6 className="mb-7 text-center">Your cart is empty 😞</h6>
                                 {/* Button */}
-                                <a className="btn btn-block btn-outline-dark" href="/product">
+                                <a className="btn btn-block btn-outline-dark" href="/">
                                     Continue Shopping
                                 </a>
                             </div>
@@ -98,7 +99,7 @@ export const CartModal: React.FC = () => {
         , document.body)
 }
 
-const CartItem: React.FC<{
+export const CartItem: React.FC<{
     product: Product01,
     num: number
 }> = ({ num, product }) => {
@@ -106,21 +107,19 @@ const CartItem: React.FC<{
     const dispatch = useDispatch()
 
     const _changeNumber = (ev: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(ev.currentTarget.value)
+        // console.log(ev.currentTarget.value)
         if (ev.currentTarget.value === '' || parseInt(ev.currentTarget.value) <  product.minQuantity ) {
             dispatch(cartDecrement({ id: product.id, num: num }))
             ev.currentTarget.value = product.minQuantity.toString()
         } else {
             let offset = num - parseInt(ev.currentTarget.value || '0')
-            console.log(offset)
+            // console.log(offset)
             if (offset > 0) {
                 dispatch(cartDecrement({ id: product.id, num: offset }))
             } else if (offset < 0) {
                 dispatch(cartIncrement({ id: product.id, num: Math.abs(offset) }))
             }
         }
-
-
     }
 
     let { id, distributor, subCategory, description, image, minQuantity, name, status, listPrice } = product
@@ -130,7 +129,7 @@ const CartItem: React.FC<{
             <div className="row align-items-center">
                 <div className="col-4">
                     {/* Image */}
-                    <Link className="card-img-hover" to={`/product/${name}`}>
+                    <Link className="card-img-hover" to={`/product/${id}`}>
                         <img className="img-fluid" src={image} alt="..." />
                     </Link>
                 </div>

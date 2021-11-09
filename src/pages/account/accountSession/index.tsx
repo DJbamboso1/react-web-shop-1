@@ -1,7 +1,9 @@
+import LoadingPage from 'components/LoadingPage'
+import { Paginate } from 'components/Paginate'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { currency } from 'utils'
+import { convertQueryURLToObject, currency } from 'utils'
 import { Session } from '../../../@types'
 import { sessionService } from '../../../services/sessionService'
 import { StateStore } from "../../../store"
@@ -10,35 +12,67 @@ type FilterQuery = {
     // page: string,
     RetailerId?: string
     PaymentMethodId?: string
+    PageNumber?: string
+    PageSize?: string
 }
 
 type StateProp = {
     loading: boolean,
-    session: Session,
-  }
+    sessions: Session['data'],
+}
 
 const AccountSession: React.FC = () => {
     let { user } = useSelector((store: StateStore) => store.auth)
     let [session, setSession] = useState<Session>()
+
+    let [state, setState] = useState<StateProp>({
+        loading: true,
+        sessions: []
+    })
+
+    let queryUrl = convertQueryURLToObject<FilterQuery>()
     useEffect(() => {
         (async () => {
             if (user?.data) {
+                let pageNum = queryUrl.PageNumber || '1'
                 let obj: FilterQuery = {
-                    RetailerId: user.data.actorId
+                    RetailerId: user.data.actorId,
+                    PageNumber: pageNum,
+                    PageSize: '3'
                 }
                 let sess = await sessionService.getAllSession(obj)
                 setSession(sess)
+                setState({
+                    loading: false,
+                    sessions: sess.data
+                })
             }
         })()
-    }, [])
+    }, [queryUrl.PageNumber])
+
+
+    const total = session?.total as number
+    const pageSize = session?.pageSize as number
+    const pageNumber = []
+    for (let i = 1; i <= Math.ceil(total / pageSize); i++) {
+        pageNumber.push(i)
+    }
+
+    if (state.loading) {
+        // setState({
+        //     loading: true,
+        //     sessions: []
+        // })
+        return <LoadingPage />
+    }
 
     return (
         <div>
             <div className="card card-lg mb-5 border">
                 {
-                    session && session.data.map(s => {
+                    state.sessions && state.sessions.map(s => {
                         return (
-                            <Link style={{color: 'black'}} className="card-body pb-0" to={`/account/orders/${s.id}`}>
+                            <Link style={{ color: 'black' }} className="card-body" to={`/account/orders/${s.id}`}>
                                 {/* Info */}
                                 <div className="card card-sm">
                                     <div className="card-body bg-light">
@@ -66,7 +100,7 @@ const AccountSession: React.FC = () => {
                                                 <h6 className="heading-xxxs text-muted">Status:</h6>
                                                 {/* Text */}
                                                 <p className="mb-0 font-size-sm font-weight-bold">
-                                                {s.status === -1 ? 'Đang thành tiền' : (s.status === 0 ? 'Hủy' : (s.status === 1 ? 'Đã thành tiền' : (s.status === 2 ? 'Chưa thành tiền' : ''))) }
+                                                    {s.status === -1 ? 'Đang thành tiền' : (s.status === 0 ? 'Hủy' : (s.status === 1 ? 'Đã thành tiền' : (s.status === 2 ? 'Chưa thành tiền' : '')))}
                                                 </p>
                                             </div>
                                             <div className="col-6 col-lg-3">
@@ -84,41 +118,11 @@ const AccountSession: React.FC = () => {
                         )
                     })
                 }
-
             </div>
             {/* Pagination */}
-            <nav className="d-flex justify-content-center justify-content-md-end mt-10">
-                <ul className="pagination pagination-sm text-gray-400">
-                    <li className="page-item">
-                        <a className="page-link page-link-arrow" href="#">
-                            <i className="fa fa-caret-left" />
-                        </a>
-                    </li>
-                    <li className="page-item active">
-                        <a className="page-link" href="#">1</a>
-                    </li>
-                    <li className="page-item">
-                        <a className="page-link" href="#">2</a>
-                    </li>
-                    <li className="page-item">
-                        <a className="page-link" href="#">3</a>
-                    </li>
-                    <li className="page-item">
-                        <a className="page-link" href="#">4</a>
-                    </li>
-                    <li className="page-item">
-                        <a className="page-link" href="#">5</a>
-                    </li>
-                    <li className="page-item">
-                        <a className="page-link" href="#">6</a>
-                    </li>
-                    <li className="page-item">
-                        <a className="page-link page-link-arrow" href="#">
-                            <i className="fa fa-caret-right" />
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+            {
+                state.sessions && session && <Paginate currentPage={session.pageNumber} totalPage={pageNumber.length} />
+            }
         </div>
     )
 }

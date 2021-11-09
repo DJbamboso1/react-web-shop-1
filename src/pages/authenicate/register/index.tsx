@@ -6,12 +6,17 @@ import { Link } from 'react-router-dom'
 
 
 type RegisterForm = {
-    firstName: string
-    lastName: string,
-    email: string,
+    roleId: string,
+    username: string,
+    displayName: string,
     password: string,
     confirmPassword: string,
-    newLetter: boolean
+    doB: string,
+    avatar: string,
+    sex: number,
+    email: string,
+    phoneNumber: string,
+    address: string
 }
 
 const Register: React.FC = () => {
@@ -22,45 +27,34 @@ const Register: React.FC = () => {
     const dispatch = useDispatch()
     const submit = (form: RegisterForm) => {
         // dispatch(authFetchAction(form))
-        console.log(form)
+        // console.log(form)
     }
 
     return (
         <div className="card card-lg" style={{ maxWidth: 700, margin: '0 auto' }}>
             <div className="card-body">
                 {/* Heading */}
-                <h6 className="mb-7">New Customer</h6>
+                <h6 className="mb-7">New Account</h6>
                 {/* Form */}
                 <form onSubmit={handleSubmit(submit)}>
                     <div className="row">
                         <div className="col-12">
                             {/* Email */}
                             <div className="form-group">
-                                <label className="sr-only" htmlFor="registerFirstName">
+                                <label className="" htmlFor="registerFirstName">
                                     First Name *
                                 </label>
-                                <input className="form-control form-control-sm" id="registerFirstName" type="text" placeholder="First Name *" {...register('firstName', { required: true })} />
-                                <ErrorInput error={error.firstName} />
+                                <input className="form-control form-control-sm" id="registerFirstName" type="text"  {...register('displayName', { required: true })} />
+                                <ErrorInput error={error.displayName} />
                             </div>
                         </div>
                         <div className="col-12">
                             {/* Email */}
                             <div className="form-group">
-                                <label className="sr-only" htmlFor="registerLastName">
-                                    Last Name *
-                                </label>
-                                <input className="form-control form-control-sm" id="registerLastName" type="text" placeholder="Last Name *" {...register('lastName', { required: true })} />
-                                <ErrorInput error={error.lastName} />
-
-                            </div>
-                        </div>
-                        <div className="col-12">
-                            {/* Email */}
-                            <div className="form-group">
-                                <label className="sr-only" htmlFor="registerEmail">
+                                <label className="" htmlFor="registerEmail">
                                     Email Address *
                                 </label>
-                                <input className="form-control form-control-sm" id="registerEmail" type="text" placeholder="Email Address *" {...register('email', { required: true, pattern: 'email' })} />
+                                <input className="form-control form-control-sm" id="registerEmail" type="text"  {...register('email', { required: true, pattern: 'email' })} />
                                 <ErrorInput error={error.email} />
 
                             </div>
@@ -68,10 +62,10 @@ const Register: React.FC = () => {
                         <div className="col-12 col-md-6">
                             {/* Password */}
                             <div className="form-group">
-                                <label className="sr-only" htmlFor="registerPassword">
+                                <label className="" htmlFor="registerPassword">
                                     Password *
                                 </label>
-                                <input className="form-control form-control-sm" id="registerPassword" type="password" placeholder="Password *" {...register('password', { required: true, min: 6, max: 32 })} />
+                                <input className="form-control form-control-sm" id="registerPassword" type="password"  {...register('password', { required: true, min: 6, max: 32 })} />
                                 <ErrorInput error={error.password} />
 
                             </div>
@@ -79,22 +73,21 @@ const Register: React.FC = () => {
                         <div className="col-12 col-md-6">
                             {/* Password */}
                             <div className="form-group">
-                                <label className="sr-only" htmlFor="registerPasswordConfirm">
+                                <label className="" htmlFor="registerPasswordConfirm">
                                     Confirm Password *
                                 </label>
-                                <input className="form-control form-control-sm" id="registerPasswordConfirm" type="password" placeholder="Confrm Password *" {...register('confirmPassword', { confirm: 'password' })} />
+                                <input className="form-control form-control-sm" id="registerPasswordConfirm" type="password"  {...register('confirmPassword', { confirm: 'password' })} />
                                 <ErrorInput error={error.confirmPassword} />
                             </div>
                         </div>
-                        <div className="col-12 col-md-auto">
-                            {/* Link */}
+                        {/* <div className="col-12 col-md-auto">
+                           
                             <div className="form-group font-size-sm text-muted">
                                 By registering your details, you agree with our Terms &amp; Conditions,
                                 and Privacy and Cookie Policy.
                             </div>
-                        </div>
-                        <div className="col-12 col-md">
-                            {/* Newsletter */}
+                        </div> */}
+                        {/* <div className="col-12 col-md">
                             <div className="form-group">
                                 <div className="custom-control custom-checkbox">
                                     <input className="custom-control-input" id="registerNewsletter" type="checkbox" {...register('newLetter')} />
@@ -103,9 +96,9 @@ const Register: React.FC = () => {
                                     </label>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                         <div className="col-12">
-                            <p>{t(`Have a account?`)} <Link to="/auth/login">Login</Link></p>
+                            <p>{t(`Have a account?`)} <Link to="/">Login</Link></p>
                         </div>
                         <div className="col-12">
                             {/* Button */}

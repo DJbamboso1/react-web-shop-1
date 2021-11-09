@@ -32,7 +32,7 @@ export type FilterQuery = {
 const ProductPage: React.FC = () => {
 
     const { list } = useCart()
-    console.log('LIST: ', list )
+    // console.log('LIST: ', list )
 
     let [data, setData] = useState<PaginateData<Product01>>()
 
@@ -54,7 +54,6 @@ const ProductPage: React.FC = () => {
             setData(list)
             let cateList = await cateService.getCategory()
             setCateData(cateList.data)
-
             let category = cateList.data.find(e => e.id === queryUrl.CategoryId)
             setCategory(category)
             setSubCate(category?.subCategories?.find(e => e.id === queryUrl.SubCategoryId))
@@ -63,7 +62,7 @@ const ProductPage: React.FC = () => {
         // setData(product.products)
     }, [queryUrl.PageNumber, queryUrl.CategoryId, queryUrl.SubCategoryId])
 
-    console.log("data: ", data)
+    // console.log("data: ", data)
 
     const total = data?.total as number
     const pageSize = data?.pageSize as number
@@ -74,7 +73,7 @@ const ProductPage: React.FC = () => {
 
 
     return (
-        <section className="py-11">
+        <section className="py-5">
             <div className="container">
                 <div className="row">
                     {/* <Filter /> */}
@@ -99,7 +98,7 @@ const ProductPage: React.FC = () => {
                                         link: `${url}?CategoryId=${category.id}`
                                     }] : [{
                                         title: 'Product',
-                                        link: '/product'
+                                        link: '/'
                                     }]),
                                     ...(subCate ? [{
                                         title: subCate.name,

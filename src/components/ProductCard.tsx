@@ -17,9 +17,9 @@ export const ProductCard: React.FC<{product?: Product01}> = ( {product} ) => {
             {/* Card */}
             <div className="card mb-7">
                 {/* Badge */}
-                {/* <div className="badge badge-white card-badge card-badge-left text-uppercase">
-                    New
-                </div> */}
+                <div className="badge badge-white card-badge card-badge-left text-uppercase">
+                    {product?.status === 0 ? <span style={{color: 'gray'}}>Ngừng bán</span> : product?.status === 1 ? <span style={{color: 'green'}}>Còn hàng</span> : product?.status === 2 && <span style={{color: 'redy'}}>Hết hàng</span>}
+                </div>
                 {/* Image */}
                 <div className="card-img">
                     {/* Image */}
@@ -40,13 +40,13 @@ export const ProductCard: React.FC<{product?: Product01}> = ( {product} ) => {
                         product && (
                             <div className="card-actions">
                                 <span className="card-action">
-                                    <Link className="btn btn-xs btn-circle btn-white-primary" data-toggle="modal" data-target="#modalProduct" to={`product/${product.id}`}>
+                                    <Link className="btn btn-xs btn-circle btn-white-primary" data-toggle="modal" data-target="#modalProduct" to={`/product/${product.id}`}>
                                         <i className="fe fe-eye" />
                                     </Link>
                                 </span>
                                 <span className="card-action">
                                     {
-                                        product && (
+                                        product && product.status === 1 && (
                                             <button onClick={() => {( product.listPrice.length > 0 ) && dispatch(addToCart(product)) }} className="btn btn-xs btn-circle btn-white-primary" data-toggle="button">
                                                 <i className="fe fe-shopping-cart" />
                                             </button>
@@ -73,7 +73,7 @@ export const ProductCard: React.FC<{product?: Product01}> = ( {product} ) => {
                     <div className="font-weight-bold">
                         {
                             product ? (
-                                <Link className="text-body" to={`/product/${product?.name}`}>
+                                <Link className="text-body" to={`/${product?.name}`}>
                                     {product?.name} 
                                     {/* ({product && product.listPrice.length > 0 ? product.listPrice[0].volume + ' items' : '0 item'}) */}
                                 </Link>

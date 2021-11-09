@@ -8,12 +8,12 @@ import { CategoryTree } from "../../@types/CategoryTree";
 
 export function categoryConfig(categories: CategoryTree[]) {
 
-    console.log('categories: ', categories)
+    // console.log('categories: ', categories)
     let objectURL = convertQueryURLToObject()
-    console.log('category: ', objectURL)
+    // console.log('category: ', objectURL)
     function _onClickHandle(e: React.MouseEvent, id: string) {
         e.currentTarget.classList.toggle('collapsed')
-        console.log('id: ', id)
+        // console.log('id: ', id)
         document.querySelector(`#${id}`)?.classList.toggle('show')
     }
     // return categories.map(cate => {
@@ -32,7 +32,7 @@ export function categoryConfig(categories: CategoryTree[]) {
             list.push(
                 <li className="nav-item">
                     {/* Toggle */}
-                    <Link className="nav-link dropdown-toggle font-size-lg text-reset border-bottom mb-6" data-toggle="collapse" to={changeQueryURL({ ...objectURL, CategoryId: cate.id, SubCategoryId: '' })} onClick={(e) => _onClickHandle(e, cate.name)}>
+                    <Link className="nav-link dropdown-toggle font-size-lg text-reset border-bottom mb-6" data-toggle="collapse" to={changeQueryURL({ ...objectURL, CategoryId: cate.id, SubCategoryId: '', PagePageNumber: 1 })} onClick={(e) => _onClickHandle(e, cate.name)}>
                         {cate.name}
                     </Link>
                     {cate.subCategories && cate.subCategories?.length > 0 && (
@@ -43,7 +43,7 @@ export function categoryConfig(categories: CategoryTree[]) {
 
                                         return (
                                             <li className="list-styled-item">
-                                                <Link className="list-styled-link" to={changeQueryURL({ ...objectURL, CategoryId: cate.id, SubCategoryId: child.id })} >
+                                                <Link className="list-styled-link" to={changeQueryURL({ ...objectURL, SubCategoryId: child.id, PagePageNumber: 1, CategoryId: cate.id })} >
                                                     {child.name}
                                                 </Link>
                                                 {((child.subCategories?.length || 0) > 0) &&
@@ -54,7 +54,7 @@ export function categoryConfig(categories: CategoryTree[]) {
                                                                 <div className="custom-control custom-checkbox mb-3">
                                                                     <input className="custom-control-input" id="dressesOne" type="checkbox" />
                                                                     <label className="custom-control-label" htmlFor="dressesOne">
-                                                                        <Link style={{ color: '#525252' }} to={changeQueryURL({ ...objectURL,  CategoryId: c.id })}>{c.name}</Link>
+                                                                        <Link style={{ color: '#525252' }} to={changeQueryURL({ ...objectURL,  CategoryId: c.id, PagePageNumber: 1 })}>{c.name}</Link>
                                                                     </label>
                                                                 </div>
                                                             )

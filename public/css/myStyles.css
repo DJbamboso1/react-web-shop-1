@@ -49,3 +49,11 @@ table {
     padding: 8px;
     border: 1px solid #ddd;
   }
+
+  .card-lg .card-body, .card-lg .card-footer {
+    padding: 0.95rem;
+  }
+
+  .list-group-strong .list-group-item.active {
+      color: orange
+  }

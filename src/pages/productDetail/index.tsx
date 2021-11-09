@@ -6,31 +6,51 @@ import Flickity from 'react-flickity-component'
 import { useDispatch } from 'react-redux'
 import { useCartNumber } from 'store/selector'
 import { addToCart, cartDecrement, cartIncrement } from 'store/actions/cartAction'
-import { calculateTotal, currency, getPricePerPro } from 'utils'
+import { currency } from 'utils'
+import { getPricePerPro, calculateTotal } from 'store/selector'
 import { style } from '@mui/system'
+import LoadingPage from 'components/LoadingPage'
+import { Breadcrumbs } from 'components/Breadcrumbs'
 
 const ProductDetail: React.FC = () => {
-    let slug: any
 
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
     let num = useCartNumber()
 
-    slug = useParams()
+    let { slug } = useParams<{ slug: string }>()
     let [data, setData] = useState<Product02<Product01>>()
+    let [loading, setLoading] = useState(true)
     useEffect(() => {
         (async () => {
-            let product = await productService.getProductById(slug.slug)
-            console.log(product)
+            let product = await productService.getProductById(slug)
+            // console.log(product)
             setData(product)
+            setLoading(false)
         })()
     }, [num])
     const dispatch = useDispatch()
 
-    console.log('num: ', num)
+    // console.log('num: ', num)
+
+    if (loading) {
+        return <LoadingPage />
+    }
 
     return (
         <>
             <section style={{ padding: '40px 0px' }}>
                 <div className="container">
+                    <Breadcrumbs list={[
+                        {
+                            title: 'Home',
+                            link: '/'
+                        },
+                        {
+                            title: `${data?.data.name}`,
+                            link: ''
+                        }
+                    ]} />
                     {data && (
                         <div className="row">
                             <div className="col-12">
@@ -115,11 +135,11 @@ const ProductDetail: React.FC = () => {
                                         {/* Price */}
                                         <div className="mb-7">
                                             {/* <span className="font-size-lg font-weight-bold text-gray-350 text-decoration-line-through">$115.00</span> */}
-                                        
+
                                             {
-                                                data && ( (data.data.listPrice.length > 0) ?
-                                                `${data.data.listPrice.length > 1 ? currency(data.data.listPrice[data.data.listPrice.length - 1].value) + ' - ' : ''}${currency(data.data.listPrice[0].value)}  `
-                                                : <h6 style={{ color: 'red' }}>No price</h6> )
+                                                data && ((data.data.listPrice.length > 0) ?
+                                                    `${data.data.listPrice.length > 1 ? currency(data.data.listPrice[data.data.listPrice.length - 1].value) + ' - ' : ''}${currency(data.data.listPrice[0].value)}  `
+                                                    : <h6 style={{ color: 'red' }}>No price</h6>)
                                             }
                                         </div>
 
@@ -153,7 +173,7 @@ const ProductDetail: React.FC = () => {
                                                     </div> */}
                                                     <div className="col-12 col-lg" style={{ flexBasis: num === 0 ? 'unset' : 0 }}>
                                                         {/* Submit */}
-                                                        <button type="submit" className="btn btn-block btn-dark mb-2" onClick={(ev) => { ev.preventDefault(); data && (data.data.listPrice.length > 0) && dispatch(addToCart(data.data)) }}>
+                                                        <button disabled={data && data.data.status === 1 ? false : true} type="submit" className="btn btn-block btn-dark mb-2" onClick={(ev) => { ev.preventDefault(); data && (data.data.listPrice.length > 0) && dispatch(addToCart(data.data)) }}>
                                                             Add to Cart <i className="fe fe-shopping-cart ml-2" />
                                                         </button>
                                                     </div>

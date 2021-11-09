@@ -45,8 +45,8 @@ const Navbar: React.FC<NavbarProp> = ({hoverEvent, mouseLeaveEvent}) => {
             
             <div className="container">
                 {/* Brand */}
-                <Link className="navbar-brand" to="/" style={{color: 'orange'}}>
-                    Gecko
+                <Link className="navbar-brand" to="/" >
+                    <img style={{zIndex: 1, width: '18%'}} src="/img/icons/LOGO3.png" alt="" />
                 </Link>
                 {/* Toggler */}
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,9 +57,9 @@ const Navbar: React.FC<NavbarProp> = ({hoverEvent, mouseLeaveEvent}) => {
                     {/* Nav */}
                     <ul className="navbar-nav mx-auto">
                         <li className="nav-item dropdown hovered" onMouseOver={hoverEvent} onMouseLeave={mouseLeaveEvent}>
-                            {/* Toggle */}
+                            
                             {/* <Link className="nav-link" data-toggle="dropdown" to="/" aria-expanded="true">Home</Link> */}
-                            {/* Menu */}
+                            
                             {/* <div className="dropdown-menu">
                                 <HomeCard />
                             </div> */}
@@ -111,7 +111,7 @@ const Navbar: React.FC<NavbarProp> = ({hoverEvent, mouseLeaveEvent}) => {
                             {/* <Link className="nav-link" to="/account/info">
                                 <i className="fe fe-user" />
                             </Link> */}
-                            <Link className="nav-link" to={login ? '/account/info' : '/'}>
+                            <Link className="nav-link" to={login ? '/account/info' : '/auth/login'}>
                                 <i className="fe fe-user" />
                             </Link>
                         </li>

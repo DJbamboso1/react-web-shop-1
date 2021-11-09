@@ -45,31 +45,37 @@ type UseFormReturn<T> = {
 
 
 export function useForm<T extends Object>(initvalue = {}): UseFormReturn<T> {
-    console.log(initvalue)
+    // console.log(initvalue)
     let [form, setForm] = useState<any>(initvalue || {})
     let [error, setError] = useState<ErrorState<T>>({})
     let [initRule] = useState<RuleState<T>>({})
     let [initMessage] = useState<MessageState<T>>({})
 
-    console.log(form)
+    // console.log(form)
 
     function inputChange(ev: ChangeEvent<HTMLInputElement>) {
         let name = ev.currentTarget.name
         let value = ev.currentTarget.value
-        
+
         // form[name] = value
         if (ev.currentTarget.getAttribute('type') === 'checkbox') {
-            if (value &&  value !== 'true' && value !== 'false') {
+            if (value && value !== 'true' && value !== 'false') {
                 form[name] = ev.currentTarget.checked ? value : ''
             } else {
                 form[name] = ev.currentTarget.checked
                 // console.log(value)
             }
 
-        } else {
+        }
+        else if (ev.currentTarget.getAttribute('type') === 'file') {
+            form[name] = ev.currentTarget.files?.[0]
+            // console.log('avatar: ', form[name])
+        }
+        else {
             form[name] = value
         }
-        setForm({...form})
+
+        setForm({ ...form })
     }
 
 
@@ -117,7 +123,7 @@ export function useForm<T extends Object>(initvalue = {}): UseFormReturn<T> {
             }
 
         }
-        
+
         return errorObj
     }
 
@@ -134,18 +140,25 @@ export function useForm<T extends Object>(initvalue = {}): UseFormReturn<T> {
         if (message) {
             initMessage[name] = message
         }
+        if (form[name] instanceof Blob) {
+            return {
+                name,
+                onChange: inputChange, 
+                
+            } as any
+        }
 
         return {
             name,
             onChange: inputChange,
-            value: form[name]
+            value: form[name] 
         }
     }
     function handleSubmit(callback: Function) {
         return (ev: any) => {
             let errorObject = check()
             ev.preventDefault()
-            
+
             if (Object.keys(errorObject).length === 0) {
                 callback(form)
             }

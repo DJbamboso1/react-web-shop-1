@@ -25,14 +25,12 @@ let $header = document.querySelector('#header')
     })
 ReactDOM.render(
   <React.StrictMode>
-    <AppProvider reducers={reducers} translate={{ en, vn }} language="en" saga={saga}>
-        
+    <AppProvider reducers={reducers} translate={{ en, vn }} language="en" saga={saga}>    
       <Suspense fallback={<LinearProgress/>}>
         {routerConfig(routers)}
         <CartModal/>
         <SearchModal/>
       </Suspense>
-      
     </AppProvider>
   </React.StrictMode>,
   document.getElementById('root')

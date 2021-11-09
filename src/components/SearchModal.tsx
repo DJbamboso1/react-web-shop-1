@@ -10,6 +10,7 @@ import { productService } from 'services/productService'
 import { StateStore } from 'store'
 import { toggleSearch } from 'store/actions/searchAction'
 import { convertQueryURLToObject, changeQueryURL } from 'utils'
+import LoadingPage from './LoadingPage'
 
 type Form = {
     SearchValue: string
@@ -17,18 +18,17 @@ type Form = {
 
 export const SearchModal: React.FC = () => {
     let { openSearch } = useSelector((store: StateStore) => store.search)
-
     let [data, setData] = useState<PaginateData<Product01>>()
-
     let queryUrl = convertQueryURLToObject<FilterQuery>()
     let dispatch = useDispatch()
     let { register, form, handleSubmit, error } = useForm<Form>()
-
     let objectURL = convertQueryURLToObject()
-
     let [searchVal, setSearchVal] = useState({})
 
+    let [loading, setLoading] = useState(true)
     // console.log('objectUrl: ', objectURL)
+
+
 
     useEffect(() => {
         if (openSearch) {
@@ -39,11 +39,17 @@ export const SearchModal: React.FC = () => {
     }, [openSearch])
 
     useEffect(() => {
-
-        (async () => {
-            let list = await productService.paginate(searchVal)
-            setData(list)
-        })()
+        setLoading(true)
+        let timeout = setTimeout(() => {
+            (async () => {
+                let list = await productService.paginate(searchVal)
+                setData(list)
+                setLoading(false)
+            })()
+        }, 1000)
+        return () => {
+            clearTimeout(timeout)
+        }
         // dispatch(fetchProductsAction(queryUrl))
         // setData(product.products)
     }, [searchVal])
@@ -95,7 +101,7 @@ export const SearchModal: React.FC = () => {
                             {/* Items */}
 
                             {
-                                data && data.data.length > 0 ? data.data.map(pro => {
+                                loading === false ? (data && data.data.length > 0 ? data.data.map(pro => {
                                     return (
                                         <div className="row align-items-center position-relative mb-5">
                                             <div className="col-4 col-md-3">
@@ -108,8 +114,15 @@ export const SearchModal: React.FC = () => {
                                             <div className="col position-static">
                                                 {/* Text */}
                                                 <p className="mb-0 font-weight-bold">
-                                                    <Link className="stretched-link text-body" to={`/product/${pro.id}`} onClick={(ev) => { dispatch(toggleSearch(false)) }}>{pro.name} ({pro.listPrice[0].volume})</Link> <br />
-                                                    <span className="text-muted">{pro.listPrice[0].value}</span>
+                                                    <Link className="stretched-link text-body" to={`/product/${pro.id}`} onClick={(ev) => { dispatch(toggleSearch(false)) }}>{pro.name} ({pro.listPrice[0].volume} items)</Link> <br />
+                                                    <span className="text-muted">
+                                                        {
+                                                            pro && ((pro.listPrice.length > 0) ?
+                                                                `${pro.listPrice.length > 1 ? (pro.listPrice[pro.listPrice.length - 1].value.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) + ' - ') : ''}${pro.listPrice[0].value.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}  `
+                                                                : <h6 style={{ color: 'red' }}>No price</h6>)
+
+                                                        }
+                                                    </span>
                                                 </p>
                                             </div>
                                         </div>
@@ -122,11 +135,12 @@ export const SearchModal: React.FC = () => {
                                     <p className="mb-0 font-size-sm text-center">
                                         😞
                                     </p>
-                                </div>
+                                </div>) : <LoadingPage />
+
                             }
 
                             {/* Button */}
-                            <button className="btn btn-link px-0 text-reset" type="submit"  onClick={(ev) => {  dispatch(toggleSearch(false))  }}>
+                            <button className="btn btn-link px-0 text-reset" type="submit" onClick={(ev) => { dispatch(toggleSearch(false)) }}>
                                 View All <i className="fe fe-arrow-right ml-2" />
                             </button>
                         </div>

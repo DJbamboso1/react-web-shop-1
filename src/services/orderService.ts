@@ -17,7 +17,7 @@ export const orderService = {
     },
 
     getOrderById(id: string) {
-        let url = API + '/order/' + id
+        let url = API + '/order' + id
         return http.get<Order1>(url)
     }
 }

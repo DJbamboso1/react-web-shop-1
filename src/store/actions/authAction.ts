@@ -6,7 +6,7 @@ type User = {
 }
 
 export const authFetchAction = (user: User) => {
-    console.log(user)
+    // console.log(user)
     return {
         type: FETCH_LOGIN,
         payload: user
@@ -21,7 +21,7 @@ export const authGetInfo = (id: string) => {
 }
 
 export const authLogin = (user: User) => {
-    console.log(user)
+    // console.log(user)
     return {
         type: LOGIN,
         payload: user
