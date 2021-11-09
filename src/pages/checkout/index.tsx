@@ -100,7 +100,7 @@ const CheckoutComponent: React.FC = () => {
 
 
     if (list.length === 0) {
-        return <Redirect to='/product'/>
+        return <Redirect to='/'/>
     }
 
     return (
@@ -118,7 +118,7 @@ const CheckoutComponent: React.FC = () => {
                     <Breadcrumbs list={[
                         {
                             title: 'Home',
-                            link: '/product'
+                            link: '/'
                         },
                         {
                             title: 'View cart',

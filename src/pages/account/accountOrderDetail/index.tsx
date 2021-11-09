@@ -1,4 +1,5 @@
 import { Order1, OrderDetail } from '@types'
+import LoadingPage from 'components/LoadingPage'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { Link } from 'react-router-dom'
@@ -14,9 +15,19 @@ type FilterQuery = {
     PageSize?: string
 }
 
+type StateProps = {
+    loading: boolean,
+    order?: Order1['data'],
+    orderDetail: OrderDetail['data']
+  }
+
 const AccountOrderDetail: React.FC = () => {
     let { slug } = useParams<{ slug: string }>()
     let [orderDetail, setOrderDetail] = useState<OrderDetail>()
+    let [state, setState] = useState<StateProps>({
+        loading: true,
+        orderDetail: []
+    })
     let [order, setOrder] = useState<Order1>()
 
     let Subtotal = useTotal()
@@ -26,18 +37,27 @@ const AccountOrderDetail: React.FC = () => {
                 OrderId: slug
             }
             let ordDetail = await orderService.getOrderDetail(obj)
-            setOrderDetail(ordDetail)
+            // setOrderDetail(ordDetail)
             let ord = await orderService.getOrderById(slug)
-            setOrder(ord)
+            // setOrder(ord)
+            setState({
+                loading: false,
+                order: ord.data,
+                orderDetail: ordDetail.data
+            })
         })()
     }, [])
+
+    if (state.loading) {
+        return <LoadingPage />
+      }
     return (
         <div>
             <div className="card card-lg mb-5 border">
                 <div className="card-body pb-0">
                     {/* Info */}
                     {
-                        order?.data &&
+                        state.order &&
                         <div className="card card-sm">
                             <div className="card-body bg-light">
                                 <div className="row">
@@ -46,7 +66,7 @@ const AccountOrderDetail: React.FC = () => {
                                         <h6 className="heading-xxxs text-muted">Order No:</h6>
                                         {/* Text */}
                                         <p className="mb-lg-0 font-size-sm font-weight-bold">
-                                            {order.data.id}
+                                            {state.order.id}
                                         </p>
                                     </div>
                                     <div className="col-6 col-lg-3">
@@ -55,7 +75,7 @@ const AccountOrderDetail: React.FC = () => {
                                         {/* Text */}
                                         <p className="mb-lg-0 font-size-sm font-weight-bold">
                                             <time dateTime="2019-09-25">
-                                                {order.data.distributorId}
+                                                {state.order.distributor.user.displayName}
                                             </time>
                                         </p>
                                     </div>
@@ -64,7 +84,7 @@ const AccountOrderDetail: React.FC = () => {
                                         <h6 className="heading-xxxs text-muted">Status:</h6>
                                         {/* Text */}
                                         <p className="mb-0 font-size-sm font-weight-bold">
-                                            {order.data.status === -1 ? 'Đang thành tiền' : (order.data.status === 0 ? 'Hủy' : (order.data.status === 1 ? 'Đã thành tiền' : (order.data.status === 2 ? 'Chưa thành tiền' : '')))}
+                                            {state.order.status === -1 ? 'Đang thành tiền' : (state.order.status === 0 ? 'Hủy' : (state.order.status === 1 ? 'Đã thành tiền' : (state.order.status === 2 ? 'Chưa thành tiền' : '')))}
                                         </p>
                                     </div>
                                     <div className="col-6 col-lg-3">
@@ -72,7 +92,7 @@ const AccountOrderDetail: React.FC = () => {
                                         <h6 className="heading-xxxs text-muted">Order Amount:</h6>
                                         {/* Text */}
                                         <p className="mb-0 font-size-sm font-weight-bold">
-                                            {currency(order.data.orderCost)}
+                                            {currency(state.order.orderCost)}
                                         </p>
                                     </div>
                                 </div>
@@ -82,25 +102,25 @@ const AccountOrderDetail: React.FC = () => {
                 </div>
                 <div className="card-footer">
                     {/* Heading */}
-                    <h6 className="mb-7">Order Items ({orderDetail?.data.length})</h6>
+                    <h6 className="mb-7">Order Items ({state.orderDetail.length})</h6>
                     {/* Divider */}
                     <hr className="my-5" />
                     {/* List group */}
                     <ul className="list-group list-group-lg list-group-flush-y list-group-flush-x">
-                        {orderDetail?.data && orderDetail.data.map(ordDetail => {
+                        {state.orderDetail && state.orderDetail.map(ordDetail => {
                             return (
                                 <li className="list-group-item">
                                     <div className="row align-items-center">
                                         <div className="col-4 col-md-3 col-xl-2">
                                             {/* Image */}
-                                            <Link to={`/product/${ordDetail.product.id}`}>
+                                            <Link to={`/${ordDetail.product.id}`}>
                                                 <img src={ordDetail.product.image} alt="..." className="img-fluid" />
                                             </Link>
                                         </div>
                                         <div className="col">
                                             {/* Title */}
                                             <p className="mb-4 font-size-sm font-weight-bold">
-                                                <Link className="text-body" to={`/product/${ordDetail.product.id}`}>{ordDetail.product.id}</Link> <br />
+                                                <Link className="text-body" to={`/${ordDetail.product.id}`}>{ordDetail.product.id}</Link> <br />
                                                 <span className="text-muted">{currency(ordDetail.orderPrice)}</span>
                                             </p>
                                             {/* Text */}

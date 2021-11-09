@@ -11,7 +11,7 @@ export interface User {
         day: number,
         month: number,
         year: number,
-        avatar: string,
+        avatar: Blob,
         sex: number,
         email: string,
         phoneNumber: string,

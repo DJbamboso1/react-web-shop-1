@@ -12,41 +12,35 @@ import ProductPage from 'pages/product'
 
 export const routers: RouterParam[] = [
     {
-        path: '/',
-        component: lazy(() => import('../pages/authenicate/login')),
-        // auth: false,
-        exact: true,
-    },
-    {
-        path: '/register',
-        component: lazy(() => import('../pages/authenicate/register')),
-        // auth: false,
-        exact: true,
-    },
-    {
-        auth: 'Distributor',
-        path: '/home',
-        component: Home,
-        exact: true
-    },
-    {
-        path: '/404',
-        component: Page404
-    },
-    {
         component: MainLayout,
-        auth: 'Retailer',
         routers: [
             {
-                path: '/product',
+                path: '/',
                 component: ProductPage,
-                // auth: 'Retailer',
+                auth: false,
                 exact: true
+            },
+            {
+                path: '/auth',
+                component: AuthLayout,
+                auth: false,
+                routers: [
+                    {
+                        path: '/login',
+                        component: lazy(() => import('../pages/authenicate/login')),
+                        exact: true,
+                    },
+                    {
+                        path: '/register',
+                        component: lazy(() => import('../pages/authenicate/register')),
+                        exact: true,
+                    },
+                ]
             },
             {
                 path: '/account',
                 component: AccountLayout,
-                // auth: 'Retailer',
+                auth: true,
                 routers: [
                     {
                         path: '/info',
@@ -54,6 +48,7 @@ export const routers: RouterParam[] = [
                         exact: true,
                     },
                     {
+                        // path: '/orders',
                         path: '/orders/:slug',
                         component: lazy(() => import('../pages/account/accountOrders')),
                         exact: true,
@@ -73,33 +68,36 @@ export const routers: RouterParam[] = [
                     },
 
                 ]
-            },           
+            },
+            // {
+            //     path: '/product',
+            //     component: ProductPage,
+            //     auth: false,
+            //     exact: true
+            // },
             {
                 path: '/view-cart',
                 component: lazy(() => import('../pages/view_cart')),
-                exact: true,
-                // auth: 'Retailer'
+                exact: true
             },
-            {
+            {           
                 path: '/checkout',
-                component: lazy(() => import('../pages/checkout')),
-                exact: true,
-                // auth: 'Retailer'
+                component: lazy(() => import('../pages/checkout')), 
+                exact: true
             },
             {
                 path: '/order-complete',
                 component: lazy(() => import('../pages/checkoutComplete')),
-                // auth: 'Retailer',
+                auth: true,
                 exact: true
             },
             {
                 path: '/order-complete/:slug',
                 component: lazy(() => import('../pages/checkoutComplete')),
-                // auth: 'Retailer',
+                auth: true,
                 exact: true
             },
             {
-                // auth: 'Retailer',
                 path: '/product/:slug',
                 component: lazy(() => import('../pages/productDetail')),
                 exact: true
@@ -108,7 +106,7 @@ export const routers: RouterParam[] = [
                 component: Page404
             }
         ]
-    },
+    }
     
 ]
 

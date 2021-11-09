@@ -42,7 +42,7 @@ export const ProductItem: React.FC<{ product: Product01, num: number }> = ({ pro
                 <div className="col">
                     {/* Title */}
                     <div className="d-flex mb-2 font-weight-bold">
-                        <Link className="text-body" to={`/product/${product.name}`}>{product.name}</Link> <span className="ml-auto" style={{ fontWeight: 'bold' }}>{`${currency(getPricePerPro(product, num))} / item`}</span>
+                        <Link className="text-body" to={`/${product.name}`}>{product.name}</Link> <span className="ml-auto" style={{ fontWeight: 'bold' }}>{`${currency(getPricePerPro(product, num))} / item`}</span>
                         {/* <span className="text-muted">
                             Nhà phân phối: {product.distributor}
                             <br/>

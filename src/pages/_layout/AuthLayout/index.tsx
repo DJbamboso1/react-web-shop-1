@@ -10,8 +10,8 @@ const AuthLayout: React.FC = ({ children }) => {
     // } 
 
     return (
-        <section className="py-12">
-            <div className="container">
+        <section className="py-0">
+            <div>
                 {children}
             </div>
         </section>

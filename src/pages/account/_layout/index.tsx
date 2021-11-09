@@ -1,3 +1,4 @@
+import { Breadcrumbs } from 'components/Breadcrumbs'
 import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, NavLink, Redirect } from 'react-router-dom'
@@ -8,7 +9,7 @@ const AccountLayout: React.FC = ({ children }) => {
 
     function navbarHandle(event: any) {
         event.preventDefault()
-        
+
 
     }
     const dispatch = useDispatch()
@@ -29,6 +30,19 @@ const AccountLayout: React.FC = ({ children }) => {
                         <div className="col-12 text-center">
                             {/* Heading */}
                             <h3 className="mb-10">My Account</h3>
+                            <div style={{display:'flex', justifyContent: 'center', paddingBottom: 50}}>
+                                <Breadcrumbs list={[
+                                    {
+                                        title: 'Home',
+                                        link: '/'
+                                    },
+                                    {
+                                        title: 'Account',
+                                        link: '/account/info'
+                                    },
+
+                                ]} />
+                            </div>
                         </div>
                     </div>
                     <div className="row">
@@ -52,9 +66,9 @@ const AccountLayout: React.FC = ({ children }) => {
                                     <NavLink className="list-group-item list-group-item-action dropright-toggle " href="account-payment.html">
                                         Payment Methods
                                     </NavLink> */}
-                                    <NavLink className="list-group-item list-group-item-action dropright-toggle" to="#" onClick={logout}>
+                                    <Link className="list-group-item list-group-item-action dropright-toggle" to="#" onClick={logout}>
                                         Logout
-                                    </NavLink>
+                                    </Link>
                                 </div>
                             </nav>
                         </div>

@@ -6,6 +6,8 @@ import ErrorInput from 'components/ErrorInput'
 import { User } from '@types'
 import authService from 'services/authService'
 import { data } from 'flickity'
+import LoadingPage from 'components/LoadingPage'
+import { Skeleton } from '@mui/material'
 
 type Form = User['data']
 
@@ -18,6 +20,8 @@ const AccountInfo: React.FC = () => {
 
     let monthRef = useRef<any>()
     let yearRef = useRef<any>()
+    let yearNow = new Date().getFullYear()
+    let [state, setState] = useState(true)
 
     let { register, setForm, handleSubmit, error, form } = useForm<Form>()
     let { user } = useSelector((store: StateStore) => store.auth)
@@ -27,10 +31,14 @@ const AccountInfo: React.FC = () => {
             if (user?.data) {
                 let inf = await authService.getInfo(user.data.id)
                 // setInfo(inf)
+                setState(false)
                 setForm(inf.data)
+
             }
         })()
     }, [])
+
+
 
     function changeDate() {
         let month = monthRef.current.value
@@ -40,50 +48,75 @@ const AccountInfo: React.FC = () => {
     }
 
     const submit = (form: Form) => {
-        // console.log(form)
+        let formData = new FormData()
+        let i: keyof typeof form;
+        for (i in form) {
+            if (i === 'avatar') {
+                formData.append(i, form[i])
+            }
+            else {
+                formData.append(i, form[i].toString())
+            }
+            // else if (i in form && form[i] instanceof Date ) {
+            //     formData.append(i, form[i])
+            // }
+        }
+    
+        console.log(form)
     }
-    let yearNow = new Date().getFullYear()
+    // if (state) {
+    //     return <LoadingPage />
+    // }
     return (
         <form onSubmit={handleSubmit(submit)}>
             <div className="row">
                 <div className="col-12">
                     {/* Email */}
                     <div className="form-group">
-                        <label htmlFor="accountFirstName">
+                        {form.displayName ? <label htmlFor="accountFirstName">
                             Full Name *
-                        </label>
-                        <input className="form-control form-control-sm" id="accountFirstName" type="text" placeholder="First Name *" {...register('displayName')} />
+                        </label> : <Skeleton width='30%' height={35} />}
+                        {form.displayName ? <input className="form-control form-control-sm" id="accountFirstName" type="text" placeholder="First Name *" {...register('displayName')} /> : <Skeleton width='100%' height={75} />}
                     </div>
                 </div>
                 <ErrorInput error={error.displayName} />
                 <div className="col-12">
                     {/* Email */}
                     <div className="form-group">
-                        <label htmlFor="accountEmail">
+                        {form.email ? <label htmlFor="accountEmail">
                             Email Address *
-                        </label>
-                        <input className="form-control form-control-sm" id="accountEmail" type="email" placeholder="Email Address *"   {...register('email', { pattern: 'email' })} />
+                        </label> : <Skeleton width='30%' height={35} />}
+                        {form.email ? <input className="form-control form-control-sm" id="accountEmail" type="email" placeholder="Email Address *"   {...register('email', { pattern: 'email' })} /> : <Skeleton width='100%' height={75} />}
                     </div>
                 </div>
                 <div className="col-12 col-md-6">
                     {/* Password */}
                     <div className="form-group">
-                        <label htmlFor="accountPassword">
-                            Current Password *
-                        </label>
-                        <input className="form-control form-control-sm" id="accountPassword" type="password" placeholder="Current Password *" />
+                        {
+                            form.id ? <label htmlFor="accountPassword">
+                                Current Password *
+                            </label> : <Skeleton width='30%' height={35} />
+                        }
+                        {
+                            form.id ? <input className="form-control form-control-sm" id="accountPassword" type="password" placeholder="Current Password *" /> : <Skeleton width='100%' height={75} />
+                        }
+
                     </div>
                 </div>
                 <div className="col-12 col-md-6">
                     {/* Password */}
                     <div className="form-group">
-                        <label htmlFor="AccountNewPassword">
-                            New Password *
-                        </label>
-                        <input className="form-control form-control-sm" id="AccountNewPassword" type="password" placeholder="New Password *" />
+                        {
+                            form.id ? <label htmlFor="AccountNewPassword">
+                                New Password *
+                            </label> : <Skeleton width='30%' height={35} />
+                        }
+                        {
+                            form.id ? <input className="form-control form-control-sm" id="AccountNewPassword" type="password" placeholder="New Password *" /> : <Skeleton width='100%' height={75} />
+                        }
                     </div>
                 </div>
-                <div className="col-12 col-lg-6">
+                <div className="col-12 col-lg-7">
                     {/* Birthday */}
                     <div className="form-group">
                         {/* Label */}
@@ -129,18 +162,27 @@ const AccountInfo: React.FC = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-12 col-lg-6">
+                <div className="col-12 col-lg-5">
                     {/* Gender */}
                     <div className="form-group mb-8">
                         <label>Gender</label>
                         <div className="btn-group-toggle" data-toggle="buttons">
-                            <label className={`btn btn-sm btn-outline-border ${form.sex === TYPE_MALE ? 'active': ''}`} onClick={e => setForm({...form, sex: TYPE_MALE})}>
-                                <input type="radio" name="gender"  /> Male
+                            <label className={`btn btn-sm btn-outline-border ${form.sex === TYPE_MALE ? 'active' : ''}`} onClick={e => setForm({ ...form, sex: TYPE_MALE })}>
+                                <input type="radio" name="gender" /> Male
                             </label>
-                            <label className={`btn btn-sm btn-outline-border ${form.sex === TYPE_FEMALE ? 'active': ''}`} onClick={e => setForm({...form, sex: TYPE_FEMALE})}>
+                            <label className={`btn btn-sm btn-outline-border ${form.sex === TYPE_FEMALE ? 'active' : ''}`} onClick={e => setForm({ ...form, sex: TYPE_FEMALE })}>
                                 <input type="radio" name="gender" /> Female
                             </label>
                         </div>
+                    </div>
+                </div>
+                <div className="col-12">
+                    {/* Email */}
+                    <div className="form-group">
+                        {form.displayName ? <label htmlFor="accountFirstName">
+                            Avatar *
+                        </label> : <Skeleton width='30%' height={35} />}
+                        <input className="form-control form-control-sm" id="accountFirstName" type="file" placeholder="First Name *" {...register('avatar')} />
                     </div>
                 </div>
                 <div className="col-12">

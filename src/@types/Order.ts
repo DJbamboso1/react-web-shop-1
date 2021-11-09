@@ -6,7 +6,13 @@ export interface Order {
   {
     id: string,
     sessionId: string,
-    distributorId: string,
+    distributor: {
+      id: string,
+      user: {
+        username: string,
+        displayName: string
+      }
+    },
     orderCost: number,
     status: number
   }[]
@@ -52,7 +58,13 @@ export interface Order1 {
   {
     id: string,
     sessionId: string,
-    distributorId: string,
+    distributor: {
+      id: string,
+      user: {
+        username: string,
+        displayName: string
+      }
+    },
     orderCost: number,
     status: number
   }

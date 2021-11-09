@@ -15,7 +15,7 @@ const ViewCart: React.FC = () => {
     const subTotal = useSelector(getSubtotal)
 
     if (list.length === 0) {
-        return <Redirect to="/product" />
+        return <Redirect to="/" />
     }
 
     return (
@@ -98,7 +98,7 @@ const ViewCart: React.FC = () => {
                         {/* Button */}
                         <Link className="btn btn-block btn-dark mb-2" to="/checkout">Proceed to Checkout</Link>
                         {/* Link */}
-                        <a className="btn btn-link btn-sm px-0 text-body" href="/product">
+                        <a className="btn btn-link btn-sm px-0 text-body" href="/">
                             <i className="fe fe-arrow-left mr-2" /> Continue Shopping
                         </a>
                     </div>

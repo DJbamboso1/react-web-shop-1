@@ -7,7 +7,7 @@ export const convertQueryURLToObject = <T extends Objected>(): Partial<T> => {
         var search = window.location.search.substring(1);
         // console.log('search: ' + search)
         return JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}')
-    } catch(error: any) {
+    } catch (error: any) {
         return {} as T
     }
 }
@@ -17,7 +17,7 @@ type Json = {
 }
 
 export const convertObjectToQueryURL = (data: Json) => {
-    return Object.keys(data).map(function(key) {
+    return Object.keys(data).map(function (key) {
         return encodeURIComponent(key) + '=' + encodeURIComponent(data[key])
     }).join('&')
 }
@@ -29,12 +29,9 @@ export const convertObjectToQueryURL = (data: Json) => {
 // }
 
 export const changeQueryURL = (data: Json) => {
-    let path = window.location.pathname + '?' + Object.keys(data).map(function(key) {
-        if(data[key] !== '') {
-            return encodeURIComponent(key) + '=' + encodeURIComponent(data[key])
-        }
-        return ''
-    }).join(`${data.SubCategoryId ? '&' : ''}`)
+    let path = window.location.pathname + '?' + Object.keys(data).map(function (key) {
+        return encodeURIComponent(key) + '=' + encodeURIComponent(data[key])
+    }).join('&')
 
     return path
 }

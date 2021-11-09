@@ -1,3 +1,4 @@
+import LoadingPage from 'components/LoadingPage'
 import { Paginate } from 'components/Paginate'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -17,12 +18,18 @@ type FilterQuery = {
 
 type StateProp = {
     loading: boolean,
-    session: Session,
+    sessions: Session['data'],
 }
 
 const AccountSession: React.FC = () => {
     let { user } = useSelector((store: StateStore) => store.auth)
     let [session, setSession] = useState<Session>()
+
+    let [state, setState] = useState<StateProp>({
+        loading: true,
+        sessions: []
+    })
+
     let queryUrl = convertQueryURLToObject<FilterQuery>()
     useEffect(() => {
         (async () => {
@@ -35,9 +42,15 @@ const AccountSession: React.FC = () => {
                 }
                 let sess = await sessionService.getAllSession(obj)
                 setSession(sess)
+                setState({
+                    loading: false,
+                    sessions: sess.data
+                })
             }
         })()
     }, [queryUrl.PageNumber])
+
+
     const total = session?.total as number
     const pageSize = session?.pageSize as number
     const pageNumber = []
@@ -45,11 +58,19 @@ const AccountSession: React.FC = () => {
         pageNumber.push(i)
     }
 
+    if (state.loading) {
+        // setState({
+        //     loading: true,
+        //     sessions: []
+        // })
+        return <LoadingPage />
+    }
+
     return (
         <div>
             <div className="card card-lg mb-5 border">
                 {
-                    session && session.data.map(s => {
+                    state.sessions && state.sessions.map(s => {
                         return (
                             <Link style={{ color: 'black' }} className="card-body" to={`/account/orders/${s.id}`}>
                                 {/* Info */}
@@ -97,11 +118,10 @@ const AccountSession: React.FC = () => {
                         )
                     })
                 }
-
             </div>
             {/* Pagination */}
             {
-                session && <Paginate currentPage={session.pageNumber} totalPage={pageNumber.length} />
+                state.sessions && session && <Paginate currentPage={session.pageNumber} totalPage={pageNumber.length} />
             }
         </div>
     )

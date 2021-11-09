@@ -33,7 +33,7 @@ export const CartModal: React.FC = () => {
     const _preventViewCart = useCallback((ev: React.MouseEvent) => {
         if (list.length === 0) {
             ev.preventDefault();
-            history.push('/product')
+            history.push('/')
         }
         dispatch(toggleCart(false))
     }, [list])
@@ -82,7 +82,7 @@ export const CartModal: React.FC = () => {
                                 {/* Heading */}
                                 <h6 className="mb-7 text-center">Your cart is empty 😞</h6>
                                 {/* Button */}
-                                <a className="btn btn-block btn-outline-dark" href="/product">
+                                <a className="btn btn-block btn-outline-dark" href="/">
                                     Continue Shopping
                                 </a>
                             </div>
@@ -129,7 +129,7 @@ export const CartItem: React.FC<{
             <div className="row align-items-center">
                 <div className="col-4">
                     {/* Image */}
-                    <Link className="card-img-hover" to={`/product/${name}`}>
+                    <Link className="card-img-hover" to={`/product/${id}`}>
                         <img className="img-fluid" src={image} alt="..." />
                     </Link>
                 </div>
