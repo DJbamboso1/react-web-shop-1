@@ -11,8 +11,8 @@ class Http {
         let response = {
             ...requestInit,
             headers: {
-                'Content-Type': 'application/json',
-                ...(this._token ? { 'Authorization': `Beare ${token}` } : {})
+                'Content-Type': 'application/json-patch+json',
+                // ...(this._token ? { 'Authorization': `Beare ${token}` } : {})
             },
             ...(requestInit?.body ? { body: JSON.stringify(requestInit.body) } : {}),
         }
@@ -32,7 +32,10 @@ class Http {
         return fetch(url, requestInit).then(res =>  res.json())
     }
 
-    put(){}
+    put<T>(url: string, form?: any): Promise<T>{
+        let requestInit = this._setupHeader({ body: form, method: 'PUT' })
+        return fetch(url, requestInit).then(res =>  res.json())
+    }
     delete(){}
 }
 

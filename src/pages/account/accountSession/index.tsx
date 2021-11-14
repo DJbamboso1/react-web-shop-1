@@ -24,7 +24,8 @@ type StateProp = {
 const AccountSession: React.FC = () => {
     let { user } = useSelector((store: StateStore) => store.auth)
     let [session, setSession] = useState<Session>()
-
+    let [status, setStatus] = useState(-2)
+    let [date, setDate] = useState< { date: Date } >()
     let [state, setState] = useState<StateProp>({
         loading: true,
         sessions: []
@@ -33,22 +34,32 @@ const AccountSession: React.FC = () => {
     let queryUrl = convertQueryURLToObject<FilterQuery>()
     useEffect(() => {
         (async () => {
-            if (user?.data) {
+            if (user) {
                 let pageNum = queryUrl.PageNumber || '1'
                 let obj: FilterQuery = {
-                    RetailerId: user.data.actorId,
+                    RetailerId: user.actorId,
                     PageNumber: pageNum,
                     PageSize: '3'
                 }
                 let sess = await sessionService.getAllSession(obj)
-                setSession(sess)
-                setState({
-                    loading: false,
-                    sessions: sess.data
-                })
+                setSession(sess)   
+                console.log('STATUS: ', status)
+                if (status > -2) {
+                    let sessFilterStatus = sess.data.filter( s => s.status === status )
+                    setState({
+                        loading: false,
+                        sessions: sessFilterStatus
+                    })
+                } else {
+                    setState({
+                        loading: false,
+                        sessions: sess.data
+                    })
+                }
+                
             }
         })()
-    }, [queryUrl.PageNumber])
+    }, [queryUrl.PageNumber, status])
 
 
     const total = session?.total as number
@@ -68,9 +79,30 @@ const AccountSession: React.FC = () => {
 
     return (
         <div>
+            <div className="col-12" style={{display: 'flex', justifyContent: 'flex-end', padding: '10px 0px'}}>
+                <form >
+                    {/* Select */}
+                    Trạng thái: <select className="custom-select custom-select-sm" id="status" style={{ width: 200, }} onChange={(ev) => { setStatus(parseInt(ev.currentTarget.value)) }} >
+                        <option value="-1">Đang thành tiền</option>
+                        <option value="0">Đã hủy</option>
+                        <option value="1">Đã thành tiền</option>
+                        <option value="2">Chưa tính tiền</option>
+                    </select>
+                </form>
+            </div>
+            {/* <div className="">
+                        <select className="custom-select custom-select-sm" id="status" style={{ width: 200, }}  >
+                            <option value="-1">Đang thành tiền</option>
+                            <option value="0">Đã hủy</option>
+                            <option value="1">Đã thành tiền</option>
+                            <option value="2">Chưa tính tiền</option>
+                        </select>
+                    </div> */}
+
+
             <div className="card card-lg mb-5 border">
                 {
-                    state.sessions && state.sessions.map(s => {
+                    state.sessions && state.sessions.length > 0 ? state.sessions.map((s, i) => {
                         return (
                             <Link style={{ color: 'black' }} className="card-body" to={`/account/orders/${s.id}`}>
                                 {/* Info */}
@@ -82,7 +114,7 @@ const AccountSession: React.FC = () => {
                                                 <h6 className="heading-xxxs text-muted">Session No:</h6>
                                                 {/* Text */}
                                                 <p className="mb-lg-0 font-size-sm font-weight-bold">
-                                                    {s.id}
+                                                    {i + 1}
                                                 </p>
                                             </div>
                                             <div className="col-6 col-lg-3">
@@ -116,7 +148,7 @@ const AccountSession: React.FC = () => {
                                 </div>
                             </Link>
                         )
-                    })
+                    }) : <p style={{ color: 'red' }}>Session is empty, want to buy some product ? <Link to='/'>Click here</Link></p>
                 }
             </div>
             {/* Pagination */}

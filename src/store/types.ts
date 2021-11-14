@@ -3,6 +3,7 @@ export const LOGIN = 'LOGIN'
 export const AUTH_LOGOUT = 'AUTH_LOGOUT'
 export const LOGIN_ERROR = 'LOGIN_ERROR' 
 export const AUTH_GET_INFO = 'AUTH_GET_INFO'
+export const AUTH_UPDATE_INFO = 'AUTH_UPDATE_INFO'
 
 export const CART_TOGGLE_CART = 'cart/toggleCart' 
 export const CART_ADD_CART = 'cart/addCart' 

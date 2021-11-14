@@ -17,7 +17,6 @@ type FilterQuery = {
 
 type StateProps = {
     loading: boolean,
-    order?: Order1['data'],
     orderDetail: OrderDetail['data']
   }
 
@@ -26,9 +25,10 @@ const AccountOrderDetail: React.FC = () => {
     let [orderDetail, setOrderDetail] = useState<OrderDetail>()
     let [state, setState] = useState<StateProps>({
         loading: true,
-        orderDetail: []
+        orderDetail: [],
+
     })
-    let [order, setOrder] = useState<Order1>()
+    let [order, setOrder] = useState<Order1['data']>()
 
     let Subtotal = useTotal()
     useEffect(() => {
@@ -39,10 +39,9 @@ const AccountOrderDetail: React.FC = () => {
             let ordDetail = await orderService.getOrderDetail(obj)
             // setOrderDetail(ordDetail)
             let ord = await orderService.getOrderById(slug)
-            // setOrder(ord)
+            setOrder(ord.data)
             setState({
                 loading: false,
-                order: ord.data,
                 orderDetail: ordDetail.data
             })
         })()
@@ -57,7 +56,7 @@ const AccountOrderDetail: React.FC = () => {
                 <div className="card-body pb-0">
                     {/* Info */}
                     {
-                        state.order &&
+                        order &&
                         <div className="card card-sm">
                             <div className="card-body bg-light">
                                 <div className="row">
@@ -66,7 +65,7 @@ const AccountOrderDetail: React.FC = () => {
                                         <h6 className="heading-xxxs text-muted">Order No:</h6>
                                         {/* Text */}
                                         <p className="mb-lg-0 font-size-sm font-weight-bold">
-                                            {state.order.id}
+                                            {order.id}
                                         </p>
                                     </div>
                                     <div className="col-6 col-lg-3">
@@ -75,7 +74,7 @@ const AccountOrderDetail: React.FC = () => {
                                         {/* Text */}
                                         <p className="mb-lg-0 font-size-sm font-weight-bold">
                                             <time dateTime="2019-09-25">
-                                                {state.order.distributor.user.displayName}
+                                                {order.distributor.user.displayName}
                                             </time>
                                         </p>
                                     </div>
@@ -84,7 +83,7 @@ const AccountOrderDetail: React.FC = () => {
                                         <h6 className="heading-xxxs text-muted">Status:</h6>
                                         {/* Text */}
                                         <p className="mb-0 font-size-sm font-weight-bold">
-                                            {state.order.status === -1 ? 'Đang thành tiền' : (state.order.status === 0 ? 'Hủy' : (state.order.status === 1 ? 'Đã thành tiền' : (state.order.status === 2 ? 'Chưa thành tiền' : '')))}
+                                            {order.status === -1 ? 'Đang thành tiền' : (order.status === 0 ? 'Hủy' : (order.status === 1 ? 'Đã thành tiền' : (order.status === 2 ? 'Chưa thành tiền' : '')))}
                                         </p>
                                     </div>
                                     <div className="col-6 col-lg-3">
@@ -92,7 +91,7 @@ const AccountOrderDetail: React.FC = () => {
                                         <h6 className="heading-xxxs text-muted">Order Amount:</h6>
                                         {/* Text */}
                                         <p className="mb-0 font-size-sm font-weight-bold">
-                                            {currency(state.order.orderCost)}
+                                            {currency(order.orderCost)}
                                         </p>
                                     </div>
                                 </div>
@@ -120,7 +119,7 @@ const AccountOrderDetail: React.FC = () => {
                                         <div className="col">
                                             {/* Title */}
                                             <p className="mb-4 font-size-sm font-weight-bold">
-                                                <Link className="text-body" to={`/${ordDetail.product.id}`}>{ordDetail.product.id}</Link> <br />
+                                                <Link className="text-body" to={`/${ordDetail.product.id}`}>{ordDetail.product.name}</Link> <br />
                                                 <span className="text-muted">{currency(ordDetail.orderPrice)}</span>
                                             </p>
                                             {/* Text */}
@@ -138,7 +137,7 @@ const AccountOrderDetail: React.FC = () => {
             </div>
             {/* Total */}
             {
-                order?.data && <div className="card card-lg mb-5 border">
+                order && <div className="card card-lg mb-5 border">
                     <div className="card-body">
                         {/* Heading */}
                         <h6 className="mb-7">Order Total</h6>
@@ -158,7 +157,7 @@ const AccountOrderDetail: React.FC = () => {
                         </li> */}
                             <li className="list-group-item d-flex font-size-lg font-weight-bold">
                                 <span>Total</span>
-                                <span className="ml-auto">{currency(order.data.orderCost)}</span>
+                                <span className="ml-auto">{currency(order.orderCost)}</span>
                             </li>
                         </ul>
                     </div>

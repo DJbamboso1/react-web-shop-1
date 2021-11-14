@@ -10,7 +10,7 @@ type PrivateRouterProp = {
 const PrivateRouter: React.FC<PrivateRouterProp> = (props) => {
     let { login, role  } = useSelector((store: StateStore) => store.auth)
     // console.log('Role get from login: ', role)
-
+    console.log(login, role)
     let { auth } = props
     // console.log('AUTH: ', auth)
 

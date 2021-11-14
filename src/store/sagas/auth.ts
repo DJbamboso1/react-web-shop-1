@@ -20,10 +20,10 @@ export function* fetchLogin(action: any): any {
             })
         }
         else {
-            // let info = yield call(authService.getInfo, user.data.id)
-            localStorage.setItem('login', JSON.stringify(user))
+            // let info = yield call(authService.getInfo, user.data.id)   
             // localStorage.setItem('token', JSON.stringify(user.data.jwtToken))
-            yield put(authLogin(user))
+            console.log('aaaaaaaaaaaaaaaaa' , user.data)
+            yield put(authLogin(user.data))
 
         }
     } catch (err) {

@@ -33,7 +33,7 @@ type ErrorState<T extends Object> = Partial<{
 type UseFormReturn<T> = {
     register: (name: keyof T, rule?: RuleItem, message?: any) => {
         name: keyof T,
-        onChange: (event: ChangeEvent<HTMLInputElement>) => void,
+        onChange: (event: any) => void,
         value: string
     },
     handleSubmit: Function,
@@ -74,7 +74,7 @@ export function useForm<T extends Object>(initvalue = {}): UseFormReturn<T> {
         else {
             form[name] = value
         }
-
+        
         setForm({ ...form })
     }
 

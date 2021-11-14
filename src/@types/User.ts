@@ -7,11 +7,11 @@ export interface User {
         roleId: string,
         username: string,
         displayName: string,
-        doB: Date,
+        doB: string,
         day: number,
         month: number,
         year: number,
-        avatar: Blob,
+        avatar: string,
         sex: number,
         email: string,
         phoneNumber: string,
@@ -20,4 +20,17 @@ export interface User {
         dateCreated: Date,
         dateModified: Date
     }
+}
+
+export interface UserRegister {
+    roleId: string,
+    username: string,
+    displayName: string,
+    password: string,
+    doB: string,
+    avatar: string,
+    sex: number,
+    email: string,
+    phoneNumber: string,
+    address: string,
 }

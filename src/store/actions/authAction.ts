@@ -1,11 +1,12 @@
-import { AUTH_GET_INFO, AUTH_LOGOUT, FETCH_LOGIN, LOGIN } from "store/types";
+import { User } from "@types";
+import { AUTH_GET_INFO, AUTH_LOGOUT, AUTH_UPDATE_INFO, FETCH_LOGIN, LOGIN } from "store/types";
 
-type User = {
+type UserLogin = {
     username: string,
     password: string
 }
 
-export const authFetchAction = (user: User) => {
+export const authFetchAction = (user: UserLogin) => {
     // console.log(user)
     return {
         type: FETCH_LOGIN,
@@ -20,7 +21,7 @@ export const authGetInfo = (id: string) => {
     }
 }
 
-export const authLogin = (user: User) => {
+export const authLogin = (user: any) => {
     // console.log(user)
     return {
         type: LOGIN,
@@ -31,5 +32,12 @@ export const authLogin = (user: User) => {
 export const authLogoutAction = () => {
     return {
         type: AUTH_LOGOUT
+    }
+}
+
+export const updateInfo = (user: any) => {
+    return {
+        type: AUTH_UPDATE_INFO,
+        payload: user
     }
 }

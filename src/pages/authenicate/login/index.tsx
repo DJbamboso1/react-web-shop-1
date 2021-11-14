@@ -101,7 +101,6 @@ const Login: React.FC = () => {
                             </div>
                             <ErrorInput error={error.username} />
                             <div className="wrap-input100">
-                                
                                 <input {...register('password', { min: 6, max: 32, required: true }, { required: 'Mật khẩu không được để trống', min: 'Mật khẩu có ít nhất 6 ký tự', max: 'Mất khẩu có nhiều nhất 32 ký tự' })} className={`input100 ${form && form.password.length > 0 && 'has-val'}`} type="password" />
                                 <span className="focus-input100" />
                                 <span className="label-input100">Password<span style={{color: 'red'}}>* </span> </span>
@@ -109,7 +108,7 @@ const Login: React.FC = () => {
                             <ErrorInput error={error.password} />
                             <div className="flex-sb-m w-full p-t-3 p-b-32">
                                 <div>
-                                <p className='txt1'>{t(`Dont't have a account?`)} <Link to="/register" style={{fontWeight: 'bold'}}>Register</Link></p>
+                                <p className='txt1'>{t(`Dont't have a account?`)} <Link to="/auth/register" style={{fontWeight: 'bold'}}>Register</Link></p>
                                 </div>
                                 
                             </div>

@@ -8,6 +8,8 @@ import authService from 'services/authService'
 import { data } from 'flickity'
 import LoadingPage from 'components/LoadingPage'
 import { Skeleton } from '@mui/material'
+import { ref, getDownloadURL, storage, uploadBytesResumable, uploadString } from 'utils/firebase'
+import { authLogin, updateInfo } from 'store/actions/authAction'
 
 type Form = User['data']
 
@@ -16,60 +18,109 @@ const TYPE_FEMALE = 1
 
 const AccountInfo: React.FC = () => {
 
+    let dispatch = useDispatch()
     let [countDay, setCountDay] = useState<number>(0)
-
-    let monthRef = useRef<any>()
-    let yearRef = useRef<any>()
-    let yearNow = new Date().getFullYear()
-    let [state, setState] = useState(true)
-
     let { register, setForm, handleSubmit, error, form } = useForm<Form>()
+    let [mon, setMonth] = useState(1)
+    let [yea, setYear] = useState(1)
+    let [day, setDay] = useState(1)
+
+    let avatarRef = useRef<HTMLInputElement>(null)
+
+    let yearNow = new Date().getFullYear()
+
     let { user } = useSelector((store: StateStore) => store.auth)
     useEffect(() => {
-        changeDate();
         (async () => {
-            if (user?.data) {
-                let inf = await authService.getInfo(user.data.id)
+            if (user) {
+                let inf = await authService.getInfo(user.id)
+                let date = new Date(inf.data.doB)
+                inf.data.day = date.getDate()
+                inf.data.month = date.getMonth()
+                inf.data.year = date.getFullYear()
+                setMonth(date.getMonth())
+                setDay(date.getDate())
+                setYear(date.getFullYear())
                 // setInfo(inf)
-                setState(false)
                 setForm(inf.data)
-
+                // changeDate()
+                let date1 = new Date(form.year, form.month, 0)
+                setCountDay(date1.getDate())
+                console.log(inf.data)
             }
         })()
     }, [])
 
-
-
-    function changeDate() {
-        let month = monthRef.current.value
-        let year = yearRef.current.value
+    useEffect(() => {
+        let month = form.month
+        let year = form.year
         let date = new Date(year, month, 0)
         setCountDay(date.getDate())
-    }
+        console.log(month)
+        console.log(year)
+        console.log(countDay)
+    }, [form.month, form.year])
 
-    const submit = (form: Form) => {
-        let formData = new FormData()
-        let i: keyof typeof form;
-        for (i in form) {
-            if (i === 'avatar') {
-                formData.append(i, form[i])
-            }
-            else {
-                formData.append(i, form[i].toString())
-            }
-            // else if (i in form && form[i] instanceof Date ) {
-            //     formData.append(i, form[i])
-            // }
+
+    const submit = async (form: Form) => {
+        // let formData = new FormData()
+        // let i: keyof typeof form;
+        // for (i in form) {
+        //     if (i === 'avatar') {
+        //         formData.append(i, form[i])
+        //     }
+        //     else if (i === 'doB') {
+        //         formData.append(i, `${form.year}/${form.month}/${form.day}`)
+        //     }
+        //     else {
+        //         formData.append(i, form[i].toString())
+        //     }
+        // }
+        form.doB = `${form.year}/${form.month}/${form.day}`
+        console.log(form.doB)
+        let profile = await authService.updateProfile(form)
+        if (profile.succeeded) {
+            dispatch(updateInfo(form))
         }
-    
-        console.log(form)
+        console.log('PROFILE: ', profile)
     }
     // if (state) {
     //     return <LoadingPage />
     // }
+
+    const changeAvatar = (ev: React.ChangeEvent<HTMLInputElement>) => {
+        let avatar = ev.currentTarget.files?.[0]
+        if (avatar) {
+            const storageRef = ref(storage, 'avatar/');
+            const uploadTask = uploadBytesResumable(storageRef, avatar);
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                },
+                (error) => {
+                },
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        console.log('File available at', downloadURL);
+                        setForm({ ...form, avatar: downloadURL })
+                        // console.log('Download', downloadURL)
+                    })
+                }
+            )
+        }
+    }
+
     return (
         <form onSubmit={handleSubmit(submit)}>
             <div className="row">
+                <div className="col-12">
+                    {/* Email */}
+                    <div className="form-group">
+
+                        {/* <input className="form-control form-control-sm" id="accountFirstName" type="text" placeholder="First Name *" {...register('displayName')} />  */}
+                        <img src={form.avatar || '/img/avatar.jpg'} alt="" onClick={() => { avatarRef.current?.dispatchEvent(new MouseEvent('click')) }} />
+                        <input type="file" style={{ display: 'none' }} ref={avatarRef} onChange={changeAvatar} />
+                    </div>
+                </div>
                 <div className="col-12">
                     {/* Email */}
                     <div className="form-group">
@@ -125,10 +176,10 @@ const AccountInfo: React.FC = () => {
                         <div className="form-row">
                             <div className="col-auto">
                                 {/* Date */}
-                                <label className="sr-only" htmlFor="accountDate">
-                                    Date
+                                <label className='sr-only' htmlFor="accountDate">
+                                    Day
                                 </label>
-                                <select className="custom-select custom-select-sm" id="accountDate">
+                                <select className="custom-select custom-select-sm" id="accountDate" {...register('day')}  >
                                     {
                                         [...Array(countDay)].map((e, i) => <option value={i + 1}>{i + 1}</option>)
                                     }
@@ -136,10 +187,10 @@ const AccountInfo: React.FC = () => {
                             </div>
                             <div className="col">
                                 {/* Date */}
-                                <label className="sr-only" htmlFor="accountMonth">
+                                <label className='sr-only' htmlFor="accountMonth">
                                     Month
                                 </label>
-                                <select className="custom-select custom-select-sm" id="accountMonth" ref={monthRef} onChange={changeDate}>
+                                <select className="custom-select custom-select-sm" id="accountMonth"  {...register('month')}  >
                                     {
                                         [...Array(12)].map((e, i) => <option value={i + 1}>{i + 1}</option>)
                                     }
@@ -147,10 +198,10 @@ const AccountInfo: React.FC = () => {
                             </div>
                             <div className="col-auto">
                                 {/* Date */}
-                                <label className="sr-only" htmlFor="accountYear">
+                                <label className='sr-only' htmlFor="accountYear">
                                     Year
                                 </label>
-                                <select className="custom-select custom-select-sm" id="accountYear" ref={yearRef} onChange={changeDate}>
+                                <select className="custom-select custom-select-sm" id="accountYear"  {...register('year')} >
                                     {
                                         [...Array(50)].map((e, i) => <option value={yearNow - i}>{yearNow - i}</option>)
                                     }
@@ -176,15 +227,15 @@ const AccountInfo: React.FC = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-12">
-                    {/* Email */}
+                {/* <div className="col-12">
+                    
                     <div className="form-group">
                         {form.displayName ? <label htmlFor="accountFirstName">
                             Avatar *
                         </label> : <Skeleton width='30%' height={35} />}
                         <input className="form-control form-control-sm" id="accountFirstName" type="file" placeholder="First Name *" {...register('avatar')} />
                     </div>
-                </div>
+                </div> */}
                 <div className="col-12">
                     {/* Button */}
                     <button className="btn btn-dark" type="submit">Save Changes</button>

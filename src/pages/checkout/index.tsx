@@ -31,7 +31,7 @@ const CheckoutComponent: React.FC = () => {
     const cartNumber = useCartNumber()
     // const [shippingPrice, setShippingPrice] = useState(35000)
 
-    const { error, form, handleSubmit, register, setForm } = useForm<Form>(user?.data)
+    const { error, form, handleSubmit, register, setForm } = useForm<Form>(user)
 
     const [paymentMethod, setPaymentMethod] = useState<Payment>()
 
@@ -44,15 +44,15 @@ const CheckoutComponent: React.FC = () => {
 
     useEffect(() => {
         (async () => {
-            if (user && user.data) {
+            if (user) {
                 let payment = await paymentService.getAllPayments()
                 // console.log('PAYMENT: ', payment.data)
                 setPaymentMethod(payment)
                 setPayment(payment.data[0].id)
-                let inf = await authService.getInfo(user.data.id)
+                let inf = await authService.getInfo(user.id)
                 // setInfo(inf)
                 setForm(inf.data)
-                setActor(user.data.actorId)
+                setActor(user.actorId)
             }
         })()
     }, [])

@@ -4,7 +4,7 @@ import { Paginate } from 'components/Paginate'
 import { ProductCard } from 'components/ProductCard'
 import React, { useEffect, useState } from 'react'
 import { productService } from 'services/productService'
-import { convertQueryURLToObject } from 'utils'
+import { changeQueryURL, convertQueryURLToObject } from 'utils'
 import { Filter } from './components'
 // import { useDispatch, useSelector } from 'react-redux'
 // import { fetchProducts } from 'store/sagas.ts/product'
@@ -18,6 +18,7 @@ import cateService from 'services/cateService'
 import { categoryConfig } from './categoryConfig'
 import { useRouteMatch } from 'react-router'
 import { useCart } from 'store/selector'
+import { Link } from 'react-router-dom'
 
 export type FilterQuery = {
     // page: string,
@@ -47,9 +48,17 @@ const ProductPage: React.FC = () => {
 
     let [subCate, setSubCate] = useState<CategoryTree>()
 
+    let [status, setStatus] = useState(-2)
+
     useEffect(() => {
 
         (async () => {
+            if (status > -2) {
+                console.log('YO !')
+                queryUrl.Status = status.toString()
+                changeQueryURL({ ...queryUrl, Status: status.toString() })
+            }
+            console.log(status)
             let list = await productService.paginate(queryUrl)
             setData(list)
             let cateList = await cateService.getCategory()
@@ -60,7 +69,7 @@ const ProductPage: React.FC = () => {
         })()
         // dispatch(fetchProductsAction(queryUrl))
         // setData(product.products)
-    }, [queryUrl.PageNumber, queryUrl.CategoryId, queryUrl.SubCategoryId])
+    }, [queryUrl.PageNumber, queryUrl.CategoryId, queryUrl.SubCategoryId, status])
 
     // console.log("data: ", data)
 
@@ -70,7 +79,7 @@ const ProductPage: React.FC = () => {
     for (let i = 1; i <= Math.ceil(total / pageSize); i++) {
         pageNumber.push(i)
     }
-
+    console.log(queryUrl)
 
     return (
         <section className="py-5">
@@ -108,9 +117,27 @@ const ProductPage: React.FC = () => {
                             </div>
                             <div className="col-12 col-md-auto">
                                 {/* Select */}
-                                {/* <select className="custom-select custom-select-xs">
-                                    <option selected>Most popular</option>
-                                </select> */}
+                                <form>
+                                    <select className="custom-select custom-select-xs" onChange={(ev) => { setStatus(parseInt(ev.currentTarget.value)) }}>
+                                        <option value="0">
+                                            {/* <Link to={ status > -2 ? changeQueryURL({ ...queryUrl, Status: status }) : '#' }>Ngừng bán</Link> */}
+                                            Ngừng bán
+                                        </option>
+                                        <option value="1">Còn hàng</option>
+                                        <option value="2">Hết hàng</option>
+                                    </select>
+                                </form>
+                                {/* <div className="col-12" style={{ display: 'flex', justifyContent: 'flex-end', padding: '10px 0px' }}>
+                                    <form >
+                                        
+                                        Trạng thái: <select className="custom-select custom-select-sm" id="status" style={{ width: 200, }} onChange={(ev) => { setStatus(parseInt(ev.currentTarget.value)) }} >
+                                            <option value="-1">Đang thành tiền</option>
+                                            <option value="0">Đã hủy</option>
+                                            <option value="1">Đã thành tiền</option>
+                                            <option value="2">Chưa tính tiền</option>
+                                        </select>
+                                    </form>
+                                </div> */}
                             </div>
                         </div>
                         {/* Tags */}

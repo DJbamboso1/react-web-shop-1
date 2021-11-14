@@ -47,7 +47,7 @@ const ProductDetail: React.FC = () => {
                             link: '/'
                         },
                         {
-                            title: `${data?.data.name}`,
+                            title: `${data && data?.data.name}`,
                             link: ''
                         }
                     ]} />

@@ -1,26 +1,21 @@
 import { User } from "@types";
-import { AUTH_GET_INFO, AUTH_LOGOUT, FETCH_LOGIN, LOGIN, LOGIN_ERROR } from "store/types"
+import { AUTH_GET_INFO, AUTH_LOGOUT, AUTH_UPDATE_INFO, FETCH_LOGIN, LOGIN, LOGIN_ERROR } from "store/types"
 
 
 export type State = {
     user?: {
-        succeeded: boolean,
-        message: string,
-        errors: null,
-        data?: {
+        id: string,
+        role: {
             id: string,
-            role: {
-                id: string,
-                name: string
-            },
-            actorId: string,
-            username: string,
-            displayName: string,
-            avatar: null,
-            email: string,
-            phoneNumber: string,
-            jwtToken: string
-        }
+            name: string
+        },
+        actorId: string,
+        username: string,
+        displayName: string,
+        avatar: null,
+        email: string,
+        phoneNumber: string,
+        jwtToken: string
     },
     login: boolean,
     errorMsg?: string,
@@ -30,7 +25,7 @@ export type State = {
 
 type PayloadAction = {
     type: string,
-    payload: State['user'] 
+    payload: any
 }
 
 let user: State['user'];
@@ -47,19 +42,21 @@ const initState: State = {
     user,
     login: !!user,
     errorMsg: "",
-    role: user?.data?.role.name || ''
+    role: user?.role.name || ''
 }
 
+console.log(initState)
 
 const authReducer = (state = initState, action: PayloadAction): State => {
     switch (action.type) {
         case LOGIN:
+            localStorage.setItem('login', JSON.stringify(action.payload))
             return {
                 ...state,
                 user: action.payload,
                 login: true,
-                role: action.payload?.data?.role.name || ''
-            } 
+                role: action.payload.role.name ? action.payload.role.name : state.role
+            }
         case AUTH_LOGOUT:
             return {
                 login: false,
@@ -72,10 +69,19 @@ const authReducer = (state = initState, action: PayloadAction): State => {
                 ...state,
                 user: undefined,
                 errorMsg: action.payload,
-                role: '' 
+                role: ''
             } as State
         }
-        
+        case AUTH_UPDATE_INFO: {
+            let user = JSON.parse(localStorage.getItem('login') || '')
+            Object.assign(user, action.payload)
+            localStorage.setItem('login', JSON.stringify(user))
+            return {
+                ...state,
+                user: user,           
+            }
+        }
+
     }
     return state
 }

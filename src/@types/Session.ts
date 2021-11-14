@@ -8,6 +8,7 @@ export interface Session {
     data: {
         id: string,
         retailerId: string,
+        retailerName: string,
         paymentMethod?: {
             id: string,
             name: string,
