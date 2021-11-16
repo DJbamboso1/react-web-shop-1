@@ -57,7 +57,7 @@ body, html {
 
 /*---------------------------------------------*/
 a {
-	font-family: Poppins-Regular;
+	/* font-family: Poppins-Regular; */
 	font-size: 14px;
 	line-height: 1.7;
 	color: #666666;
@@ -83,7 +83,7 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 p {
-	font-family: Poppins-Regular;
+	/* font-family: Poppins-Regular; */
 	font-size: 14px;
 	line-height: 1.7;
 	color: #666666;
@@ -107,9 +107,9 @@ textarea {
   border: none;
 }
 
-textarea:focus, input:focus {
+/* textarea:focus, input:focus {
   border-color: transparent !important;
-}
+} */
 
 input:focus::-webkit-input-placeholder { color:transparent; }
 input:focus:-moz-placeholder { color:transparent; }
@@ -266,7 +266,7 @@ iframe {
 .login100-form-title {
   width: 100%;
   display: block;
-  font-family: Poppins-Regular;
+  /* font-family: Poppins-Regular; */
   font-size: 30px;
   color: #333333;
   line-height: 1.2;
@@ -409,7 +409,7 @@ input.input100 {
 }
 
 .label-checkbox100 {
-  font-family: Poppins-Regular;
+  /* font-family: Poppins-Regular; */
   font-size: 13px;
   color: #999999;
   line-height: 1.4;
@@ -558,7 +558,7 @@ input.input100 {
   right: 12px;
   pointer-events: none;
 
-  font-family: Poppins-Regular;
+  /* font-family: Poppins-Regular; */
   color: #c80000;
   font-size: 13px;
   line-height: 1.4;

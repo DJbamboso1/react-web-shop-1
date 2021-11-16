@@ -78,19 +78,9 @@ const AccountLayout: React.FC = ({ children }) => {
                         <div className="col-12 text-center">
                             {/* Heading */}
                             <h3 className="mb-10">My Account</h3>
-                            <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: 50 }}>
-                                <Breadcrumbs list={[
-                                    {
-                                        title: 'Home',
-                                        link: '/'
-                                    },
-                                    {
-                                        title: 'Account',
-                                        link: '/account/info'
-                                    },
-
-                                ]} />
-                            </div>
+                            {/* <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: 50 }}>
+                                
+                            </div> */}
                         </div>
                     </div>
                     <div className="row">

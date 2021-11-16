@@ -59,11 +59,11 @@ export const useTotal = () => useSelector(getTotal)
 
 export const calculateTotal = ( product: Product01, num: number ) => {
     let total = 0
-    if(product.listPrice[0]) {
+    if(product.listPrice && product.listPrice[0]) {
         total = product.listPrice[0].value * num
     }
     for (let i in product.listPrice) {
-        let item = product.listPrice[i]
+        let item = product.listPrice[parseInt(i)]
         if( num >= item.volume ) {
            total = item.value * num
         } 
@@ -73,11 +73,11 @@ export const calculateTotal = ( product: Product01, num: number ) => {
 
 export const getPricePerPro = ( product: Product01, num: number ) => {
     let total = 0
-    if(product.listPrice[0]) {
+    if(product.listPrice && product.listPrice[0]) {
         total = product.listPrice[0].value 
     }
     for (let i in product.listPrice) {
-        let item = product.listPrice[i]
+        let item = product.listPrice[parseInt(i)]
         if( num >= item.volume ) {
            total = item.value 
         } 

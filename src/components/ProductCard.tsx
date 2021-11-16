@@ -47,7 +47,7 @@ export const ProductCard: React.FC<{product?: Product01}> = ( {product} ) => {
                                 <span className="card-action">
                                     {
                                         product && product.status === 1 && (
-                                            <button onClick={() => {( product.listPrice.length > 0 ) && dispatch(addToCart(product)) }} className="btn btn-xs btn-circle btn-white-primary" data-toggle="button">
+                                            <button onClick={() => {(product.listPrice && product.listPrice.length > 0 ) && dispatch(addToCart(product)) }} className="btn btn-xs btn-circle btn-white-primary" data-toggle="button">
                                                 <i className="fe fe-shopping-cart" />
                                             </button>
                                         )
@@ -86,7 +86,7 @@ export const ProductCard: React.FC<{product?: Product01}> = ( {product} ) => {
                         {/* {price?.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })} */}
                         {/* <h6 style={{color: 'red'}}>Price ?</h6> */}
                         {
-                            product && ( (product.listPrice.length > 0) ? 
+                            product && product.listPrice && ( (product.listPrice.length > 0) ? 
                             `${product.listPrice.length > 1 ? (product.listPrice[product.listPrice.length - 1].value.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) + ' - ') : '' }${product.listPrice[0].value.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}  ` 
                             : <h6 style={{color: 'red'}}>No price</h6> )
                             

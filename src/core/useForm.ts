@@ -5,13 +5,14 @@ import { ObjectType } from "typescript"
 let patternModel: { [key: string]: RegExp } = {
     email: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1, 3}\.[0-9]{1, 3}\.[0-9]{1, 3}\.[0-9]{1, 3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
     phone: /(84|0[3|5|7|8|9])+([0-9]{8})/,
-    url: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/
+    url: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/,
+    username: /^[a-z0-9]{3,16}$/
 }
 type RuleItem = {
     min?: number,
     max?: number,
     required?: true,
-    pattern?: RegExp | 'email' | 'phone' | 'url',
+    pattern?: RegExp | 'email' | 'phone' | 'url' | 'username',
     confirm?: string,
     check?: boolean
 }

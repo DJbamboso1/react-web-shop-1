@@ -23,8 +23,8 @@ type RegisterForm = {
     address: string
 }
 
-const TYPE_MALE = 0
-const TYPE_FEMALE = 1
+const TYPE_MALE = 1
+const TYPE_FEMALE = 2
 
 const Register: React.FC = () => {
     let { t } = useTranslate()
@@ -61,7 +61,7 @@ const Register: React.FC = () => {
             password: form.password,
             doB: `${form.year ? form.year : yearNow}/${form.month ? form.month : 1}/${form.day ? form.day : 1}`,
             avatar: '',
-            sex: typeof form.sex === 'undefined' ? 0 : form.sex,
+            sex: typeof form.sex === 'undefined' ? 1 : form.sex,
             email: form.email,
             phoneNumber: form.phoneNumber,
             address: form.address,

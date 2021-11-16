@@ -1,3 +1,4 @@
+import { Breadcrumbs } from 'components/Breadcrumbs'
 import LoadingPage from 'components/LoadingPage'
 import { Paginate } from 'components/Paginate'
 import React, { useEffect, useState } from 'react'
@@ -25,7 +26,7 @@ const AccountSession: React.FC = () => {
     let { user } = useSelector((store: StateStore) => store.auth)
     let [session, setSession] = useState<Session>()
     let [status, setStatus] = useState(-2)
-    let [date, setDate] = useState< { date: Date } >()
+    let [date, setDate] = useState<{ date: Date }>()
     let [state, setState] = useState<StateProp>({
         loading: true,
         sessions: []
@@ -42,10 +43,10 @@ const AccountSession: React.FC = () => {
                     PageSize: '3'
                 }
                 let sess = await sessionService.getAllSession(obj)
-                setSession(sess)   
+                setSession(sess)
                 console.log('STATUS: ', status)
                 if (status > -2) {
-                    let sessFilterStatus = sess.data.filter( s => s.status === status )
+                    let sessFilterStatus = sess.data.filter(s => s.status === status)
                     setState({
                         loading: false,
                         sessions: sessFilterStatus
@@ -56,7 +57,7 @@ const AccountSession: React.FC = () => {
                         sessions: sess.data
                     })
                 }
-                
+
             }
         })()
     }, [queryUrl.PageNumber, status])
@@ -79,7 +80,18 @@ const AccountSession: React.FC = () => {
 
     return (
         <div>
-            <div className="col-12" style={{display: 'flex', justifyContent: 'flex-end', padding: '10px 0px'}}>
+            <Breadcrumbs list={[
+                {
+                    title: 'Home',
+                    link: '/'
+                },
+                {
+                    title: 'Session',
+                    link: '/account/session'
+                },
+
+            ]} />
+            <div className="col-12" style={{ display: 'flex', justifyContent: 'flex-end', padding: '10px 0px' }}>
                 <form >
                     {/* Select */}
                     Trạng thái: <select className="custom-select custom-select-sm" id="status" style={{ width: 200, }} onChange={(ev) => { setStatus(parseInt(ev.currentTarget.value)) }} >

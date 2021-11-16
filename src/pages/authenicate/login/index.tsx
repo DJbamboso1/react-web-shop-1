@@ -95,7 +95,7 @@ const Login: React.FC = () => {
                             <ErrorInput error={errorMsg}/>
                             <div className="wrap-input100" >
                                 
-                                <input className={`input100 ${form.username && form.username.length > 0 && 'has-val'}`} type="text" {...register('username', { required: true }, { required: 'Tài khoản không được để trống !' })} />
+                            <input className={`input100 ${form.username && form.username.length > 0 && 'has-val'}`} type="text" {...register('username', { required: true, pattern: 'username' }, { required: 'Tài khoản không được để trống !', pattern: 'Yêu cầu tài khoản không chứa các ký tự đặt biệt' })} />
                                 <span className="focus-input100" />
                                 <span className="label-input100">Username<span style={{color: 'red'}}>* </span></span>
                             </div>

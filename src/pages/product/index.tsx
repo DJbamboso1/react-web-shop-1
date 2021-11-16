@@ -28,6 +28,7 @@ export type FilterQuery = {
     Status?: string
     PageNumber?: string
     SubCategoryId?: string
+    PageSize?: string
 }
 
 const ProductPage: React.FC = () => {
@@ -59,6 +60,7 @@ const ProductPage: React.FC = () => {
                 changeQueryURL({ ...queryUrl, Status: status.toString() })
             }
             console.log(status)
+            queryUrl.PageSize = '12'
             let list = await productService.paginate(queryUrl)
             setData(list)
             let cateList = await cateService.getCategory()

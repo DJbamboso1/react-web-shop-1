@@ -1,9 +1,13 @@
-import { Order } from '@types'
+import { Order, Product01 } from '@types'
+import { Breadcrumbs } from 'components/Breadcrumbs'
 import LoadingPage from 'components/LoadingPage'
 import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import { currency } from 'utils'
 import { orderService } from '../../../services/orderService'
+import { addToCart, cartRemoveAll } from 'store/actions/cartAction'
+import { useCart } from 'store/selector'
 
 type FilterQuery = {
   // page: string,
@@ -17,6 +21,7 @@ type StateProps = {
 }
 
 const AccountOrders: React.FC = () => {
+  let dispatch = useDispatch()
   let { slug } = useParams<{ slug: string }>()
   let [state, setState] = useState<StateProps>({
     loading: true,
@@ -24,6 +29,7 @@ const AccountOrders: React.FC = () => {
   })
   let [order, setOrder] = useState<Order>()
   let [status, setStatus] = useState(-2)
+  const { list } = useCart()
 
   useEffect(() => {
     (async () => {
@@ -49,12 +55,57 @@ const AccountOrders: React.FC = () => {
     })()
   }, [status])
 
-
   if (state.loading) {
     return <LoadingPage />
   }
+
+  const reOrderHandle = async (ev: any, id: string) => {
+    ev.preventDefault()
+    dispatch(cartRemoveAll())
+    let ordDetail = await orderService.getOrderDetail({ OrderId: id })
+    if (ordDetail) {
+      for (let i in ordDetail.data) {
+        // dispatch(addToCart(ordDetail.data[i].product))
+        const detaileData = ordDetail.data[i].product
+        let product = {
+          id: detaileData.id,
+          distributor: detaileData.distributor,
+          name: detaileData.name,
+          image: detaileData.image,
+          description: detaileData.description,
+          minQuantity: detaileData.minQuantity,
+          status: detaileData.status,
+          parentCategoryId: detaileData.parentCategoryId,
+          parentCategoryName: detaileData.parentCategoryName,
+          subCategory: detaileData.subCategory,
+          listPrice: detaileData.listPrice,
+          quantity: ordDetail.data[i].quantity
+        }
+        dispatch(addToCart(product))
+        console.log('vuhvuiwrgiewrguiwrhgkjewrgiuewgiuwreg')
+        
+        // console.log(p)
+        // if (p) p.num = ordDetail.data[i].quantity
+      }
+    }
+  }
+
   return (
     <div>
+      <Breadcrumbs list={[
+        {
+          title: 'Home',
+          link: '/'
+        },
+        {
+          title: 'Session',
+          link: '/account/session'
+        },
+        {
+          title: 'Orders',
+          link: `/account/orders/${slug}`
+        },
+      ]} />
       {/* Order */}
       <div className="col-12" style={{ display: 'flex', justifyContent: 'flex-end', padding: '10px 0px' }}>
         <form >
@@ -127,7 +178,11 @@ const AccountOrders: React.FC = () => {
                     </div>
                     <div className="col-12 col-lg-6">
                       <div className="form-row  mb-4 mb-lg-0">
-                        <div className='col-5'></div>
+                        <div className='col-5'>
+                          <Link className="btn btn-sm btn-block btn-outline-dark" to='' onClick={(ev) => { reOrderHandle(ev, ord.id) }} >
+                            Re-Order
+                          </Link>
+                        </div>
                         <div className="col-7">
                           {/* Button */}
                           <Link className="btn btn-sm btn-block btn-outline-dark" to={`/account/orderDetail/${ord.id}`}>

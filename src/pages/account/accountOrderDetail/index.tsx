@@ -1,4 +1,5 @@
 import { Order1, OrderDetail } from '@types'
+import { Breadcrumbs } from 'components/Breadcrumbs'
 import LoadingPage from 'components/LoadingPage'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
@@ -18,10 +19,11 @@ type FilterQuery = {
 type StateProps = {
     loading: boolean,
     orderDetail: OrderDetail['data']
-  }
+}
 
 const AccountOrderDetail: React.FC = () => {
     let { slug } = useParams<{ slug: string }>()
+    console.log(slug)
     let [orderDetail, setOrderDetail] = useState<OrderDetail>()
     let [state, setState] = useState<StateProps>({
         loading: true,
@@ -44,14 +46,33 @@ const AccountOrderDetail: React.FC = () => {
                 loading: false,
                 orderDetail: ordDetail.data
             })
+            console.log(state.orderDetail)
         })()
     }, [])
 
     if (state.loading) {
         return <LoadingPage />
-      }
+    }
     return (
         <div>
+            <Breadcrumbs list={[
+                {
+                    title: 'Home',
+                    link: '/'
+                },
+                {
+                    title: 'Session',
+                    link: '/account/session'
+                },
+                {
+                    title: 'Orders',
+                    link: `/account/orders/${order?.sessionId}`
+                },
+                {
+                    title: 'Detail',
+                    link: ''
+                }
+            ]} />
             <div className="card card-lg mb-5 border">
                 <div className="card-body pb-0">
                     {/* Info */}

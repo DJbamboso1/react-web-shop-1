@@ -137,7 +137,7 @@ const ProductDetail: React.FC = () => {
                                             {/* <span className="font-size-lg font-weight-bold text-gray-350 text-decoration-line-through">$115.00</span> */}
 
                                             {
-                                                data && ((data.data.listPrice.length > 0) ?
+                                                data && data.data.listPrice && ((data.data.listPrice.length > 0) ?
                                                     `${data.data.listPrice.length > 1 ? currency(data.data.listPrice[data.data.listPrice.length - 1].value) + ' - ' : ''}${currency(data.data.listPrice[0].value)}  `
                                                     : <h6 style={{ color: 'red' }}>No price</h6>)
                                             }
@@ -148,7 +148,7 @@ const ProductDetail: React.FC = () => {
                                                 <th>Volume</th>
                                                 <th>Price</th>
                                             </tr>
-                                            {data.data.listPrice.map(price => {
+                                            {data.data.listPrice && data.data.listPrice.map(price => {
                                                 return (
                                                     <tr>
                                                         <th>{`>= ${price.volume} items`}</th>
@@ -173,7 +173,7 @@ const ProductDetail: React.FC = () => {
                                                     </div> */}
                                                     <div className="col-12 col-lg" style={{ flexBasis: num === 0 ? 'unset' : 0 }}>
                                                         {/* Submit */}
-                                                        <button disabled={data && data.data.status === 1 ? false : true} type="submit" className="btn btn-block btn-dark mb-2" onClick={(ev) => { ev.preventDefault(); data && (data.data.listPrice.length > 0) && dispatch(addToCart(data.data)) }}>
+                                                        <button disabled={data && data.data.status === 1 ? false : true} type="submit" className="btn btn-block btn-dark mb-2" onClick={(ev) => { ev.preventDefault(); data && (data.data.listPrice && data.data.listPrice.length > 0) && dispatch(addToCart(data.data)) }}>
                                                             Add to Cart <i className="fe fe-shopping-cart ml-2" />
                                                         </button>
                                                     </div>

@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { changeQueryURL, convertQueryURLToObject } from "utils";
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 interface PaginateProp {
     currentPage: number
     totalPage: number
@@ -54,7 +56,7 @@ export const Paginate: React.FC<PaginateProp> = ({ currentPage, totalPage }) => 
                     currentPage > 1 && (
                         <li className="page-item">
                             <Link className="page-link page-link-arrow" to={changeQueryURL({ ...objectURL, PageNumber: currentPage - 1 })}>
-                                <i className="fa fa-caret-left" />
+                                <ArrowBackIosNewIcon />
                             </Link>
                         </li>
                     )
@@ -65,7 +67,7 @@ export const Paginate: React.FC<PaginateProp> = ({ currentPage, totalPage }) => 
                     currentPage < totalPage && (
                         <li className="page-item">
                             <Link className="page-link page-link-arrow" to={changeQueryURL({ ...objectURL, PageNumber: currentPage + 1 })}>
-                                <i className="fa fa-caret-right" />
+                                <ArrowForwardIosIcon  />
                             </Link>
                         </li>
                     )

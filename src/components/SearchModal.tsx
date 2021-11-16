@@ -101,7 +101,7 @@ export const SearchModal: React.FC = () => {
                             {/* Items */}
 
                             {
-                                loading === false ? (data && data.data.length > 0 ? data.data.map(pro => {
+                                loading === false ? (data && data.data.length > 0 ? data.data.slice(0, 5).map(pro => {
                                     return (
                                         <div className="row align-items-center position-relative mb-5">
                                             <div className="col-4 col-md-3">
@@ -114,10 +114,10 @@ export const SearchModal: React.FC = () => {
                                             <div className="col position-static">
                                                 {/* Text */}
                                                 <p className="mb-0 font-weight-bold">
-                                                    <Link className="stretched-link text-body" to={`/product/${pro.id}`} onClick={(ev) => { dispatch(toggleSearch(false)) }}>{pro.name} ({pro.listPrice[0].volume} items)</Link> <br />
+                                                    <Link className="stretched-link text-body" to={`/product/${pro.id}`} onClick={(ev) => { dispatch(toggleSearch(false)) }}>{pro.name} ({pro.listPrice && pro.listPrice[0].volume} items)</Link> <br />
                                                     <span className="text-muted">
                                                         {
-                                                            pro && ((pro.listPrice.length > 0) ?
+                                                            pro && pro.listPrice && ((pro.listPrice.length > 0) ?
                                                                 `${pro.listPrice.length > 1 ? (pro.listPrice[pro.listPrice.length - 1].value.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) + ' - ') : ''}${pro.listPrice[0].value.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}  `
                                                                 : <h6 style={{ color: 'red' }}>No price</h6>)
 

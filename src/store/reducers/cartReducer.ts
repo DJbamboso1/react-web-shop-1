@@ -49,8 +49,9 @@ const cartReducer = (state = initState, action: PayloadAction): CartStore => {
                     list: [...state.list]
                 }
             }
+        
             state.list.push({
-                num: action.payload.minQuantity,
+                num: action.payload.quantity ? action.payload.quantity : action.payload.minQuantity,
                 id: action.payload.id,
                 product: action.payload
             })

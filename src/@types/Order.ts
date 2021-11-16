@@ -30,19 +30,26 @@ export interface OrderDetail {
     id: string,
     product: {
       id: string,
-      parentCategoryId: string,
-      parentCategoryName: null,
-      subCategory: null,
-      distributor: null,
+      distributor: string,
+      // category: T,
       name: string,
       image: string,
       description: string,
       minQuantity: number,
-      listPrice: null,
-      status: number,
-      isActive: boolean,
-      dateCreated: string,
-      dateModified: string
+      status?: number,
+      parentCategoryId?: string,
+      parentCategoryName?: string,
+      subCategory?: {
+        id: string,
+        name: string
+      },
+      // price: 0.1
+      listPrice?: {
+        id: string,
+        productId: string,
+        value: number,
+        volume: number,
+      }[]
     },
     orderId: string,
     orderPrice: number,
