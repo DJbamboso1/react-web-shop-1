@@ -45,7 +45,7 @@ export const Slider: React.FC<SliderProp> = ({ ...ref }) => {
                             banner?.map(b => {
                                 return (
                                     <div className="w-100">
-                                        <a className="card bg-h-100 bg-cover " style={{ backgroundImage: `url(${b.image})` }} href={b.link}>
+                                        <a className="card bg-h-100 " style={{ backgroundImage: `url(${b.image})` }} href={b.link}>
                                             <div className="row" style={{ minHeight: '400px' }}>
                                                 {/* <div className="col-12 col-md-10 col-lg-8 col-xl-6 align-self-center">
                                                     <div className="card-body px-md-10 py-11">

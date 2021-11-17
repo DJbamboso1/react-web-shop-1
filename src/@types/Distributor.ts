@@ -1,4 +1,4 @@
-export interface Distributor<T> {
+export interface Distributor<T > {
     succeeded: true,
     message: string,
     errors: string,
@@ -6,6 +6,7 @@ export interface Distributor<T> {
         id: string,
         userId: string,
         isActive: boolean,
-        user?: T
+        user?: T,
+        displayName: string
     }[]
 }

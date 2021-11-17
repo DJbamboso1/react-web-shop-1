@@ -1,4 +1,4 @@
-import { Categories, CategoryTree, PaginateData, Product, Product01 } from '@types'
+import { Categories, CategoryTree, Distributor, PaginateData, Product, Product01, User } from '@types'
 import { Pagination } from 'components/Pagination'
 import { Paginate } from 'components/Paginate'
 import { ProductCard } from 'components/ProductCard'
@@ -19,6 +19,8 @@ import { categoryConfig } from './categoryConfig'
 import { useRouteMatch } from 'react-router'
 import { useCart } from 'store/selector'
 import { Link } from 'react-router-dom'
+import distributorService from 'services/distributorService'
+import authService from 'services/authService'
 
 export type FilterQuery = {
     // page: string,
@@ -40,7 +42,7 @@ const ProductPage: React.FC = () => {
 
     let [cateData, setCateData] = useState<CategoryTree[]>()
 
-    let [cateDisData, setCateDisData] = useState()
+    let [cateDisData, setCateDisData] = useState<Distributor<User>>()
 
     let queryUrl = convertQueryURLToObject<FilterQuery>()
     // console.log("queryUrl: ", queryUrl)
@@ -57,7 +59,7 @@ const ProductPage: React.FC = () => {
 
         (async () => {
             if (status > -2) {
-                console.log('YO !')
+                // console.log('YO !')
                 queryUrl.Status = status.toString()
                 changeQueryURL({ ...queryUrl, Status: status.toString() })
             }
@@ -70,10 +72,35 @@ const ProductPage: React.FC = () => {
             let category = cateList.data.find(e => e.id === queryUrl.CategoryId)
             setCategory(category)
             setSubCate(category?.subCategories?.find(e => e.id === queryUrl.SubCategoryId))
+
+            let cateDis = await distributorService.getDistributor()
+            setCateDisData(cateDis)
+
         })()
         // dispatch(fetchProductsAction(queryUrl))
         // setData(product.products)
     }, [queryUrl.PageNumber, queryUrl.CategoryId, queryUrl.SubCategoryId, status])
+
+    if (cateDisData) {
+        console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+        for (let i = 0; i < cateDisData.data.length; i++) {
+            let userId = '';
+            console.log(cateDisData)
+            if (cateDisData) {
+                console.log(cateDisData?.data[i])
+                userId = cateDisData.data[i]?.userId
+            }
+
+            console.log('IDDDDDDDDDDD: ', userId);
+
+            (async () => {
+                let user = await authService.getInfo(userId)
+                // cateDisData.data[i].user = user
+                cateDisData.data[i].displayName = user.data.displayName
+            })()
+
+        }
+    }
 
     // console.log("data: ", data)
 
@@ -83,14 +110,16 @@ const ProductPage: React.FC = () => {
     for (let i = 1; i <= Math.ceil(total / pageSize); i++) {
         pageNumber.push(i)
     }
-    console.log(queryUrl)
+    // console.log(queryUrl)
+
+    console.log('sjfbvuysgdviuwguvfwjevgiuwehgvw: ', cateDisData)
 
     return (
         <section className="py-5">
             <div className="container">
                 <div className="row">
                     {/* <Filter /> */}
-                    <Filter cateData={cateData} />
+                    <Filter cateData={cateData} cateDisData={cateDisData} />
 
                     <div className="col-12 col-md-8 col-lg-9">
                         {/* Slider */}

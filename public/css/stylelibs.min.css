@@ -22755,7 +22755,7 @@ a.text-decoration-underline:focus, a.text-decoration-underline:hover {
     align-items: center;
     justify-content: center;
     width: 42px;
-    height: 42px;
+    height: 100%;
     border-radius: 0;
     background-color: #fff;
     z-index: 1;
