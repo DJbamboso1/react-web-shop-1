@@ -40,6 +40,8 @@ const ProductPage: React.FC = () => {
 
     let [cateData, setCateData] = useState<CategoryTree[]>()
 
+    let [cateDisData, setCateDisData] = useState()
+
     let queryUrl = convertQueryURLToObject<FilterQuery>()
     // console.log("queryUrl: ", queryUrl)
 

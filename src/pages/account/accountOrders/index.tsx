@@ -81,8 +81,10 @@ const AccountOrders: React.FC = () => {
           listPrice: detaileData.listPrice,
           quantity: ordDetail.data[i].quantity
         }
+        console.log(ordDetail)
+        console.log('product: ', product)
         dispatch(addToCart(product))
-        console.log('vuhvuiwrgiewrguiwrhgkjewrgiuewgiuwreg')
+        
         
         // console.log(p)
         // if (p) p.num = ordDetail.data[i].quantity

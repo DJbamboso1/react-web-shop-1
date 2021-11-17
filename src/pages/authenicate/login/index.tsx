@@ -34,16 +34,13 @@ const Login: React.FC = () => {
 
 
     if (login && role) {
-
         switch (role) {
             case 'Retailer': {
                 return <Redirect to='/' />
             }
         }
     }
-    function checkLoading(load: boolean) {
-
-    }
+    
 
     return (
         // <div className="card card-lg mb-10 mb-md-0" style={{ maxWidth: 700, margin: '0 auto' }}>

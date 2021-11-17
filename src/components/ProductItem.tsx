@@ -28,7 +28,7 @@ export const ProductItem: React.FC<{ product: Product01, num: number }> = ({ pro
         }
     }
 
-
+    console.log(product)
     // console.log(thumbnail_url)
     return (
         <li className="list-group-item">
@@ -54,7 +54,7 @@ export const ProductItem: React.FC<{ product: Product01, num: number }> = ({ pro
                     <p className="mb-7 font-size-sm text-muted">
                         Nhà phân phối: {product.distributor}
                         <br />
-                        {product.description.slice(0, 40) + '......'}
+                        Đặc tả: {product.description.slice(0, 40) + (product.description.length > 40 ? ' ...' : '')}
                     </p>
                     {/*Footer */}
                     {
