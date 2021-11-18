@@ -96,9 +96,10 @@ const AccountInfo: React.FC = () => {
     // }
 
     const changeAvatar = (ev: React.ChangeEvent<HTMLInputElement>) => {
+
         setLoading(true)
         let avatar = ev.currentTarget.files?.[0]
-        console.log('AVATARRRRRRRRRR:', avatar)
+        console.log('AVATARRRRRRRRRR:', avatar?.name)
         if (avatar) {
             const storageRef = ref(storage, 'avatar/');
             const uploadTask = uploadBytesResumable(storageRef, avatar);
@@ -108,11 +109,16 @@ const AccountInfo: React.FC = () => {
                 (error) => {
                 },
                 () => {
-                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
                         console.log('File available at', downloadURL);
                         setForm({ ...form, avatar: downloadURL })
                         setLoading(false)
-                        setOpen(true)
+                        let user = await authService.getInfo(form.id)
+                        console.log("HELLO WORLD: ", user)
+                        if (user.data.avatar) {
+                            setOpen(true)
+                        }
+
                         // console.log('Download', downloadURL)
                     })
                 }
@@ -173,7 +179,7 @@ const AccountInfo: React.FC = () => {
                         <div className="form-group" style={{ textAlign: 'center' }}>
                             {/* <input className="form-control form-control-sm" id="accountFirstName" type="text" placeholder="First Name *" {...register('displayName')} />  */}
                             {!loading ? <img className='avatar' src={form.avatar || '/img/avatar.jpg'} alt="" onClick={() => { avatarRef.current?.dispatchEvent(new MouseEvent('click')) }} /> : <LoadingAvatar />}
-                            <input type="file" style={{ display: 'none' }} ref={avatarRef} onChange={changeAvatar} />
+                            <input type="file" style={{ display: 'none' }} ref={avatarRef} accept="image/*" onChange={changeAvatar} />
                         </div>
                     </div>
                     {!loading ? (<>
@@ -286,15 +292,15 @@ const AccountInfo: React.FC = () => {
                             </div>
                         </div>
                         <div className="col-12">
-                        {/* Button */}
-                        <button className="btn btn-dark" type="submit" disabled={form.id ? false : true}>Save Changes</button>
-                    </div>
+                            {/* Button */}
+                            <button className="btn btn-dark" type="submit" disabled={form.id ? false : true}>Save Changes</button>
+                        </div>
                     </>) :
                         <div className='col-12' style={{ textAlign: 'center' }}>
                             <LoadingAvatar />
                         </div>}
 
-                    
+
                 </div>
             </form>
         </>

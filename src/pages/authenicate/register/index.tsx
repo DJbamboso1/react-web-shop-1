@@ -45,12 +45,18 @@ const Register: React.FC = () => {
 
     let { register, form, handleSubmit, error, setForm } = useForm<RegisterForm>()
 
-    function changeDate() {
+    useEffect(() => {
         let month = form.month
         let year = form.year
         let date = new Date(year, month, 0)
         setCountDay(date.getDate())
-    }
+        if (form.day > countDay) {
+            form.day = 1
+        }
+        console.log(month)
+        console.log(year)
+        console.log(countDay)
+    }, [form.month, form.year])
 
     const submit = (form: RegisterForm) => {
 
@@ -59,7 +65,7 @@ const Register: React.FC = () => {
             username: form.username,
             displayName: form.displayName,
             password: form.password,
-            doB: `${form.year ? form.year : yearNow}/${form.month ? form.month : 1}/${form.day ? form.day : 1}`,
+            doB: `${form.year ? form.year : yearNow}/${form.month ? form.month : '01'}/0${form.day ? form.day : '01'}`,
             avatar: '',
             sex: typeof form.sex === 'undefined' ? 1 : form.sex,
             email: form.email,
@@ -102,7 +108,7 @@ const Register: React.FC = () => {
                                 <label className="" htmlFor="registerEmail">
                                     Username *
                                 </label>
-                                <input className="form-control form-control-sm" id="registerEmail" type="text"  {...register('username', { required: true })} />
+                                <input className="form-control form-control-sm" id="registerEmail" type="text"  {...register('username', { required: true, pattern: 'username', min: 5, max: 16 }, { required: 'Tài khoản không được để trống !', pattern: 'Yêu cầu tài khoản không chứa các ký tự đặt biệt', min: 'Tài khoản cần ít nhất 5 ký tự', max: 'Tài khoản cần nhiều nhất chỉ 16 ký tự' })} />
                                 <ErrorInput error={error.email} />
 
                             </div>
@@ -113,7 +119,7 @@ const Register: React.FC = () => {
                                 <label className="" htmlFor="registerFirstName">
                                     Display Name *
                                 </label>
-                                <input className="form-control form-control-sm" id="registerFirstName" type="text"  {...register('displayName', { required: true })} />
+                                <input className="form-control form-control-sm" id="registerFirstName" type="text"  {...register('displayName', { required: true, min: 2, max: 30 }, { required: 'Họ tên không được để trống', min: 'Tên có ít nhất 2 ký tự', max: 'Tên có nhiều nhất chỉ 30 ký tự' })} />
                                 <ErrorInput error={error.displayName} />
                             </div>
                         </div>
@@ -123,7 +129,7 @@ const Register: React.FC = () => {
                                 <label htmlFor="accountEmail">
                                     Email *
                                 </label>
-                                <input className="form-control form-control-sm" id="accountEmail" type="email"   {...register('email', { required: true, pattern: 'email' })} />
+                                <input className="form-control form-control-sm" id="accountEmail" type="email"   {...register('email', { required: true, pattern: 'email' }, { required: 'Mail không đuọc để trống' , pattern: 'Mail không đúng định dạng' })} />
                                 <ErrorInput error={error.email} />
                             </div>
                         </div>
@@ -133,7 +139,7 @@ const Register: React.FC = () => {
                                 <label htmlFor="accountEmail">
                                     Phone number *
                                 </label>
-                                <input className="form-control form-control-sm" id="accountEmail" type="text"    {...register('phoneNumber', { required: true, pattern: 'phone' })} />
+                                <input className="form-control form-control-sm" id="accountEmail" type="text"    {...register('phoneNumber', { required: true, pattern: 'phone' }, { required: 'Số điện thoại không được để trống', pattern: 'Số điện thoại không đúng định dạng , yêu cầu số điện thoại Việt Nam' })} />
                                 <ErrorInput error={error.phoneNumber} />
                             </div>
                         </div>
@@ -143,7 +149,7 @@ const Register: React.FC = () => {
                                 <label htmlFor="accountEmail">
                                     Address *
                                 </label>
-                                <input className="form-control form-control-sm" id="accountEmail" type="text"   {...register('address', { required: true })} />
+                                <input className="form-control form-control-sm" id="accountEmail" type="text"   {...register('address', { required: true }, { required: 'Địa chỉ không được để trống' })} />
                                 <ErrorInput error={error.address} />
                             </div>
                         </div>
@@ -153,7 +159,7 @@ const Register: React.FC = () => {
                                 <label className="" htmlFor="registerPassword">
                                     Password *
                                 </label>
-                                <input className="form-control form-control-sm" id="registerPassword" type="password"  {...register('password', { required: true, min: 6, max: 32 })} />
+                                <input className="form-control form-control-sm" id="registerPassword" type="password"  {...register('password', { required: true, min: 6, max: 32 }, { required: 'Mật khẩu không được để trống !', min: 'Mật khẩu cần ít nhất 6 ký tự', max: 'Mật khẩu cần nhiều nhất chỉ 32 ký tự' })} />
                                 <ErrorInput error={error.password} />
 
                             </div>

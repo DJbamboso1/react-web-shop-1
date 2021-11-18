@@ -34,21 +34,21 @@ export const Filter: React.FC<{ cateData: any, cateDisData?: Distributor<User> }
 
 
 
-            <h4 className='border-bottom' style={{ padding: '30px 10px 10px 10px', textAlign: 'center' }}>Categories</h4>
+            {/* <h4 className='border-bottom' style={{ padding: '30px 10px 10px 10px', textAlign: 'center' }}>Distributors</h4>
             <form className="mb-10 mb-md-0">
                 <ul className="nav nav-vertical" id="filterNav">
                     {cateDisData?.data ? cateDisData.data.map(disData => {
                         return (
                             <li className="nav-item">
                                 <Link className="nav-link dropdown-toggle font-size-lg text-reset border-bottom mb-6" data-toggle="collapse" to=''>
-                                    {/* {disData && disData.user && disData.user.data && disData.user.data?.displayName} */}
+                                    
                                     {disData.displayName }
                                 </Link>
                             </li>
                         )
                     }) : <Skeleton variant="rectangular" height={600} />}
                 </ul>
-            </form>
+            </form> */}
 
         </div>
     )
