@@ -44,7 +44,7 @@ const AccountSession: React.FC = () => {
                 }
                 let sess = await sessionService.getAllSession(obj)
                 setSession(sess)
-                console.log('STATUS: ', status)
+                // console.log('STATUS: ', status)
                 if (status > -2) {
                     let sessFilterStatus = sess.data.filter(s => s.status === status)
                     setState({

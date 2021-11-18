@@ -1,4 +1,4 @@
-import { CategoryTree, PaginateData, Product01 } from '@types'
+import { CategoryTree, Distributor, PaginateData, Product01, User } from '@types'
 import { useForm } from 'core'
 import { NONAME } from 'dns'
 import { FilterQuery } from 'pages/product'
@@ -6,6 +6,8 @@ import React, { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, Redirect } from 'react-router-dom'
+import authService from 'services/authService'
+import distributorService from 'services/distributorService'
 import { productService } from 'services/productService'
 import { StateStore } from 'store'
 import { toggleSearch } from 'store/actions/searchAction'
@@ -13,7 +15,8 @@ import { convertQueryURLToObject, changeQueryURL } from 'utils'
 import LoadingPage from './LoadingPage'
 
 type Form = {
-    SearchValue: string
+    SearchValue?: string,
+    DistributorId?: string,
 }
 
 export const SearchModal: React.FC = () => {
@@ -26,9 +29,9 @@ export const SearchModal: React.FC = () => {
     let [searchVal, setSearchVal] = useState({})
 
     let [loading, setLoading] = useState(true)
+
+    let [listDis, setListDis] = useState<Distributor<User>>()
     // console.log('objectUrl: ', objectURL)
-
-
 
     useEffect(() => {
         if (openSearch) {
@@ -54,7 +57,34 @@ export const SearchModal: React.FC = () => {
         // setData(product.products)
     }, [searchVal])
 
+    useEffect(() => {
+        (async () => {
+            setLoading(true)
+            let distributors = await distributorService.getDistributor()
+            setListDis(distributors)
+            setLoading(false)
+        })()
+    }, [])
+
+    if (listDis) {
+        for (let i = 0; i < listDis.data.length; i++) {
+            let userId = '';
+            console.log(listDis)
+            if (listDis) {
+                console.log(listDis?.data[i])
+                userId = listDis.data[i]?.userId
+            }
+            (async () => {
+                let user = await authService.getInfo(userId)
+                // cateDisData.data[i].user = user
+                listDis.data[i].user = user
+            })()
+
+        }
+    }
+
     const submit = (form: Form) => {
+        console.log('FORM:', form)
         setSearchVal(form)
     }
 
@@ -75,15 +105,19 @@ export const SearchModal: React.FC = () => {
                     <form onChange={handleSubmit(submit)}>
                         <div className="modal-body">
 
-                            {/* <div className="form-group">
-                                <label className="sr-only" htmlFor="modalSearchCategories">Categories:</label>
-                                <select className="custom-select" id="modalSearchCategories">
-                                    <option selected>All Categories</option>
-                                    <option>Women</option>
-                                    <option>Men</option>
-                                    <option>Kids</option>
+                            <div className="form-group">
+                                <label className="sr-only" htmlFor="modalSearchCategories">Distributor:</label>
+                                <select className="custom-select" id="modalSearchCategories" {...register('DistributorId')}>
+                                    <option selected value=''>All Distributors</option>
+                                    {
+                                        listDis?.data && listDis.data.map(i => {
+                                            return (
+                                                <option value={i.id}>{i.user?.data.displayName}</option>
+                                            )
+                                        })
+                                    }
                                 </select>
-                            </div> */}
+                            </div>
                             <div className="input-group input-group-merge">
                                 <input className="form-control" type="search" placeholder="Search" {...register('SearchValue')} />
                                 <div className="input-group-append">

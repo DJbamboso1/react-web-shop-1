@@ -45,10 +45,10 @@ const AccountInfo: React.FC = () => {
             if (user) {
                 let inf = await authService.getInfo(user.id)
                 let date = new Date(inf.data.doB)
-                console.log('aaaaaaaaaaaaaaaanvjfvjdfv: ', date)
+                
                 inf.data.day = date.getDate()
                 inf.data.month = date.getMonth() + 1
-                console.log('month: ', inf.data.month)
+                
                 inf.data.year = date.getFullYear()
 
                 setForm(inf.data)
@@ -57,7 +57,7 @@ const AccountInfo: React.FC = () => {
                 let date1 = new Date(form.year, form.month, 0)
                 setCountDay(date1.getDate())
                 // setLoading(false)
-                console.log(inf.data)
+                
             }
         })()
     }, [])
@@ -70,16 +70,14 @@ const AccountInfo: React.FC = () => {
         if (form.day > countDay) {
             form.day = 1
         }
-        console.log(month)
-        console.log(year)
-        console.log(countDay)
+        
     }, [form.month, form.year])
 
 
     const submit = async (form: Form) => {
         setLoading(true)
         form.doB = `${form.year}/${form.month > 9 ? '' : '0'}${form.month}/${form.day > 9 ? '' : '0'}${form.day}`
-        console.log(form.doB)
+        
         let profile = await authService.updateProfile(form)
         setLoading(false)
         if (profile.succeeded) {
@@ -99,7 +97,7 @@ const AccountInfo: React.FC = () => {
 
         setLoading(true)
         let avatar = ev.currentTarget.files?.[0]
-        console.log('AVATARRRRRRRRRR:', avatar?.name)
+        
         if (avatar) {
             const storageRef = ref(storage, 'avatar/');
             const uploadTask = uploadBytesResumable(storageRef, avatar);
@@ -110,11 +108,11 @@ const AccountInfo: React.FC = () => {
                 },
                 () => {
                     getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-                        console.log('File available at', downloadURL);
+                        // console.log('File available at', downloadURL);
                         setForm({ ...form, avatar: downloadURL })
                         setLoading(false)
                         let user = await authService.getInfo(form.id)
-                        console.log("HELLO WORLD: ", user)
+                        // console.log("HELLO WORLD: ", user)
                         if (user.data.avatar) {
                             setOpen(true)
                         }

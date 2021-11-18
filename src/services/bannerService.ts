@@ -5,7 +5,8 @@ let productAPI = process.env.REACT_APP_API_KEY_SHOP || ''
 
 const bannerService = {
     getBanner(distributorId?: string) {
-        let url = productAPI + '/banner'
+        console.log('ABCDEFRG: ', distributorId ? `/distributor/${distributorId}/banner` : '/banner')
+        let url = productAPI + (distributorId ? `/distributor/${distributorId}/banner` : '/banner')
         return http.get<Banner>(url)
     },
 }

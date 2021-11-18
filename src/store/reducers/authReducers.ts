@@ -45,7 +45,7 @@ const initState: State = {
     role: user?.role.name || ''
 }
 
-console.log(initState)
+
 
 const authReducer = (state = initState, action: PayloadAction): State => {
     switch (action.type) {

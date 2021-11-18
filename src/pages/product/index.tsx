@@ -42,7 +42,7 @@ const ProductPage: React.FC = () => {
 
     let [cateData, setCateData] = useState<CategoryTree[]>()
 
-    let [cateDisData, setCateDisData] = useState<Distributor<User>>()
+    // let [cateDisData, setCateDisData] = useState<Distributor<User>>()
 
     let queryUrl = convertQueryURLToObject<FilterQuery>()
     // console.log("queryUrl: ", queryUrl)
@@ -55,6 +55,8 @@ const ProductPage: React.FC = () => {
 
     let [status, setStatus] = useState(-2)
 
+    let [queryUrlCate, setQueryUrlCate] = useState<{ DistributorId: string }>()
+
     useEffect(() => {
 
         (async () => {
@@ -63,44 +65,30 @@ const ProductPage: React.FC = () => {
                 queryUrl.Status = status.toString()
                 changeQueryURL({ ...queryUrl, Status: status.toString() })
             }
+            if (queryUrl.DistributorId) {
+                setQueryUrlCate({ DistributorId: queryUrl.DistributorId })
+            }
             console.log(status)
             queryUrl.PageSize = '12'
             let list = await productService.paginate(queryUrl)
             setData(list)
-            let cateList = await cateService.getCategory()
+            let cateList = await cateService.getCategory(queryUrl)
+            console.log('CATE LIST: ', cateList)
             setCateData(cateList.data)
-            let category = cateList.data.find(e => e.id === queryUrl.CategoryId)
-            setCategory(category)
-            setSubCate(category?.subCategories?.find(e => e.id === queryUrl.SubCategoryId))
+            if (queryUrl.CategoryId) {
+                let category = cateList.data.find(e => e.id === queryUrl.CategoryId)
+                setCategory(category)
+                setSubCate(category?.subCategories?.find(e => e.id === queryUrl.SubCategoryId))
+            }
 
-            let cateDis = await distributorService.getDistributor()
-            setCateDisData(cateDis)
+
 
         })()
         // dispatch(fetchProductsAction(queryUrl))
         // setData(product.products)
-    }, [queryUrl.PageNumber, queryUrl.CategoryId, queryUrl.SubCategoryId, status])
+    }, [queryUrl.PageNumber, queryUrl.CategoryId, queryUrl.SubCategoryId, status, queryUrl.DistributorId])
 
-    if (cateDisData) {
-        console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
-        for (let i = 0; i < cateDisData.data.length; i++) {
-            let userId = '';
-            console.log(cateDisData)
-            if (cateDisData) {
-                console.log(cateDisData?.data[i])
-                userId = cateDisData.data[i]?.userId
-            }
 
-            console.log('IDDDDDDDDDDD: ', userId);
-
-            (async () => {
-                let user = await authService.getInfo(userId)
-                // cateDisData.data[i].user = user
-                cateDisData.data[i].displayName = user.data.displayName
-            })()
-
-        }
-    }
 
     // console.log("data: ", data)
 
@@ -112,14 +100,14 @@ const ProductPage: React.FC = () => {
     }
     // console.log(queryUrl)
 
-    console.log('sjfbvuysgdviuwguvfwjevgiuwehgvw: ', cateDisData)
+    // console.log('sjfbvuysgdviuwguvfwjevgiuwehgvw: ', cateDisData)
 
     return (
         <section className="py-5">
             <div className="container">
                 <div className="row">
                     {/* <Filter /> */}
-                    <Filter cateData={cateData} cateDisData={cateDisData} />
+                    <Filter cateData={cateData} />
 
                     <div className="col-12 col-md-8 col-lg-9">
                         {/* Slider */}

@@ -53,9 +53,7 @@ const Register: React.FC = () => {
         if (form.day > countDay) {
             form.day = 1
         }
-        console.log(month)
-        console.log(year)
-        console.log(countDay)
+        
     }, [form.month, form.year])
 
     const submit = (form: RegisterForm) => {
@@ -71,18 +69,18 @@ const Register: React.FC = () => {
             email: form.email,
             phoneNumber: form.phoneNumber,
             address: form.address,
-        }
+        };
         // formData.doB = `${form.year ? form.year : yearNow}/${form.month ? form.month : 1}/${form.day ? form.day : 1}`
-        console.log(form);
+        // console.log(form);
         (async () => {
             let obj = await authService.register(user)
-            console.log(typeof obj.data)
+            // console.log(typeof obj.data)
             
             if (obj && obj.succeeded === true) {
                 let retailer = await authService.registerRetailer({ userId : obj.data })
 
                 if (retailer && retailer.succeeded === true) {
-                    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+                   
                     return <Redirect to='/' />
                 }
             } else {

@@ -10854,7 +10854,7 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 }
 
 .dropdown-toggle {
-    white-space: nowrap
+    /* white-space: nowrap */
 }
 
 .dropdown-toggle::after {
@@ -18958,7 +18958,7 @@ a.text-dark:focus, a.text-dark:hover {
 }
 
 .card-bg, .dropdown-toggle, .dropright-toggle, .form-group-overflow, .img-comp-front {
-    overflow: hidden
+    /* overflow: hidden */
 }
 
 .text-reset {

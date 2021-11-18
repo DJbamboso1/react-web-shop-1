@@ -32,7 +32,7 @@ export function categoryConfig(categories: CategoryTree[]) {
             list.push(
                 <li className="nav-item">
                     {/* Toggle */}
-                    <Link className="nav-link dropdown-toggle font-size-lg text-reset border-bottom mb-6" data-toggle="collapse" to={changeQueryURL({ ...objectURL, CategoryId: cate.id, SubCategoryId: '', PageNumber: 1 })} onClick={(e) => _onClickHandle(e, cate.name)}>
+                    <Link className="nav-link dropdown-toggle font-size-lg text-reset border-bottom " data-toggle="collapse" to={changeQueryURL({ ...objectURL, CategoryId: cate.id, SubCategoryId: '', PageNumber: 1 })} onClick={(e) => _onClickHandle(e, cate.name)}>
                         {cate.name}
                     </Link>
                     {cate.subCategories && cate.subCategories?.length > 0 && (

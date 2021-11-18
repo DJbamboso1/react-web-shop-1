@@ -80,3 +80,9 @@ table {
     box-shadow: 24;
     padding: 4;
   }
+
+  .cateScroll {
+    padding: 20px 0px;
+    overflow-y: auto;
+    height: 440px;
+  }

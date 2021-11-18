@@ -46,8 +46,7 @@ const AccountOrders: React.FC = () => {
       }
       let ord = await orderService.getAllOrder(obj)
       // setOrder(ord)
-      console.log(status)
-      console.log(ord)
+      
       setState({
         loading: false,
         orders: ord.data
@@ -81,8 +80,7 @@ const AccountOrders: React.FC = () => {
           listPrice: detaileData.listPrice,
           quantity: ordDetail.data[i].quantity
         }
-        console.log(ordDetail)
-        console.log('product: ', product)
+        
         dispatch(addToCart(product))
         
         

@@ -3,6 +3,8 @@ import LoadingPage from 'components/LoadingPage'
 import { useEffect, useState } from 'react'
 import Flickity from 'react-flickity-component'
 import bannerService from 'services/bannerService'
+import { changeQueryURL, convertQueryURLToObject } from "utils"
+
 interface SliderProp extends React.HTMLAttributes<HTMLDivElement> {
 }
 
@@ -12,14 +14,25 @@ export const Slider: React.FC<SliderProp> = ({ ...ref }) => {
     //         pageDots: true
     //     })
     // }, [])
+    let queryUrl = convertQueryURLToObject()
     let [loading, setLoading] = useState(true)
     let [banner, setBanner] = useState<Banner['data']>()
+    console.log('SLIDER HERE: WHERE IS QUERY URL ? : ', queryUrl.DistributorId)
     useEffect(() => {
         (async () => {
-            let data = await bannerService.getBanner()
-            if (data) {
-                setBanner(data.data)
-                setLoading(false)
+            if (queryUrl.DistributorId?.length) {
+                let data = await bannerService.getBanner(queryUrl.DistributorId)
+
+                if (data) {
+                    setBanner(data.data)
+                    setLoading(false)
+                }
+            } else {
+                let data = await bannerService.getBanner()
+                if (data) {
+                    setBanner(data.data)
+                    setLoading(false)
+                }
             }
         })()
     }, [])

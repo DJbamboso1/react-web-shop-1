@@ -23,7 +23,7 @@ type StateProps = {
 
 const AccountOrderDetail: React.FC = () => {
     let { slug } = useParams<{ slug: string }>()
-    console.log(slug)
+    // console.log(slug)
     let [orderDetail, setOrderDetail] = useState<OrderDetail>()
     let [state, setState] = useState<StateProps>({
         loading: true,
@@ -46,7 +46,7 @@ const AccountOrderDetail: React.FC = () => {
                 loading: false,
                 orderDetail: ordDetail.data
             })
-            console.log(state.orderDetail)
+            // console.log(state.orderDetail)
         })()
     }, [])
 
