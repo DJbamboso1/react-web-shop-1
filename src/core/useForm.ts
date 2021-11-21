@@ -43,9 +43,14 @@ type UseFormReturn<T> = {
     setForm: React.Dispatch<T>
 }
 
+type OptionType = {
+    preCheck?: Function,
+
+}
 
 
-export function useForm<T extends Object>(initvalue = {}): UseFormReturn<T> {
+
+export function useForm<T extends Object>(initvalue = {}, option: OptionType = {}): UseFormReturn<T> {
     // console.log(initvalue)
     let [form, setForm] = useState<any>(initvalue || {})
     let [error, setError] = useState<ErrorState<T>>({})
@@ -82,16 +87,15 @@ export function useForm<T extends Object>(initvalue = {}): UseFormReturn<T> {
 
 
     function check() {
-
         let errorObj: any = {}
-
+        option?.preCheck?.(initRule)
+        console.log(initRule)
         for (let i in initRule) {
             let r = initRule[i]
             if (r?.required && !form[i]?.trim()) {
                 errorObj[i] = initMessage?.[i]?.required || 'Trường này không được để trống'
                 continue
             }
-
             if (r?.pattern) {
                 let pattern = r.pattern
                 if (patternModel[r.pattern as string]) {
@@ -101,19 +105,15 @@ export function useForm<T extends Object>(initvalue = {}): UseFormReturn<T> {
                     errorObj[i] = initMessage?.[i]?.pattern || 'Trường này không đúng định dạng'
                 }
             }
-
             if (r?.min && form[i]?.length < r.min) {
                 errorObj[i] = initMessage?.[i]?.min || `Trường này phải dài hơn ${r.min} ký tự`
             }
-
             if (r?.max && form[i]?.length > r.max) {
                 errorObj[i] = initMessage?.[i]?.max || `Trường này không được nhiều hơn ${r.max} ký tự`
             }
-
             if (r?.confirm && form[r.confirm] !== form[i]) {
                 errorObj[i] = initMessage?.[i]?.confirm || `Vui lòng điền giông ${r.confirm}`
             }
-
         }
 
         for (let i in initRule) {
@@ -134,10 +134,8 @@ export function useForm<T extends Object>(initvalue = {}): UseFormReturn<T> {
         }
         // console.log(form)
         if (rule) {
-
             initRule[name] = rule
         }
-
         if (message) {
             initMessage[name] = message
         }

@@ -20,24 +20,23 @@ export const Slider: React.FC<SliderProp> = ({ ...ref }) => {
     console.log('SLIDER HERE: WHERE IS QUERY URL ? : ', queryUrl.DistributorId)
     useEffect(() => {
         (async () => {
-            if (queryUrl.DistributorId?.length) {
-                let data = await bannerService.getBanner(queryUrl.DistributorId)
-
-                if (data) {
-                    setBanner(data.data)
-                    setLoading(false)
-                }
+            // if (queryUrl.DistributorId?.length) {
+            let data = await bannerService.getBanner(queryUrl.DistributorId)
+            if (data) {
+                setBanner(data.data)
+                setLoading(false)
             } else {
                 let data = await bannerService.getBanner()
                 if (data) {
                     setBanner(data.data)
-                    setLoading(false)
+            setLoading(false)
                 }
             }
+            // }
         })()
     }, [])
 
-
+    console.log('BANNER: ', banner)
     return (
         <>
             {

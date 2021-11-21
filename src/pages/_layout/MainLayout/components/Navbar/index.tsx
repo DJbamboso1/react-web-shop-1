@@ -11,13 +11,16 @@ import CatalogCard from './components/CatalogCard'
 import HomeCard from './components/HomeCard'
 import Pages from './components/Pages'
 import Shop from './components/Shop'
+// import firebase from 'firebase/app';
+import firebase from '../../../../../utils/firebase'
+// import {requestPermission, M} from 'firebase/app'
 
 type NavbarProp = {
     hoverEvent: React.MouseEventHandler<HTMLElement>,
     mouseLeaveEvent: React.MouseEventHandler<HTMLElement>
 }
 
-const Navbar: React.FC<NavbarProp> = ({hoverEvent, mouseLeaveEvent}) => {
+const Navbar: React.FC<NavbarProp> = ({ hoverEvent, mouseLeaveEvent }) => {
 
     let { login } = useSelector((store: StateStore) => store.auth)
     let { list } = useSelector((store: StateStore) => store.cart)
@@ -39,14 +42,23 @@ const Navbar: React.FC<NavbarProp> = ({hoverEvent, mouseLeaveEvent}) => {
 
     }
 
+    // React.useEffect(() => {
+    //     const msg = firebase.messaging();
+    //     msg.requestPermission().then(() => {
+    //         return msg.getToken();
+    //     }).then((data: any) => {
+    //         console.log("token", msg)
+    //     })
+    // })
+
     return (
 
         <nav className="navbar navbar-expand-lg navbar-light bg-white">
-            
+
             <div className="container">
                 {/* Brand */}
                 <Link className="navbar-brand" to="/" >
-                    <img style={{zIndex: 1, width: '18%'}} src="/img/icons/LOGO3.png" alt="" />
+                    <img style={{ zIndex: 1, width: '18%' }} src="/img/icons/LOGO3.png" alt="" />
                 </Link>
                 {/* Toggler */}
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,9 +69,9 @@ const Navbar: React.FC<NavbarProp> = ({hoverEvent, mouseLeaveEvent}) => {
                     {/* Nav */}
                     <ul className="navbar-nav mx-auto">
                         <li className="nav-item dropdown hovered" onMouseOver={hoverEvent} onMouseLeave={mouseLeaveEvent}>
-                            
+
                             {/* <Link className="nav-link" data-toggle="dropdown" to="/" aria-expanded="true">Home</Link> */}
-                            
+
                             {/* <div className="dropdown-menu">
                                 <HomeCard />
                             </div> */}
@@ -103,7 +115,7 @@ const Navbar: React.FC<NavbarProp> = ({hoverEvent, mouseLeaveEvent}) => {
                     {/* Nav */}
                     <ul className="navbar-nav flex-row">
                         <li className="nav-item">
-                            <a className="nav-link" data-toggle="modal"  href="#" onClick={_openSearchModal}>
+                            <a className="nav-link" data-toggle="modal" href="#" onClick={_openSearchModal}>
                                 <i className="fe fe-search" />
                             </a>
                         </li>

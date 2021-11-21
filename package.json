@@ -27,7 +27,7 @@
     "@types/redux-saga": "^0.10.5",
     "@types/reselect": "^2.2.0",
     "dotenv": "^10.0.0",
-    "firebase": "^9.4.1",
+    "firebase": "^9.5.0",
     "flickity": "^2.2.2",
     "history": "^4.10.1",
     "react": "^17.0.2",

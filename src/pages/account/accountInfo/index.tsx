@@ -27,7 +27,17 @@ const AccountInfo: React.FC = () => {
 
     let dispatch = useDispatch()
     let [countDay, setCountDay] = useState<number>(0)
-    let { register, setForm, handleSubmit, error, form } = useForm<Form>()
+    let { register, setForm, handleSubmit, error, form } = useForm<Form>({}, {
+        preCheck: (initRule: any) => {
+            console.log(form)
+            if (!form.oldPassword && !form.newPassword) {
+                console.log('DELETE')
+                delete initRule.oldPassword
+                delete initRule.newPassword
+            }
+            console.log('NOT DELETE')
+        }
+    })
 
     let [open, setOpen] = useState(false);
 
@@ -39,16 +49,18 @@ const AccountInfo: React.FC = () => {
 
     let [message, setMessage] = useState('')
 
+    let [checkPass, setCheckPass] = useState(false)
+
     let { user } = useSelector((store: StateStore) => store.auth)
     useEffect(() => {
         (async () => {
             if (user) {
                 let inf = await authService.getInfo(user.id)
                 let date = new Date(inf.data.doB)
-                
+
                 inf.data.day = date.getDate()
                 inf.data.month = date.getMonth() + 1
-                
+
                 inf.data.year = date.getFullYear()
 
                 setForm(inf.data)
@@ -57,7 +69,7 @@ const AccountInfo: React.FC = () => {
                 let date1 = new Date(form.year, form.month, 0)
                 setCountDay(date1.getDate())
                 // setLoading(false)
-                
+
             }
         })()
     }, [])
@@ -70,36 +82,39 @@ const AccountInfo: React.FC = () => {
         if (form.day > countDay) {
             form.day = 1
         }
-        
+
     }, [form.month, form.year])
 
 
-    const submit = async (form: Form) => {
-        setLoading(true)
-        form.doB = `${form.year}/${form.month > 9 ? '' : '0'}${form.month}/${form.day > 9 ? '' : '0'}${form.day}`
-        
-        let profile = await authService.updateProfile(form)
-        setLoading(false)
-        if (profile.succeeded) {
-            dispatch(updateInfo(form))
-            setMessage('Cập nhật thành công')
-        } else {
-            setMessage('Cập nhật không thành công')
-        }
-        setOpen(true)
+    const submit = (form: Form) => {
+        // setLoading(true)
 
+        form.doB = `${form.year}/${form.month > 9 ? '' : '0'}${form.month}/${form.day > 9 ? '' : '0'}${form.day}`;
+
+        (async () => {
+            
+            let profile = await authService.updateProfile(form)
+            setLoading(false)
+            if (profile.succeeded) {
+                dispatch(updateInfo(form))
+                setMessage('Cập nhật thành công')
+            } else {
+                setMessage('Cập nhật không thành công')
+            }
+            setOpen(true)
+        })()
+        // console.log('old', form.oldPassword)
+        // console.log('new', form.newPassword)
     }
     // if (state) {
     //     return <LoadingPage />
     // }
 
     const changeAvatar = (ev: React.ChangeEvent<HTMLInputElement>) => {
-
         setLoading(true)
         let avatar = ev.currentTarget.files?.[0]
-        
         if (avatar) {
-            const storageRef = ref(storage, 'avatar/');
+            const storageRef = ref(storage, '/avatars/avatar');
             const uploadTask = uploadBytesResumable(storageRef, avatar);
             uploadTask.on('state_changed',
                 (snapshot) => {
@@ -117,13 +132,10 @@ const AccountInfo: React.FC = () => {
                             setOpen(true)
                         }
 
-                        // console.log('Download', downloadURL)
                     })
                 }
             )
         }
-        // console.log('ushvoiwjvuerihvoikqenvgiuwrhfoiendgiuwrhfoivneuigh8wef')
-
     }
 
     if (open === true) {
@@ -187,7 +199,7 @@ const AccountInfo: React.FC = () => {
                                 {form.displayName ? <label htmlFor="accountFirstName">
                                     Full Name *
                                 </label> : <Skeleton width='30%' height={35} />}
-                                {form.displayName ? <input className="form-control form-control-sm" id="accountFirstName" type="text" placeholder="First Name *" {...register('displayName')} /> : <Skeleton width='100%' height={75} />}
+                                {form.displayName ? <input className="form-control form-control-sm" id="accountFirstName" type="text" placeholder="First Name *" {...register('displayName', {required: true})} /> : <Skeleton width='100%' height={75} />}
                             </div>
                         </div>
                         <ErrorInput error={error.displayName} />
@@ -197,36 +209,38 @@ const AccountInfo: React.FC = () => {
                                 {form.email ? <label htmlFor="accountEmail">
                                     Email Address *
                                 </label> : <Skeleton width='30%' height={35} />}
-                                {form.email ? <input className="form-control form-control-sm" id="accountEmail" type="email" placeholder="Email Address *"   {...register('email', { pattern: 'email' })} /> : <Skeleton width='100%' height={75} />}
+                                {form.email ? <input className="form-control form-control-sm" id="accountEmail" type="email" placeholder="Email Address *"   {...register('email', { pattern: 'email', required: true })} /> : <Skeleton width='100%' height={75} />}
                             </div>
                         </div>
-                        {/* <div className="col-12 col-md-6">
-                        
-                        <div className="form-group">
-                            {
-                                form.id ? <label htmlFor="accountPassword">
-                                    Current Password *
-                                </label> : <Skeleton width='30%' height={35} />
-                            }
-                            {
-                                form.id ? <input className="form-control form-control-sm" id="accountPassword" type="password" placeholder="Current Password *" /> : <Skeleton width='100%' height={75} />
-                            }
+                        <div className="col-12 col-md-6">
 
+                            <div className="form-group">
+                                {
+                                    form.id ? <label htmlFor="accountPassword">
+                                        Current Password 
+                                    </label> : <Skeleton width='30%' height={35} />
+                                }
+                                {
+                                    form.id ? <input className="form-control form-control-sm" id="accountPassword" type="password" placeholder="Current Password " {...register('oldPassword', { min: 6, max: 30, required: true })} /> : <Skeleton width='100%' height={75} />
+                                }
+
+                            </div>
+                            <ErrorInput error={error.oldPassword} />
                         </div>
-                    </div>
-                    <div className="col-12 col-md-6">
-                        
-                        <div className="form-group">
-                            {
-                                form.id ? <label htmlFor="AccountNewPassword">
-                                    New Password *
-                                </label> : <Skeleton width='30%' height={35} />
-                            }
-                            {
-                                form.id ? <input className="form-control form-control-sm" id="AccountNewPassword" type="password" placeholder="New Password *" /> : <Skeleton width='100%' height={75} />
-                            }
+                        <div className="col-12 col-md-6">
+
+                            <div className="form-group">
+                                {
+                                    form.roleId ? <label htmlFor="AccountNewPassword">
+                                        New Password 
+                                    </label> : <Skeleton width='30%' height={35} />
+                                }
+                                {
+                                    form.roleId ? <input className="form-control form-control-sm" id="AccountNewPassword" type="password" placeholder="New Password " {...register('newPassword', { min: 6, max: 30, required: true })} /> : <Skeleton width='100%' height={75} />
+                                }
+                            </div>
+                            <ErrorInput error={error.newPassword} />
                         </div>
-                    </div> */}
                         <div className="col-12 col-lg-7">
                             {/* Birthday */}
                             <div className="form-group">
@@ -297,8 +311,6 @@ const AccountInfo: React.FC = () => {
                         <div className='col-12' style={{ textAlign: 'center' }}>
                             <LoadingAvatar />
                         </div>}
-
-
                 </div>
             </form>
         </>

@@ -40,6 +40,21 @@ const authService = {
     updateProfile(user: User['data']) {
         let url = API + '/user'
         return http.put<User>(url, user)
+    },
+
+    checkUsername(username: string) {
+        let url = API + '/user/check/username?username=' + username
+        return http.get<{ succeeded: boolean, message: string, error: null, data: boolean }>(url)
+    },
+
+    checkEmail(username: string) {
+        let url = API + '/user/check/email?email=' + username
+        return http.get<{ succeeded: boolean, message: string, error: null, data: boolean }>(url)
+    },
+
+    updatePassword(obj: {userId: string, oldPassword: string, newPassword: string, comfirmPassword: string}) {
+        let url = API + '/update-password'
+        return http.put(url, obj)
     }
 }
 

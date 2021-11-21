@@ -18,7 +18,10 @@ export interface User {
         address: string,
         isActive: boolean,
         dateCreated: Date,
-        dateModified: Date
+        dateModified: Date,
+        oldPassword?: string,
+        newPassword?: string,
+        confirmPassword?: string
     }
 }
 
