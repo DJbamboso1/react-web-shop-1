@@ -137,3 +137,37 @@ table {
   .list-styled-link {
     padding-left: 25px; 
   }
+
+  .icon-img {
+    z-index: 1;
+    width: 18%;
+  }
+
+  @media (max-width: 991px) {
+    .navbar .container {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: unset;
+      justify-content: unset;
+    }
+    .func.collapse:not(.show) {
+      display: block;
+    }
+
+    .navbar-brand {
+      text-align: center;
+    }
+
+    .icon-img {
+      z-index: 1;
+      width: 200px;
+    }
+
+    .navbar-nav {
+      justify-content: flex-end;
+    }
+  }
+
+  
+
+  

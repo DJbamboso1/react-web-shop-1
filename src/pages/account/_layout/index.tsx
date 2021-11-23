@@ -77,7 +77,7 @@ const AccountLayout: React.FC = ({ children }) => {
                     <div className="row">
                         <div className="col-12 text-center">
                             {/* Heading */}
-                            <h3 className="mb-10">My Account</h3>
+                            <h3 className="mb-10">Tài khoản của tôi</h3>
                             {/* <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: 50 }}>
                                 
                             </div> */}
@@ -89,7 +89,7 @@ const AccountLayout: React.FC = ({ children }) => {
                             <nav className="mb-10 mb-md-0">
                                 <div className="list-group list-group-sm list-group-strong list-group-flush-x">
                                     <NavLink className="list-group-item list-group-item-action dropright-toggle " to="/account/info">
-                                        Personal Info
+                                        Thông tin cá nhân
                                     </NavLink>
                                     <NavLink className="list-group-item list-group-item-action dropright-toggle " to="/account/session"> {/*active*/}
                                         Sessions
@@ -105,7 +105,7 @@ const AccountLayout: React.FC = ({ children }) => {
                                         Payment Methods
                                     </NavLink> */}
                                     <Link className="list-group-item list-group-item-action dropright-toggle" to="#" onClick={handleClickOpen}>
-                                        Logout
+                                        Đăng xuất
                                     </Link>
                                     <Dialog
                                         open={open}

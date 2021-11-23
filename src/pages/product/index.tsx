@@ -34,8 +34,6 @@ export type FilterQuery = {
 }
 
 const ProductPage: React.FC = () => {
-
-    const { list } = useCart()
     // console.log('LIST: ', list )
 
     let [data, setData] = useState<PaginateData<Product01>>()
@@ -55,7 +53,7 @@ const ProductPage: React.FC = () => {
 
     let [status, setStatus] = useState(-2)
 
-    // let [queryUrlCate, setQueryUrlCate] = useState<{ DistributorId: string }>()
+    let [queryUrlCate, setQueryUrlCate] = useState('')
 
     let [distributor, setDistributor] = useState<User>()
 
@@ -69,12 +67,13 @@ const ProductPage: React.FC = () => {
             if (queryUrl.DistributorId) {
                 let cateDis = await distributorService.getDistributor()
                 let dis = cateDis.data.find(e => e.id === queryUrl.DistributorId)
-                // console.log('DIS: ', dis)
+                console.log('DIS: ', dis)
                 // setQueryUrlCate({ DistributorId: queryUrl.DistributorId })
                 if (dis) {
                     let user = await authService.getInfo(dis.userId)
                     // console.log('DISTRIBUTOR USER: ', user)
                     setDistributor(user)
+                    setQueryUrlCate(dis.id)
                 }
             } else {
                 setDistributor(undefined) 
@@ -115,7 +114,6 @@ const ProductPage: React.FC = () => {
         pageNumber.push(i)
     }
     // console.log(queryUrl)
-
     // console.log('sjfbvuysgdviuwguvfwjevgiuwehgvw: ', cateDisData)
 
     return (
@@ -132,22 +130,22 @@ const ProductPage: React.FC = () => {
                         <div className="row align-items-center mb-7">
                             <div className="col-12 col-md">
                                 {/* Heading */}
-                                <h3 className="mb-1">Product</h3>
+                                <h3 className="mb-1">{ distributor?.data.displayName || 'Sản phẩm'}</h3>
                                 {/* Breadcrumb */}
                                 <Breadcrumbs list={[
                                     {
-                                        title: 'Home',
+                                        title: 'Trang chủ',
                                         link: '/'
                                     },
 
                                     ...(distributor ? [{
                                         title: distributor.data.displayName,
-                                        link: `${url}?DistributorId=${distributor.data.id}`
+                                        link: `${url}?DistributorId=${queryUrlCate}`
                                     }] : []),
 
                                     ...(category ? [{
                                         title: category.name,
-                                        link: `${url}?CategoryId=${category.id}`
+                                        link: `${url}?CategoryId=${category.id}${distributor ? `&DistributorId=${queryUrlCate}` : ''}`
                                     }] : []),
 
                                     ...(subCate ? [{
@@ -160,6 +158,9 @@ const ProductPage: React.FC = () => {
                                 {/* Select */}
                                 <form>
                                     <select className="custom-select custom-select-xs" onChange={(ev) => { setStatus(parseInt(ev.currentTarget.value)) }}>
+                                        <option value=''>
+                                            trạng thái
+                                        </option>
                                         <option value="0">
                                             {/* <Link to={ status > -2 ? changeQueryURL({ ...queryUrl, Status: status }) : '#' }>Ngừng bán</Link> */}
                                             Ngừng bán

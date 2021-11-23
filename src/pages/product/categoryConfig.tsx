@@ -1,17 +1,20 @@
 import { stringify } from "querystring";
-import { MouseEventHandler } from "react";
+import { MouseEventHandler, useState } from "react";
 import { Link } from "react-router-dom";
 import { changeQueryURL, convertQueryURLToObject } from "utils";
 import { FilterQuery } from ".";
 import { CategoryTree } from "../../@types/CategoryTree";
-
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 export function categoryConfig(categories: CategoryTree[]) {
 
     console.log('categories: ', categories)
     let objectURL = convertQueryURLToObject()
+    let isDropdown: boolean
     // console.log('category: ', objectURL)
     function _onClickHandle(e: React.MouseEvent, id: string) {
+        isDropdown = !isDropdown
         e.currentTarget.classList.toggle('collapsed')
         console.log('id: ', id)
         document.getElementById(`${id}`)?.classList.toggle('show')
@@ -33,9 +36,11 @@ export function categoryConfig(categories: CategoryTree[]) {
                 list.push(
                     <li className="nav-item">
                         {/* Toggle */}
-                        <Link className="nav-link dropdown-toggle font-size-lg text-reset border-bottom " data-toggle="collapse" to={changeQueryURL({ ...objectURL, CategoryId: cate.id, SubCategoryId: '', PageNumber: 1 })} onClick={(e) => _onClickHandle(e, cate.name)}>
+                        <Link className="nav-link font-size-lg text-reset border-bottom " style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}} data-toggle="collapse" to={changeQueryURL({ ...objectURL, CategoryId: cate.id, SubCategoryId: '', PageNumber: 1 })} onClick={(e) => _onClickHandle(e, cate.name)}>
                             {cate.name}
+                            <KeyboardArrowDownIcon/>
                         </Link>
+
                         {cate.subCategories && cate.subCategories?.length > 0 && (
                             <div className="collapse" id={cate.name}>
                                 <div className="form-group">

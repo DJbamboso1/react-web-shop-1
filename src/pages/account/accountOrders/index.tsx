@@ -203,7 +203,7 @@ const AccountOrders: React.FC = () => {
                         <div className='col-5'>
                           {
                             ord.status === 1 && (<>
-                              <Link className="btn btn-sm btn-block btn-outline-dark" to='#' onClick={handleClickOpen}  >
+                              <Link className="btn btn-sm btn-block btn-outline-dark" style={{minWidth: '120px'}} to='#' onClick={handleClickOpen}  >
                                 Đặt lại đơn
                               </Link>
                               <Dialog

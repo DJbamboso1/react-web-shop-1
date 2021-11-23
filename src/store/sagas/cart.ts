@@ -15,7 +15,7 @@ export function* AddCartCheckLogin(action: any): any {
 
     let store: StateStore = yield select()
     // console.log(store.auth.login)
-    if (store.auth.login) {
+    if (store.auth.login ) {
         yield put({ type: CART_ADD_CART, payload: action.payload })
     } else {
 

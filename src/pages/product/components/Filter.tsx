@@ -39,7 +39,7 @@ export const Filter: React.FC<{ cateData: any }> = ({ cateData }) => {
         <div className="col-12 col-md-4 col-lg-3">
             {/* Filters */}
             <div className='cateScroll'>
-                <h4 className='border-bottom' style={{ padding: 10, textAlign: 'center' }}>Categories</h4>
+                <h4 className='border-bottom' style={{ padding: 10, textAlign: 'center' }}>Phân loại:</h4>
                 <form className="mb-10 mb-md-0">
                     <ul className="nav nav-vertical" id="filterNav">
                         {cateData && categoryConfig(cateData)} {/* : <Skeleton variant="rectangular" height={600} /> */}
@@ -47,7 +47,7 @@ export const Filter: React.FC<{ cateData: any }> = ({ cateData }) => {
                 </form>
             </div>
             <div className='cateScroll'>
-                <h4 className='border-bottom' style={{ padding: '30px 10px 10px 10px', textAlign: 'center' }}>Distributors</h4>
+                <h4 className='border-bottom' style={{ padding: '30px 10px 10px 10px', textAlign: 'center' }}>Nhà phân phối</h4>
                 <form className="mb-10 mb-md-0">
                     <ul className="nav nav-vertical" id="filterNav">
                         {cateDisData?.data ? cateDisData.data.map(disData => {

@@ -56,16 +56,17 @@ const Navbar: React.FC<NavbarProp> = ({ hoverEvent, mouseLeaveEvent }) => {
         <nav className="navbar navbar-expand-lg navbar-light bg-white">
 
             <div className="container">
+                {/* Toggler */}
+                {/* <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon" />
+                </button> */}
                 {/* Brand */}
                 <Link className="navbar-brand" to="/" >
-                    <img style={{ zIndex: 1, width: '18%' }} src="/img/icons/LOGO3.png" alt="" />
+                    <img className='icon-img' src="/img/icons/LOGO3.png" alt="" />
                 </Link>
-                {/* Toggler */}
-                <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                    <span className="navbar-toggler-icon" />
-                </button>
+                
                 {/* Collapse */}
-                <div className="collapse navbar-collapse" id="navbarCollapse">
+                <div className="func collapse navbar-collapse" id="navbarCollapse">
                     {/* Nav */}
                     <ul className="navbar-nav mx-auto">
                         <li className="nav-item dropdown hovered" onMouseOver={hoverEvent} onMouseLeave={mouseLeaveEvent}>

@@ -35,6 +35,8 @@ const AccountInfo: React.FC = () => {
                 delete initRule.oldPassword
                 delete initRule.newPassword
             }
+            if (!form.businessLicense) delete initRule.businessLicense
+            if (!form.taxId) delete initRule.taxId
             // console.log('NOT DELETE')
         }
     })
