@@ -55,10 +55,11 @@ const ProductPage: React.FC = () => {
 
     let [status, setStatus] = useState(-2)
 
-    let [queryUrlCate, setQueryUrlCate] = useState<{ DistributorId: string }>()
+    // let [queryUrlCate, setQueryUrlCate] = useState<{ DistributorId: string }>()
+
+    let [distributor, setDistributor] = useState<User>()
 
     useEffect(() => {
-
         (async () => {
             if (status > -2) {
                 // console.log('YO !')
@@ -66,9 +67,19 @@ const ProductPage: React.FC = () => {
                 changeQueryURL({ ...queryUrl, Status: status.toString() })
             }
             if (queryUrl.DistributorId) {
-                setQueryUrlCate({ DistributorId: queryUrl.DistributorId })
+                let cateDis = await distributorService.getDistributor()
+                let dis = cateDis.data.find(e => e.id === queryUrl.DistributorId)
+                // console.log('DIS: ', dis)
+                // setQueryUrlCate({ DistributorId: queryUrl.DistributorId })
+                if (dis) {
+                    let user = await authService.getInfo(dis.userId)
+                    // console.log('DISTRIBUTOR USER: ', user)
+                    setDistributor(user)
+                }
+            } else {
+                setDistributor(undefined) 
             }
-            console.log(status)
+            // console.log(status)
             queryUrl.PageSize = '12'
             let list = await productService.paginate(queryUrl)
             setData(list)
@@ -77,12 +88,17 @@ const ProductPage: React.FC = () => {
             setCateData(cateList.data)
             if (queryUrl.CategoryId) {
                 let category = cateList.data.find(e => e.id === queryUrl.CategoryId)
-                setCategory(category)
-                setSubCate(category?.subCategories?.find(e => e.id === queryUrl.SubCategoryId))
+                    if (category) {
+                        setCategory(category)
+                        setSubCate(category?.subCategories?.find(e => e.id === queryUrl.SubCategoryId))
+                    }
+            } else {
+                setCategory(undefined)
+                setSubCate(undefined)
             }
+            if (queryUrl.DistributorId) {
 
-
-
+            }
         })()
         // dispatch(fetchProductsAction(queryUrl))
         // setData(product.products)
@@ -123,13 +139,17 @@ const ProductPage: React.FC = () => {
                                         title: 'Home',
                                         link: '/'
                                     },
+
+                                    ...(distributor ? [{
+                                        title: distributor.data.displayName,
+                                        link: `${url}?DistributorId=${distributor.data.id}`
+                                    }] : []),
+
                                     ...(category ? [{
                                         title: category.name,
                                         link: `${url}?CategoryId=${category.id}`
-                                    }] : [{
-                                        title: 'Product',
-                                        link: '/'
-                                    }]),
+                                    }] : []),
+
                                     ...(subCate ? [{
                                         title: subCate.name,
                                         link: ''

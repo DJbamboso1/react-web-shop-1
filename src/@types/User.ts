@@ -21,7 +21,9 @@ export interface User {
         dateModified: Date,
         oldPassword?: string,
         newPassword?: string,
-        confirmPassword?: string
+        confirmPassword?: string,
+        businessLicense: string,
+        taxId: string,
     }
 }
 

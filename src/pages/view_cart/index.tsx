@@ -24,15 +24,15 @@ const ViewCart: React.FC = () => {
                 <div className="row">
                     <div className="col-12">
                         {/* Heading */}
-                        <h3 className="mb-10 text-center">Shopping Cart</h3>
+                        <h3 className="mb-10 text-center">Giỏ hàng</h3>
                     </div>
                     <Breadcrumbs list={[
                         {
-                            title: 'Home',
+                            title: 'Trang chủ',
                             link: '/product'
                         },
                         {
-                            title: 'View cart',
+                            title: 'Xem chỉ tiết giỏ hàng',
                             link: '/view-cart'
                         }
                     ]} />
@@ -87,7 +87,7 @@ const ViewCart: React.FC = () => {
                                         <span>Tax</span> <span className="ml-auto font-size-sm">{currency(taxPrice)}</span>
                                     </li> */}
                                     <li className="list-group-item d-flex font-size-lg font-weight-bold">
-                                        <span>Total</span> <span className="ml-auto font-size-sm">{currency(total)}</span>
+                                        <span>Tổng: </span> <span className="ml-auto font-size-sm">{currency(total)}</span>
                                     </li>
                                     {/* <li className="list-group-item font-size-sm text-center text-gray-500">
                                         Shipping cost calculated at Checkout *
@@ -96,10 +96,10 @@ const ViewCart: React.FC = () => {
                             </div>
                         </div>
                         {/* Button */}
-                        <Link className="btn btn-block btn-dark mb-2" to="/checkout">Proceed to Checkout</Link>
+                        <Link className="btn btn-block btn-dark mb-2" to="/checkout">Tiếp tục thanh toán</Link>
                         {/* Link */}
                         <a className="btn btn-link btn-sm px-0 text-body" href="/">
-                            <i className="fe fe-arrow-left mr-2" /> Continue Shopping
+                            <i className="fe fe-arrow-left mr-2" /> Tiếp tục mua hàng
                         </a>
                     </div>
                 </div>

@@ -42,7 +42,7 @@ export const ProductItem: React.FC<{ product: Product01, num: number }> = ({ pro
                 <div className="col">
                     {/* Title */}
                     <div className="d-flex mb-2 font-weight-bold">
-                        <Link className="text-body" to={`/${product.name}`}>{product.name}</Link> <span className="ml-auto" style={{ fontWeight: 'bold' }}>{`${currency(getPricePerPro(product, num))} / item`}</span>
+                        <Link className="text-body" to={`/${product.name}`}>{product.name}</Link> <span className="ml-auto" style={{ fontWeight: 'bold' }}>{`${currency(getPricePerPro(product, num))} / vật phẩm`}</span>
                         {/* <span className="text-muted">
                             Nhà phân phối: {product.distributor}
                             <br/>
@@ -65,12 +65,12 @@ export const ProductItem: React.FC<{ product: Product01, num: number }> = ({ pro
                                     <input autoComplete="false" onBlur={_changeNumber} onClick={_changeNumber as any} type="number" className="cart-input-num" defaultValue={num} min={product.minQuantity} style={{ width: '30%' }} />
                                     {/* Remove */}
                                     <a onClick={(ev) => { ev.preventDefault(); dispatch(cartRemove(product.id)) }} className="font-size-xs text-gray-400 ml-auto" href="#!">
-                                        <i className="fe fe-x" /> Remove
+                                        <i className="fe fe-x" /> Xóa
                                     </a>
 
                                 </div>
                                 <br></br>
-                                Total: {currency(calculateTotal(product, num))}
+                                Tổng: {currency(calculateTotal(product, num))}
                             </>
 
                         )

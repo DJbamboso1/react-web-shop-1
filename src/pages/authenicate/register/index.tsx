@@ -78,23 +78,22 @@ const Register: React.FC = () => {
 
         let checkUsername = await authService.checkUsername(user.username)
         if (checkUsername.message === 'Username not Available') {
-            console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+            
             error.username = 'Tài khoản đã tồn tại'
             setUsernameError(error.username)
         }
         let checkEmail = await authService.checkEmail(user.email)
         if (checkEmail.message === 'Email not Available') {
-            console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb')
             error.email = 'Mail đã tồn tại'
             setMailError(error.email)
         }
-        console.log('ERROR: ', error.username?.length)
+        // console.log('ERROR: ', error.username?.length)
         if (!error.username && !error.email) {
             let obj = await authService.register(user)
-            console.log(obj)
+            // console.log(obj)
             if (obj && obj.succeeded === true) {
                 let retailer = await authService.registerRetailer({ userId: obj.data })
-                console.log('RESULT: ', retailer)
+                // console.log('RESULT: ', retailer)
                 if (retailer && retailer.succeeded === true) {
                     history.push('/auth/login')
                 }

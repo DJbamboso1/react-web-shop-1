@@ -8,6 +8,7 @@ import { currency } from 'utils'
 import { orderService } from '../../../services/orderService'
 import { addToCart, cartRemoveAll } from 'store/actions/cartAction'
 import { useCart } from 'store/selector'
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
 
 type FilterQuery = {
   // page: string,
@@ -30,6 +31,7 @@ const AccountOrders: React.FC = () => {
   let [order, setOrder] = useState<Order>()
   let [status, setStatus] = useState(-2)
   const { list } = useCart()
+  const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
     (async () => {
@@ -46,7 +48,6 @@ const AccountOrders: React.FC = () => {
       }
       let ord = await orderService.getAllOrder(obj)
       // setOrder(ord)
-      
       setState({
         loading: false,
         orders: ord.data
@@ -58,9 +59,17 @@ const AccountOrders: React.FC = () => {
     return <LoadingPage />
   }
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const reOrderHandle = async (ev: any, id: string) => {
     ev.preventDefault()
     dispatch(cartRemoveAll())
+    handleClose()
     let ordDetail = await orderService.getOrderDetail({ OrderId: id })
     if (ordDetail) {
       for (let i in ordDetail.data) {
@@ -80,13 +89,11 @@ const AccountOrders: React.FC = () => {
           listPrice: detaileData.listPrice,
           quantity: ordDetail.data[i].quantity
         }
-        
         dispatch(addToCart(product))
-        
-        
         // console.log(p)
         // if (p) p.num = ordDetail.data[i].quantity
       }
+
     }
   }
 
@@ -94,7 +101,7 @@ const AccountOrders: React.FC = () => {
     <div>
       <Breadcrumbs list={[
         {
-          title: 'Home',
+          title: 'Trang chủ',
           link: '/'
         },
         {
@@ -102,7 +109,7 @@ const AccountOrders: React.FC = () => {
           link: '/account/session'
         },
         {
-          title: 'Orders',
+          title: 'Đơn',
           link: `/account/orders/${slug}`
         },
       ]} />
@@ -111,10 +118,14 @@ const AccountOrders: React.FC = () => {
         <form >
           {/* Select */}
           Trạng thái: <select className="custom-select custom-select-sm" id="status" style={{ width: 200, }} onChange={(ev) => { setStatus(parseInt(ev.currentTarget.value)) }} >
+            <option value="-3">Có hàng bị trả</option>
+            <option value="-2">Chưa được giao</option>
             <option value="-1">Đang thành tiền</option>
             <option value="0">Đã hủy</option>
             <option value="1">Đã thành tiền</option>
             <option value="2">Chưa tính tiền</option>
+            <option value="3">Đã được giao</option>
+
           </select>
         </form>
       </div>
@@ -130,7 +141,7 @@ const AccountOrders: React.FC = () => {
                       <div className="row">
                         <div className="col-6 col-lg-3">
                           {/* Heading */}
-                          <h6 className="heading-xxxs text-muted">Order No:</h6>
+                          <h6 className="heading-xxxs text-muted">Số thứ tự:</h6>
                           {/* Text */}
                           <p className="mb-lg-0 font-size-sm font-weight-bold">
                             {i + 1}
@@ -138,7 +149,7 @@ const AccountOrders: React.FC = () => {
                         </div>
                         <div className="col-6 col-lg-3">
                           {/* Heading */}
-                          <h6 className="heading-xxxs text-muted">Distributor:</h6>
+                          <h6 className="heading-xxxs text-muted">Nhà phân phối:</h6>
                           {/* Text */}
                           <p className="mb-lg-0 font-size-sm font-weight-bold">
                             <time dateTime="2019-09-25">
@@ -148,15 +159,26 @@ const AccountOrders: React.FC = () => {
                         </div>
                         <div className="col-6 col-lg-3">
                           {/* Heading */}
-                          <h6 className="heading-xxxs text-muted">Status:</h6>
+                          <h6 className="heading-xxxs text-muted">Trạng thái:</h6>
                           {/* Text */}
-                          <p className="mb-0 font-size-sm font-weight-bold">
-                            {ord.status === -1 ? 'Đang thành tiền' : (ord.status === 0 ? 'Hủy' : (ord.status === 1 ? 'Đã thành tiền' : (ord.status === 2 ? 'Chưa thành tiền' : '')))}
+                          <p className="mb-0 font-size-sm font-weight-bold" style={{
+                            color: `${ord.status === -3 ? 'red' :
+                              (ord.status === -2 || ord.status === 0 ? 'red' :
+                                ord.status === -1 || ord.status === 2 ? 'orange' : 
+                                  'green')}`
+                          }}>
+                            {ord.status === -3 ? 'Có hàng bị trả' :
+                              (ord.status === -2 ? 'Chưa được giao' :
+                                ord.status === -1 ? 'Đang thành tiền' : (
+                                  ord.status === 0 ? 'Hủy' :
+                                    (ord.status === 1 ? 'Đã thành tiền' :
+                                      (ord.status === 2 ? 'Chưa thành tiền' :
+                                        (ord.status === 3 && 'Đã được giao')))))}
                           </p>
                         </div>
                         <div className="col-6 col-lg-3">
                           {/* Heading */}
-                          <h6 className="heading-xxxs text-muted">Order Amount:</h6>
+                          <h6 className="heading-xxxs text-muted">Giá:</h6>
                           {/* Text */}
                           <p className="mb-0 font-size-sm font-weight-bold">
                             {ord.orderCost && currency(ord.orderCost)}
@@ -179,14 +201,39 @@ const AccountOrders: React.FC = () => {
                     <div className="col-12 col-lg-6">
                       <div className="form-row  mb-4 mb-lg-0">
                         <div className='col-5'>
-                          <Link className="btn btn-sm btn-block btn-outline-dark" to='' onClick={(ev) => { reOrderHandle(ev, ord.id) }} >
-                            Re-Order
-                          </Link>
+                          {
+                            ord.status === 1 && (<>
+                              <Link className="btn btn-sm btn-block btn-outline-dark" to='#' onClick={handleClickOpen}  >
+                                Đặt lại đơn
+                              </Link>
+                              <Dialog
+                                open={open}
+                                onClose={handleClose}
+                                aria-labelledby="alert-dialog-title"
+                                aria-describedby="alert-dialog-description"
+                              >
+                                <DialogTitle id="alert-dialog-title">
+                                  Đặt lại đơn
+                                </DialogTitle>
+                                <DialogContent>
+                                  <DialogContentText id="alert-dialog-description">
+                                    Bạn có muốn đặt lại đơn này ? <br /> Giỏ hàng hiện tại của bạn sẽ bị xóa để đặt lại đơn
+                                  </DialogContentText>
+                                </DialogContent>
+                                <DialogActions>
+                                  <Button onClick={handleClose} >Không</Button>
+                                  <Button onClick={(ev) => { reOrderHandle(ev, ord.id) }} autoFocus>
+                                    Có
+                                  </Button>
+                                </DialogActions>
+                              </Dialog>
+                            </>)
+                          }
                         </div>
                         <div className="col-7">
                           {/* Button */}
                           <Link className="btn btn-sm btn-block btn-outline-dark" to={`/account/orderDetail/${ord.id}`}>
-                            Order Details
+                            Chi tiết đơn
                           </Link>
                         </div>
                         {/* <div className="col-6">
@@ -202,42 +249,8 @@ const AccountOrders: React.FC = () => {
               </div>
             </>
           )
-        }) : <p style={{ color: 'red' }}>Session is empty, want to buy some product ? <Link to='/'>Click here</Link></p>
+        }) : <p style={{ color: 'red' }}>Lịch sử rỗng, bạn có muốn mua hàng ? <Link to='/'>Ấn vào đây</Link></p>
       }
-
-      {/* Pagination */}
-      {/* <nav className="d-flex justify-content-center justify-content-md-end mt-10">
-        <ul className="pagination pagination-sm text-gray-400">
-          <li className="page-item">
-            <a className="page-link page-link-arrow" href="#">
-              <i className="fa fa-caret-left" />
-            </a>
-          </li>
-          <li className="page-item active">
-            <a className="page-link" href="#">1</a>
-          </li>
-          <li className="page-item">
-            <a className="page-link" href="#">2</a>
-          </li>
-          <li className="page-item">
-            <a className="page-link" href="#">3</a>
-          </li>
-          <li className="page-item">
-            <a className="page-link" href="#">4</a>
-          </li>
-          <li className="page-item">
-            <a className="page-link" href="#">5</a>
-          </li>
-          <li className="page-item">
-            <a className="page-link" href="#">6</a>
-          </li>
-          <li className="page-item">
-            <a className="page-link page-link-arrow" href="#">
-              <i className="fa fa-caret-right" />
-            </a>
-          </li>
-        </ul>
-      </nav> */}
     </div>
   )
 }

@@ -50,7 +50,7 @@ export const CartModal: React.FC = () => {
                         </button>
                         {/* Header*/}
                         <div className="modal-header line-height-fixed font-size-lg">
-                            <strong className="mx-auto">Your Cart ({list.length})</strong>
+                            <strong className="mx-auto">Giỏ hàng của bạn ({list.length})</strong>
                         </div>
                         {/* List group */}
                         <ul className="list-group list-group-lg list-group-flush" > {/*style={{overflow: 'auto', height: '55%' }} */}
@@ -60,12 +60,12 @@ export const CartModal: React.FC = () => {
                         </ul>
                         {/* Footer */}
                         <div className="modal-footer line-height-fixed font-size-sm bg-light mt-auto">
-                            <strong>Subtotal</strong> <strong className="ml-auto">{currency(subtotal)}</strong>
+                            <strong>Tổng: </strong> <strong className="ml-auto">{currency(subtotal)}</strong>
                         </div>
                         {/* Buttons */}
                         <div className="modal-body">
-                            <Link className="btn btn-block btn-dark" to="/checkout" onClick={_preventViewCart}>Continue to Checkout</Link>
-                            <Link className="btn btn-block btn-outline-dark" to="/view-cart" onClick={_preventViewCart}>View Cart</Link>
+                            <Link className="btn btn-block btn-dark" to="/checkout" onClick={_preventViewCart}>Tiếp tục thanh toán</Link>
+                            <Link className="btn btn-block btn-outline-dark" to="/view-cart" onClick={_preventViewCart}>Xem chi tiết giỏ hàng</Link>
                         </div>
                     </div> :
                         <div className="modal-content ">
@@ -80,10 +80,10 @@ export const CartModal: React.FC = () => {
                             {/* Body */}
                             <div className="modal-body fldsaex-grow-0 my-auto">
                                 {/* Heading */}
-                                <h6 className="mb-7 text-center">Your cart is empty 😞</h6>
+                                <h6 className="mb-7 text-center">Giỏ hàng đang trống 😞</h6>
                                 {/* Button */}
                                 <a className="btn btn-block btn-outline-dark" href="/">
-                                    Continue Shopping
+                                    Tiếp tục mua sắm
                                 </a>
                             </div>
                         </div>
@@ -138,7 +138,7 @@ export const CartItem: React.FC<{
                     <p className="font-size-sm font-weight-bold mb-6">
                         <Link className="text-body" to={`product/${id}`}>{name} </Link> <br />  {/* window.location.href = result.data.paymentResponse.payUrl */}              
                         <span className="text-muted">
-                            {`${currency(getPricePerPro(product, num))} / item`}
+                            {`${currency(getPricePerPro(product, num))} / vật phẩm`}
                             {/* {product && ((product.listPrice.length > 0) ?
                                 <>
                                     {
@@ -167,7 +167,7 @@ export const CartItem: React.FC<{
                             ev.preventDefault()
                             dispatch(cartRemove(id))
                         }} className="font-size-xs text-gray-400 ml-auto" href="">
-                            <i className="fe fe-x" /> Remove
+                            <i className="fe fe-x" /> Xóa
                         </a>
                     </div>
                 </div>

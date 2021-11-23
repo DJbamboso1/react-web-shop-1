@@ -109,7 +109,7 @@ const CheckoutComponent: React.FC = () => {
                 <div className="row">
                     <div className="col-12 text-center">
                         {/* Heading */}
-                        <h3 className="mb-4">Checkout</h3>
+                        <h3 className="mb-4">Thanh toán</h3>
                         {/* Subheading */}
                         {/* <p className="mb-10">
                             Already have an account? <a className="font-weight-bold text-reset" href="#!">Click here to login</a>
@@ -117,15 +117,15 @@ const CheckoutComponent: React.FC = () => {
                     </div>
                     <Breadcrumbs list={[
                         {
-                            title: 'Home',
+                            title: 'Trang chủ',
                             link: '/'
                         },
                         {
-                            title: 'View cart',
+                            title: 'Xem chi tiết giỏ hàng',
                             link: '/view-cart'
                         },
                         {
-                            title: 'Checkout',
+                            title: 'Thanh toán',
                             link: '/checkout'
                         },
                     ]} />
@@ -142,10 +142,10 @@ const CheckoutComponent: React.FC = () => {
                             <div className="row mb-9">
                                 {/* <TextField className="col-md-6" {...register('firstName', { required: true })} error={error.firstName} required label="First Name" placeholder="First Name" />
                                 <TextField className="col-md-6" {...register('lastName', { required: true })} error={error.lastName} required label="Last Name" placeholder="Last Name" /> */}
-                                <TextField {...register('displayName', { required: true })} error={error.displayName} required label="Full Name" placeholder="Last Name" disable />
+                                <TextField {...register('displayName', { required: true })} error={error.displayName} required label="Họ tên" placeholder="Last Name" disable />
                                 <TextField {...register('email', { required: true })} error={error.email} required label="Email" placeholder="Email" disable />
-                                <TextField {...register('phoneNumber', { required: true })} error={error.phoneNumber} required label="Phone" placeholder="Phone" disable />
-                                <TextField {...register('address', { required: true })} error={error.address} required label="Address" placeholder="Address" />
+                                <TextField {...register('phoneNumber', { required: true })} error={error.phoneNumber} required label="Số điện thoại" placeholder="Phone" disable />
+                                <TextField {...register('address', { required: true })} error={error.address} required label="Địa chỉ" placeholder="Address" disable />
                             </div>
                             <h6 className="mb-7">Phương thức thanh toán</h6>
                             <div className="table-responsive mb-6">
@@ -163,7 +163,7 @@ const CheckoutComponent: React.FC = () => {
 
                                                                 <label className="custom-control-label text-body text-nowrap" htmlFor={pm.id}>
                                                                     {/* {console.log(pm.id)} */}
-                                                                    {pm.description}
+                                                                    {pm.description === 'Cash on Delivery' ? 'Thanh toán tiên mặt' : 'Thanh toán ví Momo'}
                                                                 </label>
                                                             </div>
                                                         </td>
@@ -266,7 +266,7 @@ const CheckoutComponent: React.FC = () => {
                         </div>
                         <div className="col-12 col-md-5 col-lg-4 offset-lg-1">
                             {/* Heading */}
-                            <h6 className="mb-7">Order Items ({list.length})</h6>
+                            <h6 className="mb-7">Đơn ({list.length})</h6>
                             {/* Divider */}
                             <hr className="my-7" />
                             {/* List group */}
@@ -294,20 +294,20 @@ const CheckoutComponent: React.FC = () => {
                                             <span>Shipping</span> <span className="ml-auto font-size-sm">{currency(shippingPrice)}</span>
                                         </li> */}
                                         <li className="list-group-item d-flex font-size-lg font-weight-bold">
-                                            <span>Total</span> <span className="ml-auto">{currency(total)}</span>
+                                            <span>Tổng:</span> <span className="ml-auto">{currency(total)}</span>
                                         </li>
                                     </ul>
                                 </div>
                             </div>
                             {/* Disclaimer */}
-                            <p className="mb-7 font-size-xs text-gray-500">
+                            {/* <p className="mb-7 font-size-xs text-gray-500">
                                 Your personal data will be used to process your order, support
                                 your experience throughout this website, and for other purposes
                                 described in our privacy policy.
-                            </p>
+                            </p> */}
                             {/* Button */} 
                             <button type="submit" className="btn btn-block btn-dark">
-                                Place Order
+                                Thanh toán
                             </button>
                         </div>
                     </div>

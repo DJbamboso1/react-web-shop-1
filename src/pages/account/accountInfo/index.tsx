@@ -29,13 +29,13 @@ const AccountInfo: React.FC = () => {
     let [countDay, setCountDay] = useState<number>(0)
     let { register, setForm, handleSubmit, error, form } = useForm<Form>({}, {
         preCheck: (initRule: any) => {
-            console.log(form)
+            // console.log(form)
             if (!form.oldPassword && !form.newPassword) {
-                console.log('DELETE')
+                // console.log('DELETE')
                 delete initRule.oldPassword
                 delete initRule.newPassword
             }
-            console.log('NOT DELETE')
+            // console.log('NOT DELETE')
         }
     })
 
@@ -45,11 +45,11 @@ const AccountInfo: React.FC = () => {
 
     let avatarRef = useRef<HTMLInputElement>(null)
 
+    let licenseRef = useRef<HTMLInputElement>(null)
+
     let yearNow = new Date().getFullYear()
 
     let [message, setMessage] = useState('')
-
-    let [checkPass, setCheckPass] = useState(false)
 
     let { user } = useSelector((store: StateStore) => store.auth)
     useEffect(() => {
@@ -88,11 +88,8 @@ const AccountInfo: React.FC = () => {
 
     const submit = (form: Form) => {
         // setLoading(true)
-
         form.doB = `${form.year}/${form.month > 9 ? '' : '0'}${form.month}/${form.day > 9 ? '' : '0'}${form.day}`;
-
         (async () => {
-            
             let profile = await authService.updateProfile(form)
             setLoading(false)
             if (profile.succeeded) {
@@ -138,6 +135,34 @@ const AccountInfo: React.FC = () => {
         }
     }
 
+    const changeLicense = (ev: React.ChangeEvent<HTMLInputElement>) => {
+        setLoading(true)
+        let license = ev.currentTarget.files?.[0]
+        if (license) {
+            const storageRef = ref(storage, '/licenses/license');
+            const uploadTask = uploadBytesResumable(storageRef, license);
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                },
+                (error) => {
+                },
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                        // console.log('File available at', downloadURL);
+                        setForm({ ...form, businessLicense: downloadURL })
+                        setLoading(false)
+                        let user = await authService.getInfo(form.id)
+                        // console.log("HELLO WORLD: ", user)
+                        if (user.data.businessLicense) {
+                            setOpen(true)
+                        }
+
+                    })
+                }
+            )
+        }
+    }
+
     if (open === true) {
         return (
             <Modal
@@ -173,11 +198,11 @@ const AccountInfo: React.FC = () => {
         <>
             <Breadcrumbs list={[
                 {
-                    title: 'Home',
+                    title: 'Trang chủ',
                     link: '/'
                 },
                 {
-                    title: 'Account',
+                    title: 'Thông tin',
                     link: '/account/info'
                 },
 
@@ -189,7 +214,8 @@ const AccountInfo: React.FC = () => {
                         <div className="form-group" style={{ textAlign: 'center' }}>
                             {/* <input className="form-control form-control-sm" id="accountFirstName" type="text" placeholder="First Name *" {...register('displayName')} />  */}
                             {!loading ? <img className='avatar' src={form.avatar || '/img/avatar.jpg'} alt="" onClick={() => { avatarRef.current?.dispatchEvent(new MouseEvent('click')) }} /> : <LoadingAvatar />}
-                            <input type="file" style={{ display: 'none' }} ref={avatarRef} accept="image/*" onChange={changeAvatar} />
+                            <input type="file" className='form-control form-control-sm' style={{ display: 'none' }} ref={avatarRef} accept="image/*" onChange={changeAvatar} />
+                            
                         </div>
                     </div>
                     {!loading ? (<>
@@ -197,9 +223,9 @@ const AccountInfo: React.FC = () => {
                             {/* Email */}
                             <div className="form-group">
                                 {form.displayName ? <label htmlFor="accountFirstName">
-                                    Full Name *
+                                    Họ tên *
                                 </label> : <Skeleton width='30%' height={35} />}
-                                {form.displayName ? <input className="form-control form-control-sm" id="accountFirstName" type="text" placeholder="First Name *" {...register('displayName', {required: true})} /> : <Skeleton width='100%' height={75} />}
+                                {form.displayName ? <input className="form-control form-control-sm" id="accountFirstName" type="text"  {...register('displayName', { required: true })} /> : <Skeleton width='100%' height={75} />}
                             </div>
                         </div>
                         <ErrorInput error={error.displayName} />
@@ -207,9 +233,9 @@ const AccountInfo: React.FC = () => {
                             {/* Email */}
                             <div className="form-group">
                                 {form.email ? <label htmlFor="accountEmail">
-                                    Email Address *
+                                    Email *
                                 </label> : <Skeleton width='30%' height={35} />}
-                                {form.email ? <input className="form-control form-control-sm" id="accountEmail" type="email" placeholder="Email Address *"   {...register('email', { pattern: 'email', required: true })} /> : <Skeleton width='100%' height={75} />}
+                                {form.email ? <input className="form-control form-control-sm" id="accountEmail" type="email"    {...register('email', { pattern: 'email', required: true })} /> : <Skeleton width='100%' height={75} />}
                             </div>
                         </div>
                         <div className="col-12 col-md-6">
@@ -217,11 +243,11 @@ const AccountInfo: React.FC = () => {
                             <div className="form-group">
                                 {
                                     form.id ? <label htmlFor="accountPassword">
-                                        Current Password 
+                                        Mật khẩu cũ
                                     </label> : <Skeleton width='30%' height={35} />
                                 }
                                 {
-                                    form.id ? <input className="form-control form-control-sm" id="accountPassword" type="password" placeholder="Current Password " {...register('oldPassword', { min: 6, max: 30, required: true })} /> : <Skeleton width='100%' height={75} />
+                                    form.id ? <input className="form-control form-control-sm" id="accountPassword" type="password"  {...register('oldPassword', { min: 6, max: 30, required: true })} /> : <Skeleton width='100%' height={75} />
                                 }
 
                             </div>
@@ -232,11 +258,11 @@ const AccountInfo: React.FC = () => {
                             <div className="form-group">
                                 {
                                     form.roleId ? <label htmlFor="AccountNewPassword">
-                                        New Password 
+                                        Mật khẩu mới
                                     </label> : <Skeleton width='30%' height={35} />
                                 }
                                 {
-                                    form.roleId ? <input className="form-control form-control-sm" id="AccountNewPassword" type="password" placeholder="New Password " {...register('newPassword', { min: 6, max: 30, required: true })} /> : <Skeleton width='100%' height={75} />
+                                    form.roleId ? <input className="form-control form-control-sm" id="AccountNewPassword" type="password"  {...register('newPassword', { min: 6, max: 30, required: true })} /> : <Skeleton width='100%' height={75} />
                                 }
                             </div>
                             <ErrorInput error={error.newPassword} />
@@ -245,7 +271,7 @@ const AccountInfo: React.FC = () => {
                             {/* Birthday */}
                             <div className="form-group">
                                 {/* Label */}
-                                {form.doB ? <label>Date of Birth</label> : <Skeleton width="60%" height={24} />}
+                                {form.doB ? <label>Ngày sinh</label> : <Skeleton width="60%" height={24} />}
                                 {/* Inputs */}
                                 {form.doB ? (<div className="form-row">
                                     <div className="col-auto">
@@ -292,20 +318,37 @@ const AccountInfo: React.FC = () => {
                         <div className="col-12 col-lg-5">
                             {/* Gender */}
                             <div className="form-group mb-8">
-                                {form.sex ? <label>Gender</label> : <Skeleton width="60%" height={24} />}
+                                {form.sex ? <label>Giới tính</label> : <Skeleton width="60%" height={24} />}
                                 {form.sex ? (<div className="btn-group-toggle" data-toggle="buttons">
                                     <label className={`btn btn-sm btn-outline-border ${form.sex === TYPE_MALE ? 'active' : ''}`} onClick={e => setForm({ ...form, sex: TYPE_MALE })}>
-                                        <input type="radio" name="gender" /> Male
+                                        <input type="radio" name="gender" /> Nam
                                     </label>
                                     <label className={`btn btn-sm btn-outline-border ${form.sex === TYPE_FEMALE ? 'active' : ''}`} onClick={e => setForm({ ...form, sex: TYPE_FEMALE })}>
-                                        <input type="radio" name="gender" /> Female
+                                        <input type="radio" name="gender" /> Nữ
                                     </label>
                                 </div>) : <Skeleton className='btn-group-toggle' height={51} />}
                             </div>
                         </div>
                         <div className="col-12">
+                            <label>Giấy phép</label>
+                            <div className="form-group" >
+                                {/* <input className="form-control form-control-sm" id="accountFirstName" type="text" placeholder="First Name *" {...register('displayName')} />  */}
+                                {!loading ? <img src={form.businessLicense || '/img/file.png'} alt="" onClick={() => { licenseRef.current?.dispatchEvent(new MouseEvent('click')) }} /> : <LoadingAvatar />}
+                                <input type="file" className='form-control form-control-sm'  ref={licenseRef} accept="image/*, application/pdf" onChange={changeLicense} />
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            {/* Email */}
+                            <div className="form-group">
+                                {form.email ? <label htmlFor="accountEmail">
+                                    Mã số thuế 
+                                </label> : <Skeleton width='30%' height={35} />}
+                                {form.id ? <input className="form-control form-control-sm" id="accountEmail" type="text"   {...register('taxId', { required: true, min: 10, max: 10 }, { required: 'Cần nhập mã sô thuế', min: 'Mã số thuế cần 10 ký tự', max: 'Mã số thuế cần 10 ký tự' })} /> : <Skeleton width='100%' height={75} />}
+                            </div>
+                        </div>
+                        <div className="col-12">
                             {/* Button */}
-                            <button className="btn btn-dark" type="submit" disabled={form.id ? false : true}>Save Changes</button>
+                            <button className="btn btn-dark" type="submit" disabled={form.id ? false : true}>Lưu</button>
                         </div>
                     </>) :
                         <div className='col-12' style={{ textAlign: 'center' }}>

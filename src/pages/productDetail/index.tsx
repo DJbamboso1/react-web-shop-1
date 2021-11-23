@@ -11,11 +11,15 @@ import { getPricePerPro, calculateTotal } from 'store/selector'
 import { style } from '@mui/system'
 import LoadingPage from 'components/LoadingPage'
 import { Breadcrumbs } from 'components/Breadcrumbs'
+import { useHistory } from 'react-router'
 
 const ProductDetail: React.FC = () => {
 
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
+
+    let history = useHistory()
+
     let num = useCartNumber()
 
     let { slug } = useParams<{ slug: string }>()
@@ -44,7 +48,8 @@ const ProductDetail: React.FC = () => {
                     <Breadcrumbs list={[
                         {
                             title: 'Home',
-                            link: '/'
+                            link: '/',
+                            onClick: () => {history.goBack()}
                         },
                         {
                             title: `${data && data?.data.name}`,
@@ -132,6 +137,7 @@ const ProductDetail: React.FC = () => {
                                         </div>
                                         {/* Heading */}
                                         <h3 className="mb-2">{data.data.name}</h3>
+                                        <h6 className="mb-2">Nhà phân phối: {data.data.distributor}</h6>
                                         {/* Price */}
                                         <div className="mb-7">
                                             {/* <span className="font-size-lg font-weight-bold text-gray-350 text-decoration-line-through">$115.00</span> */}
@@ -145,13 +151,13 @@ const ProductDetail: React.FC = () => {
 
                                         <table style={{ overflowX: 'auto' }}>
                                             <tr>
-                                                <th>Volume</th>
-                                                <th>Price</th>
+                                                <th>Số lượng</th>
+                                                <th>Giá</th>
                                             </tr>
                                             {data.data.listPrice && data.data.listPrice.map(price => {
                                                 return (
                                                     <tr>
-                                                        <th>{`>= ${price.volume} items`}</th>
+                                                        <th>{`>= ${price.volume} món`}</th>
                                                         <th> {currency(price.value)}</th>
                                                     </tr>
                                                 )
@@ -174,7 +180,7 @@ const ProductDetail: React.FC = () => {
                                                     <div className="col-12 col-lg" style={{ flexBasis: num === 0 ? 'unset' : 0 }}>
                                                         {/* Submit */}
                                                         <button disabled={data && data.data.status === 1 ? false : true} type="submit" className="btn btn-block btn-dark mb-2" onClick={(ev) => { ev.preventDefault(); data && (data.data.listPrice && data.data.listPrice.length > 0) && dispatch(addToCart(data.data)) }}>
-                                                            Add to Cart <i className="fe fe-shopping-cart ml-2" />
+                                                            Thêm vào giỏ hàng <i className="fe fe-shopping-cart ml-2" />
                                                         </button>
                                                     </div>
                                                 </div>

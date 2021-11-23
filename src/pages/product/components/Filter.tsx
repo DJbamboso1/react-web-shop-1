@@ -18,25 +18,23 @@ export const Filter: React.FC<{ cateData: any }> = ({ cateData }) => {
 
     useEffect(() => {
         (async () => {
-            let cateDis = await distributorService.getDistributor()           
-            
+            let cateDis = await distributorService.getDistributor()
+
             if (cateDis) {
                 for (let i = 0; i < cateDis.data.length; i++) {
-                    let userId = '';       
-                    if (cateDis) {
-                       userId = cateDis.data[i]?.userId
-                    }
-                        let user = await authService.getInfo(userId)
-                        // cateDisData.data[i].user = user
-                        cateDis.data[i].displayName = user.data.displayName
+                    let userId = '';
+                    userId = cateDis.data[i]?.userId
+                    let user = await authService.getInfo(userId)
+                    // cateDisData.data[i].user = user
+                    cateDis.data[i].displayName = user.data.displayName
                 }
             }
             setCateDisData(cateDis)
         })()
 
     }, [])
-    
-    
+
+
     return (
         <div className="col-12 col-md-4 col-lg-3">
             {/* Filters */}

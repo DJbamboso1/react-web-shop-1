@@ -57,7 +57,7 @@ const AccountOrderDetail: React.FC = () => {
         <div>
             <Breadcrumbs list={[
                 {
-                    title: 'Home',
+                    title: 'Trang chủ',
                     link: '/'
                 },
                 {
@@ -65,11 +65,11 @@ const AccountOrderDetail: React.FC = () => {
                     link: '/account/session'
                 },
                 {
-                    title: 'Orders',
+                    title: 'Đơn',
                     link: `/account/orders/${order?.sessionId}`
                 },
                 {
-                    title: 'Detail',
+                    title: 'Chi tiết',
                     link: ''
                 }
             ]} />
@@ -83,15 +83,15 @@ const AccountOrderDetail: React.FC = () => {
                                 <div className="row">
                                     <div className="col-6 col-lg-3">
                                         {/* Heading */}
-                                        <h6 className="heading-xxxs text-muted">Order No:</h6>
+                                        <h6 className="heading-xxxs text-muted">Số thứ tự:</h6>
                                         {/* Text */}
                                         <p className="mb-lg-0 font-size-sm font-weight-bold">
-                                            {order.id}
+                                            1
                                         </p>
                                     </div>
                                     <div className="col-6 col-lg-3">
                                         {/* Heading */}
-                                        <h6 className="heading-xxxs text-muted">Distributor:</h6>
+                                        <h6 className="heading-xxxs text-muted">Nhà phân phối:</h6>
                                         {/* Text */}
                                         <p className="mb-lg-0 font-size-sm font-weight-bold">
                                             <time dateTime="2019-09-25">
@@ -101,15 +101,26 @@ const AccountOrderDetail: React.FC = () => {
                                     </div>
                                     <div className="col-6 col-lg-3">
                                         {/* Heading */}
-                                        <h6 className="heading-xxxs text-muted">Status:</h6>
+                                        <h6 className="heading-xxxs text-muted">Trạng thái:</h6>
                                         {/* Text */}
-                                        <p className="mb-0 font-size-sm font-weight-bold">
-                                            {order.status === -1 ? 'Đang thành tiền' : (order.status === 0 ? 'Hủy' : (order.status === 1 ? 'Đã thành tiền' : (order.status === 2 ? 'Chưa thành tiền' : '')))}
+                                        <p className="mb-0 font-size-sm font-weight-bold" style={{
+                                            color: `${order.status === -3 ? 'red' :
+                                                (order.status === -2 || order.status === 0 ? 'red' :
+                                                    order.status === -1 || order.status === 2 ? 'yellow' :
+                                                        'green')}`
+                                        }}>
+                                            {order.status === -3 ? 'Có hàng bị trả' :
+                                                (order.status === -2 ? 'Chưa được giao' :
+                                                    order.status === -1 ? 'Đang thành tiền' : (
+                                                        order.status === 0 ? 'Hủy' :
+                                                            (order.status === 1 ? 'Đã thành tiền' :
+                                                                (order.status === 2 ? 'Chưa thành tiền' :
+                                                                    (order.status === 3 && 'Đã được giao')))))}
                                         </p>
                                     </div>
                                     <div className="col-6 col-lg-3">
                                         {/* Heading */}
-                                        <h6 className="heading-xxxs text-muted">Order Amount:</h6>
+                                        <h6 className="heading-xxxs text-muted">Giá :</h6>
                                         {/* Text */}
                                         <p className="mb-0 font-size-sm font-weight-bold">
                                             {currency(order.orderCost)}
@@ -145,7 +156,7 @@ const AccountOrderDetail: React.FC = () => {
                                             </p>
                                             {/* Text */}
                                             <div className="font-size-sm text-muted">
-                                                Quantity: {ordDetail.quantity}
+                                                Số lượng: {ordDetail.quantity}
                                             </div>
                                         </div>
                                     </div>
@@ -161,7 +172,7 @@ const AccountOrderDetail: React.FC = () => {
                 order && <div className="card card-lg mb-5 border">
                     <div className="card-body">
                         {/* Heading */}
-                        <h6 className="mb-7">Order Total</h6>
+                        <h6 className="mb-7">Tổng đơn</h6>
                         {/* List group */}
                         <ul className="list-group list-group-sm list-group-flush-y list-group-flush-x">
                             {/* <li className="list-group-item d-flex">
@@ -177,7 +188,7 @@ const AccountOrderDetail: React.FC = () => {
                             <span className="ml-auto">$8.00</span>
                         </li> */}
                             <li className="list-group-item d-flex font-size-lg font-weight-bold">
-                                <span>Total</span>
+                                <span>Giá: </span>
                                 <span className="ml-auto">{currency(order.orderCost)}</span>
                             </li>
                         </ul>

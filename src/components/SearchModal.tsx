@@ -69,9 +69,9 @@ export const SearchModal: React.FC = () => {
     if (listDis) {
         for (let i = 0; i < listDis.data.length; i++) {
             let userId = '';
-            console.log(listDis)
+            // console.log(listDis)
             if (listDis) {
-                console.log(listDis?.data[i])
+                // console.log(listDis?.data[i])
                 userId = listDis.data[i]?.userId
             }
             (async () => {
@@ -84,7 +84,7 @@ export const SearchModal: React.FC = () => {
     }
 
     const submit = (form: Form) => {
-        console.log('FORM:', form)
+        // console.log('FORM:', form)
         setSearchVal(form)
     }
 
@@ -99,16 +99,16 @@ export const SearchModal: React.FC = () => {
                     </button>
                     {/* Header*/}
                     <div className="modal-header line-height-fixed font-size-lg">
-                        <strong className="mx-auto">Search Products</strong>
+                        <strong className="mx-auto">Tìm kiếm sản phẩm</strong>
                     </div>
                     {/* Body: Form */}
                     <form onChange={handleSubmit(submit)}>
                         <div className="modal-body">
 
                             <div className="form-group">
-                                <label className="sr-only" htmlFor="modalSearchCategories">Distributor:</label>
+                                <label className="sr-only" htmlFor="modalSearchCategories">Nhà phân phối:</label>
                                 <select className="custom-select" id="modalSearchCategories" {...register('DistributorId')}>
-                                    <option selected value=''>All Distributors</option>
+                                    <option selected value=''>Tất cả</option>
                                     {
                                         listDis?.data && listDis.data.map(i => {
                                             return (
@@ -119,7 +119,7 @@ export const SearchModal: React.FC = () => {
                                 </select>
                             </div>
                             <div className="input-group input-group-merge">
-                                <input className="form-control" type="search" placeholder="Search" {...register('SearchValue')} />
+                                <input className="form-control" type="search" placeholder="Tìm kiếm" {...register('SearchValue')} />
                                 <div className="input-group-append">
                                     <button className="btn btn-outline-border" type="submit" >
                                         <i className="fe fe-search" />
@@ -131,7 +131,7 @@ export const SearchModal: React.FC = () => {
                         {/* Body: Results (add `.d-none` to disable it) */}
                         <div className="modal-body border-top font-size-sm" >
                             {/* Heading */}
-                            <p>Search Results:</p>
+                            <p>Kết quả tìm kiếm:</p>
                             {/* Items */}
 
                             {
@@ -148,12 +148,12 @@ export const SearchModal: React.FC = () => {
                                             <div className="col position-static">
                                                 {/* Text */}
                                                 <p className="mb-0 font-weight-bold">
-                                                    <Link className="stretched-link text-body" to={`/product/${pro.id}`} onClick={(ev) => { dispatch(toggleSearch(false)) }}>{pro.name} ({pro.listPrice && pro.listPrice[0].volume} items)</Link> <br />
+                                                    <Link className="stretched-link text-body" to={`/product/${pro.id}`} onClick={(ev) => { dispatch(toggleSearch(false)) }}>{pro.name} ({pro.listPrice && pro.listPrice[0].volume} vật phẩm)</Link> <br />
                                                     <span className="text-muted">
                                                         {
                                                             pro && pro.listPrice && ((pro.listPrice.length > 0) ?
                                                                 `${pro.listPrice.length > 1 ? (pro.listPrice[pro.listPrice.length - 1].value.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) + ' - ') : ''}${pro.listPrice[0].value.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}  `
-                                                                : <h6 style={{ color: 'red' }}>No price</h6>)
+                                                                : <h6 style={{ color: 'red' }}>Không giá</h6>)
 
                                                         }
                                                     </span>
@@ -164,7 +164,7 @@ export const SearchModal: React.FC = () => {
                                 }) : <div className=" modal-body">
                                     {/* Text */}
                                     <p className="mb-3 font-size-sm text-center">
-                                        Nothing matches your search
+                                        Không tìm thấy từ khóa
                                     </p>
                                     <p className="mb-0 font-size-sm text-center">
                                         😞
@@ -175,7 +175,7 @@ export const SearchModal: React.FC = () => {
 
                             {/* Button */}
                             <button className="btn btn-link px-0 text-reset" type="submit" onClick={(ev) => { dispatch(toggleSearch(false)) }}>
-                                View All <i className="fe fe-arrow-right ml-2" />
+                                Xem tất cả <i className="fe fe-arrow-right ml-2" />
                             </button>
                         </div>
                     </form>
