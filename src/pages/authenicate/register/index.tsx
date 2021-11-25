@@ -92,11 +92,12 @@ const Register: React.FC = () => {
             let obj = await authService.register(user)
             // console.log(obj)
             if (obj && obj.succeeded === true) {
-                let retailer = await authService.registerRetailer({ userId: obj.data })
-                // console.log('RESULT: ', retailer)
-                if (retailer && retailer.succeeded === true) {
-                    history.push('/auth/login')
-                }
+                history.push('/auth/login')
+                // let retailer = await authService.registerRetailer({ userId: obj.data })
+                // // console.log('RESULT: ', retailer)
+                // if (retailer && retailer.succeeded === true) {
+                //     history.push('/auth/login')
+                // }
             } else {
                 console.log('BUG')
                 setErrorMsg('Đăng ký không thành công')
@@ -114,7 +115,7 @@ const Register: React.FC = () => {
             {!loading ? (
                 <div className="card-body">
                     {/* Heading */}
-                    <h6 className="mb-7">New Account</h6>
+                    <h6 className="mb-7">Tạo tài khoản mới</h6>
                     {errorMsg && <ErrorInput error={errorMsg} />}
                     {/* Form */}
                     <form onSubmit={handleSubmit(submit)}>
@@ -124,7 +125,7 @@ const Register: React.FC = () => {
                                 {/* Email */}
                                 <div className="form-group">
                                     <label className="" htmlFor="registerEmail">
-                                        Username *
+                                        Tài khoản *
                                     </label>
                                     <input className="form-control form-control-sm" id="registerEmail" type="text"  {...register('username', { required: true, pattern: 'username', min: 5, max: 16 }, { required: 'Tài khoản không được để trống !', pattern: 'Yêu cầu tài khoản không chứa các ký tự đặt biệt', min: 'Tài khoản cần ít nhất 5 ký tự', max: 'Tài khoản cần nhiều nhất chỉ 16 ký tự' })} />
                                     <ErrorInput error={usernameError || error.username} />
@@ -135,7 +136,7 @@ const Register: React.FC = () => {
                                 {/* Email */}
                                 <div className="form-group">
                                     <label className="" htmlFor="registerFirstName">
-                                        Display Name *
+                                        Họ tên *
                                     </label>
                                     <input className="form-control form-control-sm" id="registerFirstName" type="text"  {...register('displayName', { required: true, min: 2, max: 30 }, { required: 'Họ tên không được để trống', min: 'Tên có ít nhất 2 ký tự', max: 'Tên có nhiều nhất chỉ 30 ký tự' })} />
                                     <ErrorInput error={error.displayName} />
@@ -155,7 +156,7 @@ const Register: React.FC = () => {
                                 {/* Email */}
                                 <div className="form-group">
                                     <label htmlFor="accountEmail">
-                                        Phone number *
+                                        Số điện thoại *
                                     </label>
                                     <input className="form-control form-control-sm" id="accountEmail" type="text"    {...register('phoneNumber', { required: true, pattern: 'phone' }, { required: 'Số điện thoại không được để trống', pattern: 'Số điện thoại không đúng định dạng , yêu cầu số điện thoại Việt Nam' })} />
                                     <ErrorInput error={error.phoneNumber} />
@@ -165,7 +166,7 @@ const Register: React.FC = () => {
                                 {/* Email */}
                                 <div className="form-group">
                                     <label htmlFor="accountEmail">
-                                        Address *
+                                        Địa chỉ *
                                     </label>
                                     <input className="form-control form-control-sm" id="accountEmail" type="text"   {...register('address', { required: true }, { required: 'Địa chỉ không được để trống' })} />
                                     <ErrorInput error={error.address} />
@@ -175,7 +176,7 @@ const Register: React.FC = () => {
                                 {/* Password */}
                                 <div className="form-group">
                                     <label className="" htmlFor="registerPassword">
-                                        Password *
+                                        Mật khẩu *
                                     </label>
                                     <input className="form-control form-control-sm" id="registerPassword" type="password"  {...register('password', { required: true, min: 6, max: 32 }, { required: 'Mật khẩu không được để trống !', min: 'Mật khẩu cần ít nhất 6 ký tự', max: 'Mật khẩu cần nhiều nhất chỉ 32 ký tự' })} />
                                     <ErrorInput error={error.password} />
@@ -186,7 +187,7 @@ const Register: React.FC = () => {
                                 {/* Password */}
                                 <div className="form-group">
                                     <label className="" htmlFor="registerPasswordConfirm">
-                                        Confirm Password *
+                                        Nhập lại mật khẩu *
                                     </label>
                                     <input className="form-control form-control-sm" id="registerPasswordConfirm" type="password"  {...register('confirmPassword', { confirm: 'password' })} />
                                     <ErrorInput error={error.confirmPassword} />
@@ -196,7 +197,7 @@ const Register: React.FC = () => {
                                 {/* Birthday */}
                                 <div className="form-group">
                                     {/* Label */}
-                                    <label>Date of Birth</label>
+                                    <label>ngày sinh</label>
                                     {/* Inputs */}
                                     <div className="form-row">
                                         <div className="col-auto">
@@ -241,13 +242,13 @@ const Register: React.FC = () => {
                             <div className="col-12 col-lg-5">
                                 {/* Gender */}
                                 <div className="form-group mb-8">
-                                    <label>Gender</label>
+                                    <label>Giới tính</label>
                                     <div className="btn-group-toggle" data-toggle="buttons">
                                         <label className={`btn btn-sm btn-outline-border ${form.sex === TYPE_MALE ? 'active' : ''}`} onClick={e => setForm({ ...form, sex: TYPE_MALE })}>
-                                            <input type="radio" name="gender" /> Male
+                                            <input type="radio" name="gender" /> Nam
                                         </label>
                                         <label className={`btn btn-sm btn-outline-border ${form.sex === TYPE_FEMALE ? 'active' : ''}`} onClick={e => setForm({ ...form, sex: TYPE_FEMALE })}>
-                                            <input type="radio" name="gender" /> Female
+                                            <input type="radio" name="gender" /> Nữ
                                         </label>
                                     </div>
                                 </div>
@@ -270,12 +271,12 @@ const Register: React.FC = () => {
                             </div>
                         </div> */}
                             <div className="col-12">
-                                <p>{t(`Have a account?`)} <Link to="/">Login</Link></p>
+                                <p>{t(`Đã có tài khoản ?`)} <Link to="/">Đăng nhập</Link></p>
                             </div>
                             <div className="col-12">
                                 {/* Button */}
                                 <button className="btn btn-sm btn-dark" type="submit">
-                                    Register
+                                    Đăng ký
                                 </button>
                             </div>
                         </div>

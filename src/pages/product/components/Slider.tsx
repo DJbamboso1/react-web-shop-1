@@ -17,31 +17,28 @@ export const Slider: React.FC<SliderProp> = ({ ...ref }) => {
     let queryUrl = convertQueryURLToObject()
     let [loading, setLoading] = useState(true)
     let [banner, setBanner] = useState<Banner['data']>()
-    // console.log('SLIDER HERE: WHERE IS QUERY URL ? : ', queryUrl.DistributorId)
+    console.log('SLIDER HERE: WHERE IS QUERY URL ? : ', queryUrl.DistributorId)
     useEffect(() => {
         (async () => {
             // if (queryUrl.DistributorId?.length) {
-            let data = await bannerService.getBanner(queryUrl.DistributorId)
-            if (data.succeeded === true) {
+            if (queryUrl.DistributorId) {
+                let data = await bannerService.getBanner(queryUrl.DistributorId)
                 setBanner(data.data)
-                setLoading(false)
             } else {
                 let data = await bannerService.getBanner()
-                if (data) {
-                    setBanner(data.data)
-            setLoading(false)
-                }
+                setBanner(data.data)
             }
+            setLoading(false)
             // }
         })()
-    }, [])
+    }, [queryUrl.DistributorId])
 
-    // console.log('BANNER: ', banner)
+    console.log('BANNER: ', banner)
     return (
         <>
             {
-                !loading ? (
-                    <Flickity
+                !loading ?
+                    banner && <Flickity
                         className="flickity-page-dots-inner mb-9"
                         options={{
                             pageDots: true,
@@ -54,7 +51,7 @@ export const Slider: React.FC<SliderProp> = ({ ...ref }) => {
                     // static // default false
                     >
                         {
-                            banner?.map(b => {
+                            banner.map(b => {
                                 return (
                                     <div className="w-100">
                                         <a className="card bg-h-100 " style={{ backgroundImage: `url(${b.image})` }} href={b.link}>
@@ -137,7 +134,7 @@ export const Slider: React.FC<SliderProp> = ({ ...ref }) => {
                             </div>
                         </div> */}
                     </Flickity>
-                ) :
+                    :
                     <LoadingPage />
             }
         </>

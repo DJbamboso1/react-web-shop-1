@@ -60,13 +60,13 @@ const AccountOrderDetail: React.FC = () => {
                     title: 'Trang chủ',
                     link: '/'
                 },
+                // {
+                //     title: 'Session',
+                //     link: '/account/session'
+                // },
                 {
-                    title: 'Session',
-                    link: '/account/session'
-                },
-                {
-                    title: 'Đơn',
-                    link: `/account/orders/${order?.sessionId}`
+                    title: 'Đơn hàng',
+                    link: `/account/orders`
                 },
                 {
                     title: 'Chi tiết',
@@ -106,7 +106,7 @@ const AccountOrderDetail: React.FC = () => {
                                         <p className="mb-0 font-size-sm font-weight-bold" style={{
                                             color: `${order.status === -3 ? 'red' :
                                                 (order.status === -2 || order.status === 0 ? 'red' :
-                                                    order.status === -1 || order.status === 2 ? 'yellow' :
+                                                    order.status === -1 || order.status === 2 ? 'orange' :
                                                         'green')}`
                                         }}>
                                             {order.status === -3 ? 'Có hàng bị trả' :

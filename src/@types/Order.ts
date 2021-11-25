@@ -1,4 +1,7 @@
 export interface Order {
+  pageNumber: number,
+  pageSize: number,
+  total: number,
   succeeded: boolean,
   message: String,
   errors: null,

@@ -2,18 +2,22 @@ import { Order, Product01 } from '@types'
 import { Breadcrumbs } from 'components/Breadcrumbs'
 import LoadingPage from 'components/LoadingPage'
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
-import { currency } from 'utils'
+import { convertQueryURLToObject, currency } from 'utils'
 import { orderService } from '../../../services/orderService'
 import { addToCart, cartRemoveAll } from 'store/actions/cartAction'
 import { useCart } from 'store/selector'
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
+import { StateStore } from 'store'
+import { Paginate } from 'components/Paginate'
 
 type FilterQuery = {
   // page: string,
-  SessionId?: string
-  Status?: number
+  RetailerId?: string
+  Status?: string,
+  PageSize?: string,
+  PageNumber?: string,
 }
 
 type StateProps = {
@@ -22,38 +26,35 @@ type StateProps = {
 }
 
 const AccountOrders: React.FC = () => {
+  let queryUrl = convertQueryURLToObject<FilterQuery>()
   let dispatch = useDispatch()
-  let { slug } = useParams<{ slug: string }>()
+  let { user } = useSelector((store: StateStore) => store.auth)
   let [state, setState] = useState<StateProps>({
     loading: true,
     orders: []
   })
   let [order, setOrder] = useState<Order>()
-  let [status, setStatus] = useState(-2)
-  const { list } = useCart()
+  let [status, setStatus] = useState('')
+  // const { list } = useCart()
   const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
     (async () => {
-      let obj: FilterQuery = {}
-      if (status > -2) {
-        obj = {
-          SessionId: slug,
-          Status: status
-        }
-      } else {
-        obj = {
-          SessionId: slug,
-        }
-      }
-      let ord = await orderService.getAllOrder(obj)
-      // setOrder(ord)
+
+      queryUrl.RetailerId = user?.actorId
+      queryUrl.PageSize = '3'
+      queryUrl.Status = status
+      console.log('cacacacacacacac: ', queryUrl)
+      let ord = await orderService.getAllOrder(queryUrl)
+      console.log('ORDER PLS', ord)
+      setOrder(ord)
       setState({
         loading: false,
         orders: ord.data
       })
+      console.log('ORDER STATE PLS', state.orders)
     })()
-  }, [status])
+  }, [queryUrl.PageNumber, status])
 
   if (state.loading) {
     return <LoadingPage />
@@ -97,6 +98,13 @@ const AccountOrders: React.FC = () => {
     }
   }
 
+  const total = order?.total as number
+  const pageSize = order?.pageSize as number
+  const pageNumber = []
+  for (let i = 1; i <= Math.ceil(total / pageSize); i++) {
+    pageNumber.push(i)
+  }
+
   return (
     <div>
       <Breadcrumbs list={[
@@ -105,19 +113,19 @@ const AccountOrders: React.FC = () => {
           link: '/'
         },
         {
-          title: 'Session',
-          link: '/account/session'
+          title: 'Đơn hàng',
+          link: '/account/orders'
         },
-        {
-          title: 'Đơn',
-          link: `/account/orders/${slug}`
-        },
+        // {
+        //   title: 'Đơn',
+        //   link: `/account/orders/${slug}`
+        // },
       ]} />
       {/* Order */}
       <div className="col-12" style={{ display: 'flex', justifyContent: 'flex-end', padding: '10px 0px' }}>
         <form >
           {/* Select */}
-          Trạng thái: <select className="custom-select custom-select-sm" id="status" style={{ width: 200, }} onChange={(ev) => { setStatus(parseInt(ev.currentTarget.value)) }} >
+          Trạng thái: <select className="custom-select custom-select-sm" id="status" style={{ width: 200, }} onChange={(ev) => { setStatus(ev.currentTarget.value) }} >
             <option value="-3">Có hàng bị trả</option>
             <option value="-2">Chưa được giao</option>
             <option value="-1">Đang thành tiền</option>
@@ -130,7 +138,7 @@ const AccountOrders: React.FC = () => {
         </form>
       </div>
       {
-        state.orders ? state.orders.map((ord, i) => {
+        state.orders.length > 0 ? state.orders.map((ord, i) => {
           return (
             <>
               <div className="card card-lg mb-5 border">
@@ -164,7 +172,7 @@ const AccountOrders: React.FC = () => {
                           <p className="mb-0 font-size-sm font-weight-bold" style={{
                             color: `${ord.status === -3 ? 'red' :
                               (ord.status === -2 || ord.status === 0 ? 'red' :
-                                ord.status === -1 || ord.status === 2 ? 'orange' : 
+                                ord.status === -1 || ord.status === 2 ? 'orange' :
                                   'green')}`
                           }}>
                             {ord.status === -3 ? 'Có hàng bị trả' :
@@ -203,7 +211,7 @@ const AccountOrders: React.FC = () => {
                         <div className='col-5'>
                           {
                             ord.status === 1 && (<>
-                              <Link className="btn btn-sm btn-block btn-outline-dark" style={{minWidth: '120px'}} to='#' onClick={handleClickOpen}  >
+                              <Link className="btn btn-sm btn-block btn-outline-dark" style={{ minWidth: '120px' }} to='#' onClick={handleClickOpen}  >
                                 Đặt lại đơn
                               </Link>
                               <Dialog
@@ -247,9 +255,13 @@ const AccountOrders: React.FC = () => {
                   </div>
                 </div>
               </div>
+
             </>
           )
         }) : <p style={{ color: 'red' }}>Lịch sử rỗng, bạn có muốn mua hàng ? <Link to='/'>Ấn vào đây</Link></p>
+      }
+      {
+        order && <Paginate currentPage={order.pageNumber} totalPage={pageNumber.length} />
       }
     </div>
   )

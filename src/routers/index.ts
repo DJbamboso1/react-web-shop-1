@@ -21,7 +21,7 @@ export const routers: RouterParam[] = [
                 exact: true
             },
             {
-                path: '/ss/:slug',
+                path: '/ss/email-vertified',
                 component: MailVerified,
                 auth: false,
                 exact: true
@@ -55,7 +55,7 @@ export const routers: RouterParam[] = [
                     },
                     {
                         // path: '/orders',
-                        path: '/orders/:slug',
+                        path: '/orders',
                         component: lazy(() => import('../pages/account/accountOrders')),
                         exact: true,
                     },
@@ -69,10 +69,12 @@ export const routers: RouterParam[] = [
                         component: lazy(() => import('../pages/account/wishList'))
                     },
                     {
-                        path: '/session',
-                        component: lazy(() => import('../pages/account/accountSession'))
-                    },
-
+                        component: Page404
+                    }
+                    // {
+                    //     path: '/session',
+                    //     component: lazy(() => import('../pages/account/accountSession'))
+                    // },
                 ]
             },
             // {

@@ -11,7 +11,7 @@ import { Filter } from './components'
 // import { fetchProductsAction } from 'store/actions/productAction'
 // import { StateStore } from 'store'
 import Flickity from 'flickity'
-import { Slider } from './components'
+import { Slider, SliderDis } from './components'
 import { Breadcrumbs } from 'components/Breadcrumbs'
 import { title } from 'process'
 import cateService from 'services/cateService'
@@ -35,7 +35,9 @@ export type FilterQuery = {
 
 const ProductPage: React.FC = () => {
     // console.log('LIST: ', list )
-
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+    
     let [data, setData] = useState<PaginateData<Product01>>()
 
     let [cateData, setCateData] = useState<CategoryTree[]>()
@@ -76,7 +78,7 @@ const ProductPage: React.FC = () => {
                     setQueryUrlCate(dis.id)
                 }
             } else {
-                setDistributor(undefined) 
+                setDistributor(undefined)
             }
             // console.log(status)
             queryUrl.PageSize = '12'
@@ -87,10 +89,10 @@ const ProductPage: React.FC = () => {
             setCateData(cateList.data)
             if (queryUrl.CategoryId) {
                 let category = cateList.data.find(e => e.id === queryUrl.CategoryId)
-                    if (category) {
-                        setCategory(category)
-                        setSubCate(category?.subCategories?.find(e => e.id === queryUrl.SubCategoryId))
-                    }
+                if (category) {
+                    setCategory(category)
+                    setSubCate(category?.subCategories?.find(e => e.id === queryUrl.SubCategoryId))
+                }
             } else {
                 setCategory(undefined)
                 setSubCate(undefined)
@@ -126,11 +128,12 @@ const ProductPage: React.FC = () => {
                     <div className="col-12 col-md-8 col-lg-9">
                         {/* Slider */}
                         <Slider />
+                        {/* { queryUrl.DistributorId ? <SliderDis/> : <Slider/>} */}
                         {/* Header */}
                         <div className="row align-items-center mb-7">
                             <div className="col-12 col-md">
                                 {/* Heading */}
-                                <h3 className="mb-1">{ distributor?.data.displayName || 'Sản phẩm'}</h3>
+                                <h3 className="mb-1">{distributor?.data.displayName || 'Sản phẩm'}</h3>
                                 {/* Breadcrumb */}
                                 <Breadcrumbs list={[
                                     {

@@ -55,6 +55,11 @@ const authService = {
     updatePassword(obj: {userId: string, oldPassword: string, newPassword: string, comfirmPassword: string}) {
         let url = API + '/update-password'
         return http.put(url, obj)
+    },
+
+    vertificateEmail(id: string) {
+        let url = API + `/user/email-vertification?activationCode=${id}`
+        return http.put<{ succeeded: boolean, message: string, error: null, data: string }>(url, id)
     }
 }
 
