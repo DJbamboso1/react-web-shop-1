@@ -40,7 +40,7 @@ const CheckoutComponent: React.FC = () => {
     const [result, setResult] = useState<Checkout>()
 
     const [actor, setActor] = useState('')
-
+    let [isActive, setIsActive] = useState(true)
 
     useEffect(() => {
         (async () => {
@@ -53,6 +53,15 @@ const CheckoutComponent: React.FC = () => {
                 // setInfo(inf)
                 setForm(inf.data)
                 setActor(user.actorId)
+            }
+        })()
+    }, [])
+
+    useEffect(() => {
+        (async () => {
+            let retailer = await authService.getRetailerById(user?.actorId || '')
+            if (retailer && retailer.data) {
+                setIsActive(retailer.data.isActive)
             }
         })()
     }, [])
@@ -101,6 +110,10 @@ const CheckoutComponent: React.FC = () => {
 
     if (list.length === 0) {
         return <Redirect to='/'/>
+    }
+
+    if (isActive === false) {
+        return  <Redirect to='/'/>
     }
 
     return (

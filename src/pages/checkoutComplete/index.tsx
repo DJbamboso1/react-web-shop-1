@@ -39,18 +39,28 @@ const CheckoutCompleteComponent: React.FC = () => {
     document.documentElement.scrollTop = 0;
     useEffect(() => {
         (async () => {
-            if (queryUrl.orderId) {
-                let obj = await sessionService.getSessionById(queryUrl.orderId)
-                if (obj) {
-                    setSession(obj)
-                    setLoading(false)
+            try {
+                if (queryUrl.orderId) {
+                    let obj = await sessionService.getSessionById(queryUrl.orderId)
+                    if (obj) {
+                        setSession(obj)
+                        setLoading(false)
+                    } else {
+                        history.push('/')
+                    }
+                } else if (slug) {
+                    let obj = await sessionService.getSessionById(slug)
+                    if (obj) {
+                        setSession(obj)
+                        setLoading(false)
+                    } else {
+                        history.push('/')
+                    }
+                } else {
+                    history.push('/')
                 }
-            } else if (slug) {
-                let obj = await sessionService.getSessionById(slug)
-                if (obj) {
-                    setSession(obj)
-                    setLoading(false)
-                }
+            } catch (e) {
+                history.push('/')
             }
         })()
     }, [check])
@@ -63,15 +73,15 @@ const CheckoutCompleteComponent: React.FC = () => {
                         {/* Icon */}
                         <div className="mb-7 font-size-h1">{session ? '❤️' : '😞'}</div>
                         {/* Heading */}
-                        <h2 className="mb-5">Your Order {session ? 'is Completed!' : 'failed'}</h2>
+                        <h2 className="mb-5">Đặt hàng {session ? 'thành công!' : 'thất bại'}</h2>
                         {/* Text */}
                         {
                             session ? (<>
-                                <p className="mb-7 text-gray-500">
-                                    Your session <span className="text-body text-decoration-underline">{slug ? slug : queryUrl.orderId}</span> has been completed.
-                                </p>
-                                <Link className="btn btn-dark" to='#' onClick={() => { history.push(`/account/orders/${session?.data.id}`) }}>
-                                    View My Session
+                                {/* <p className="mb-7 text-gray-500">
+                                     <span className="text-body text-decoration-underline">{slug ? slug : queryUrl.orderId}</span> has been completed.
+                                </p> */}
+                                <Link className="btn btn-dark" to='#' onClick={() => { history.push(`/`) }}>
+                                    Quay về trang chủ
                                 </Link>
                             </>) : ''
                         }

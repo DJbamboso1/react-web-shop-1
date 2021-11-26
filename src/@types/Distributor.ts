@@ -1,7 +1,10 @@
-export interface Distributor<T > {
+export interface Distributor<T> {
     succeeded: true,
     message: string,
     errors: string,
+    pageNumber?: number,
+    pageSize?: number,
+    total?: number,
     data: {
         id: string,
         userId: string,

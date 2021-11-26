@@ -12,6 +12,7 @@ export interface User {
         month: number,
         year: number,
         avatar: string,
+        avatarFile?: Blob
         sex: number,
         email: string,
         phoneNumber: string,
@@ -23,6 +24,7 @@ export interface User {
         newPassword?: string,
         confirmPassword?: string,
         businessLicense: string,
+        businessLicenseFile?: Blob,
         taxId: string,
     }
 }

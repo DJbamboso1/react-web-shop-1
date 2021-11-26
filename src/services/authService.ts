@@ -1,4 +1,4 @@
-import { User, UserRegister } from "@types"
+import { Retailer, User, UserRegister } from "@types"
 import { http } from "core"
 import Register from "pages/authenicate/register"
 let API = process.env.REACT_APP_API_KEY_SHOP || ''
@@ -60,6 +60,11 @@ const authService = {
     vertificateEmail(id: string) {
         let url = API + `/user/email-vertification?activationCode=${id}`
         return http.put<{ succeeded: boolean, message: string, error: null, data: string }>(url, id)
+    },
+
+    getRetailerById(actorId: string) {
+        let url = API + `/retailer/${actorId}`
+        return http.get<Retailer>(url)
     }
 }
 

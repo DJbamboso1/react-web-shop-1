@@ -25,6 +25,8 @@ type StateProps = {
   orders: Order['data'],
 }
 
+
+
 const AccountOrders: React.FC = () => {
   let queryUrl = convertQueryURLToObject<FilterQuery>()
   let dispatch = useDispatch()
@@ -37,21 +39,22 @@ const AccountOrders: React.FC = () => {
   let [status, setStatus] = useState('')
   // const { list } = useCart()
   const [open, setOpen] = React.useState(false);
-
+  let [index, setIndex] = useState(0)
   useEffect(() => {
     (async () => {
 
       queryUrl.RetailerId = user?.actorId
       queryUrl.PageSize = '3'
       queryUrl.Status = status
-      console.log('cacacacacacacac: ', queryUrl)
       let ord = await orderService.getAllOrder(queryUrl)
-      console.log('ORDER PLS', ord)
+      console.log('ORDER PLS', ord) 
       setOrder(ord)
       setState({
         loading: false,
         orders: ord.data
       })
+      let i = (parseInt(queryUrl.PageNumber || '1') - 1) * parseInt(queryUrl.PageSize || '3') + 1
+      setIndex(i)
       console.log('ORDER STATE PLS', state.orders)
     })()
   }, [queryUrl.PageNumber, status])
@@ -125,15 +128,15 @@ const AccountOrders: React.FC = () => {
       <div className="col-12" style={{ display: 'flex', justifyContent: 'flex-end', padding: '10px 0px' }}>
         <form >
           {/* Select */}
-          Trạng thái: <select className="custom-select custom-select-sm" id="status" style={{ width: 200, }} onChange={(ev) => { setStatus(ev.currentTarget.value) }} >
+          <select className="custom-select custom-select-sm" id="status" style={{ width: 200, }} onChange={(ev) => { setStatus(ev.currentTarget.value) }} >
+            <option value="">Trạng thái</option>
             <option value="-3">Có hàng bị trả</option>
             <option value="-2">Chưa được giao</option>
-            <option value="-1">Đang thành tiền</option>
+            {/* <option value="-1">Đang thành tiền</option> */}
             <option value="0">Đã hủy</option>
             <option value="1">Đã thành tiền</option>
             <option value="2">Chưa tính tiền</option>
             <option value="3">Đã được giao</option>
-
           </select>
         </form>
       </div>
@@ -152,9 +155,10 @@ const AccountOrders: React.FC = () => {
                           <h6 className="heading-xxxs text-muted">Số thứ tự:</h6>
                           {/* Text */}
                           <p className="mb-lg-0 font-size-sm font-weight-bold">
-                            {i + 1}
+                            {index++}
                           </p>
                         </div>
+                        
                         <div className="col-6 col-lg-3">
                           {/* Heading */}
                           <h6 className="heading-xxxs text-muted">Nhà phân phối:</h6>

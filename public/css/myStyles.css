@@ -143,6 +143,12 @@ table {
     width: 18%;
   }
 
+  .alert {
+    padding: 20px;
+    background-color: #f44336;
+    color: white;
+  }
+
   @media (max-width: 991px) {
     .navbar .container {
       display: flex;

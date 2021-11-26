@@ -13,7 +13,7 @@ import distributorService from "services/distributorService"
 export const Filter: React.FC<{ cateData: any }> = ({ cateData }) => {
     // console.log('DISTRIBUTORRRRRRRRR: ', cateDisData)
     let objectURL = convertQueryURLToObject()
-    let [cateDisData, setCateDisData] = useState<Distributor<User>>()
+    let [cateDisData, setCateDisData] = useState<Distributor<User['data']>>()
 
 
     useEffect(() => {
@@ -23,7 +23,7 @@ export const Filter: React.FC<{ cateData: any }> = ({ cateData }) => {
             if (cateDis) {
                 for (let i = 0; i < cateDis.data.length; i++) {
                     let userId = '';
-                    userId = cateDis.data[i]?.userId
+                    userId = cateDis.data[i].user?.id || ''
                     let user = await authService.getInfo(userId)
                     // cateDisData.data[i].user = user
                     cateDis.data[i].displayName = user.data.displayName

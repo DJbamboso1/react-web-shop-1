@@ -24,7 +24,8 @@ export const style = {
 };
 
 const AccountInfo: React.FC = () => {
-
+    // document.body.scrollTop = 0;
+    // document.documentElement.scrollTop = 0;
     let dispatch = useDispatch()
     let [countDay, setCountDay] = useState<number>(0)
     let { register, setForm, handleSubmit, error, form } = useForm<Form>({}, {
@@ -53,25 +54,30 @@ const AccountInfo: React.FC = () => {
 
     let [message, setMessage] = useState('')
 
+    let [isFile, setIsFile] = useState(false)
+
+    let [status, setStatus] = useState(true)
+
     let { user } = useSelector((store: StateStore) => store.auth)
     useEffect(() => {
         (async () => {
             if (user) {
                 let inf = await authService.getInfo(user.id)
                 let date = new Date(inf.data.doB)
-
                 inf.data.day = date.getDate()
                 inf.data.month = date.getMonth() + 1
-
                 inf.data.year = date.getFullYear()
-
                 setForm(inf.data)
                 // setForm(...inf.data, sex: 0)
                 // changeDate()
                 let date1 = new Date(form.year, form.month, 0)
                 setCountDay(date1.getDate())
                 // setLoading(false)
-
+            }
+            let retailer = await authService.getRetailerById(user?.actorId || '')
+            if (retailer && retailer.data) {
+                setStatus(retailer.data.isActive)
+                console.log('STTTTAAAAAAAAAAAAAAAAAATUSSSSSSSS: ', retailer.data.isActive)
             }
         })()
     }, [])
@@ -88,10 +94,45 @@ const AccountInfo: React.FC = () => {
     }, [form.month, form.year])
 
 
+
+
     const submit = (form: Form) => {
         // setLoading(true)
         form.doB = `${form.year}/${form.month > 9 ? '' : '0'}${form.month}/${form.day > 9 ? '' : '0'}${form.day}`;
+        // if (form.businessLicense) {
+        //     changeLicense(form.businessLicense)
+        // }
         (async () => {
+            let license = form.businessLicenseFile
+            console.log('LICENSE: ', license)
+            if (license) {
+                if (license.type === 'application/pdf') {
+                    setIsFile(true)
+                }
+                setLoading(true)
+                const storageRef = ref(storage, '/licenses/license');
+                const uploadTask = uploadBytesResumable(storageRef, license);
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+                    },
+                    (error) => {
+                    },
+                    () => {
+                        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                            console.log('File available at', downloadURL);
+
+                            setForm({ ...form, businessLicense: downloadURL })
+                            setLoading(false)
+                            let user = await authService.getInfo(form.id)
+                            // console.log("HELLO WORLD: ", user)
+                            if (user.data.businessLicense) {
+                                // setOpen(true)
+                            }
+
+                        })
+                    }
+                )
+            }
             let profile = await authService.updateProfile(form)
             setLoading(false)
             if (profile.succeeded) {
@@ -137,34 +178,38 @@ const AccountInfo: React.FC = () => {
         }
     }
 
-    const changeLicense = (ev: React.ChangeEvent<HTMLInputElement>) => {
-        setLoading(true)
-        let license = ev.currentTarget.files?.[0]
-        if (license) {
-            const storageRef = ref(storage, '/licenses/license');
-            const uploadTask = uploadBytesResumable(storageRef, license);
-            uploadTask.on('state_changed',
-                (snapshot) => {
-                },
-                (error) => {
-                },
-                () => {
-                    getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-                        // console.log('File available at', downloadURL);
-                        setForm({ ...form, businessLicense: downloadURL })
-                        setLoading(false)
-                        let user = await authService.getInfo(form.id)
-                        // console.log("HELLO WORLD: ", user)
-                        if (user.data.businessLicense) {
-                            setOpen(true)
-                        }
+    // const changeLicense = (ev: React.ChangeEvent<HTMLInputElement>) => {
+    //     setLoading(true)
+    //     let license = ev.currentTarget.files?.[0]
+    //     console.log('LICENSE: ', license)
+    //     if (license) {
+    //         setLicen(license.name)
+    //         const storageRef = ref(storage, '/licenses/license');
+    //         const uploadTask = uploadBytesResumable(storageRef, license);
+    //         uploadTask.on('state_changed',
+    //             (snapshot) => {
+    //             },
+    //             (error) => {
+    //             },
+    //             () => {
+    //                 getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+    //                     console.log('File available at', downloadURL);
+    //                     setForm({ ...form, businessLicense: downloadURL })
+    //                     setLoading(false)
+    //                     let user = await authService.getInfo(form.id)
 
-                    })
-                }
-            )
-        }
-    }
+    //                     if (user.data.businessLicense) {
+    //                         setOpen(true)
+    //                     }
 
+    //                 })
+    //             }
+    //         )
+    //     }
+    // }
+    console.log('FORM: ', form)
+    console.log('USER: ', user)
+    console.log('STATUS: ', status)
     if (open === true) {
         return (
             <Modal
@@ -217,7 +262,7 @@ const AccountInfo: React.FC = () => {
                             {/* <input className="form-control form-control-sm" id="accountFirstName" type="text" placeholder="First Name *" {...register('displayName')} />  */}
                             {!loading ? <img className='avatar' src={form.avatar || '/img/avatar.jpg'} alt="" onClick={() => { avatarRef.current?.dispatchEvent(new MouseEvent('click')) }} /> : <LoadingAvatar />}
                             <input type="file" className='form-control form-control-sm' style={{ display: 'none' }} ref={avatarRef} accept="image/*" onChange={changeAvatar} />
-                            
+
                         </div>
                     </div>
                     {!loading ? (<>
@@ -239,6 +284,17 @@ const AccountInfo: React.FC = () => {
                                 </label> : <Skeleton width='30%' height={35} />}
                                 {form.email ? <input className="form-control form-control-sm" id="accountEmail" type="email"    {...register('email', { pattern: 'email', required: true })} /> : <Skeleton width='100%' height={75} />}
                             </div>
+                            <ErrorInput error={error.email} />
+                        </div>
+                        <div className="col-12">
+                            {/* Email */}
+                            <div className="form-group">
+                                {form.address ? <label htmlFor="accountEmail">
+                                    Địa chỉ *
+                                </label> : <Skeleton width='30%' height={35} />}
+                                {form.address ? <input className="form-control form-control-sm" id="accountEmail" type="text"    {...register('address', { required: true, min: 5 })} /> : <Skeleton width='100%' height={75} />}
+                            </div>
+                            <ErrorInput error={error.address} />
                         </div>
                         <div className="col-12 col-md-6">
 
@@ -332,21 +388,30 @@ const AccountInfo: React.FC = () => {
                             </div>
                         </div>
                         <div className="col-12">
-                            <label>Giấy phép</label>
+                            {form.id ? <label htmlFor="accountEmail">
+                                Giấy phép *
+                            </label> : <Skeleton width='30%' height={35} />}
                             <div className="form-group" >
                                 {/* <input className="form-control form-control-sm" id="accountFirstName" type="text" placeholder="First Name *" {...register('displayName')} />  */}
-                                {!loading ? <img src={form.businessLicense || '/img/file.png'} alt="" onClick={() => { licenseRef.current?.dispatchEvent(new MouseEvent('click')) }} /> : <LoadingAvatar />}
-                                <input type="file" className='form-control form-control-sm'  ref={licenseRef} accept="image/*, application/pdf" onChange={changeLicense} />
+                                {/* {
+                                        form.businessLicense ? (isFile === true ? <a href={form.businessLicense}>{form.businessLicense}</a> : <img style={{ width: '50%', padding: '10px 0px' }} src={form.businessLicense || '/img/file.png'} alt="" onClick={() => { licenseRef.current?.dispatchEvent(new MouseEvent('click')) }} />) : ''
+                                    } */}
+                                {
+                                    !loading ? (form.businessLicense && <><a href={form.businessLicense}>{form.businessLicense}</a><br /></>) : <LoadingAvatar />
+                                }
+                                {/* {!loading ? (isFile === true ? <a href={form.businessLicense}>{form.businessLicense}</a> : <img style={{ width: '50%', padding: '10px 0px' }} src={form.businessLicense } alt="" onClick={() => { licenseRef.current?.dispatchEvent(new MouseEvent('click')) }} />) : <LoadingAvatar />} */}
+                                {form.id ? <input type="file" className='form-control form-control-sm' ref={licenseRef} accept="image/*, application/pdf" disabled={status === true ? true : false} hidden={status === true ? true : false} {...register('businessLicenseFile')} /> : <Skeleton width='100%' height={75} />}
                             </div>
                         </div>
                         <div className="col-12">
                             {/* Email */}
                             <div className="form-group">
                                 {form.email ? <label htmlFor="accountEmail">
-                                    Mã số thuế 
+                                    Mã số thuế
                                 </label> : <Skeleton width='30%' height={35} />}
-                                {form.id ? <input className="form-control form-control-sm" id="accountEmail" type="text"   {...register('taxId', { required: true, min: 10, max: 10 }, { required: 'Cần nhập mã sô thuế', min: 'Mã số thuế cần 10 ký tự', max: 'Mã số thuế cần 10 ký tự' })} /> : <Skeleton width='100%' height={75} />}
+                                {form.id ? <input className="form-control form-control-sm" id="accountEmail" type="text" disabled={status === true ? true : false} hidden={status === true ? true : false} {...register('taxId', { required: true, min: 10, max: 10 }, { required: 'Cần nhập mã sô thuế', min: 'Mã số thuế cần 10 ký tự', max: 'Mã số thuế cần 10 ký tự' })} /> : <Skeleton width='100%' height={75} />}
                             </div>
+                            <ErrorInput error={error.taxId} />
                         </div>
                         <div className="col-12">
                             {/* Button */}

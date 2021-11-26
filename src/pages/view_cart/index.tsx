@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { useCart, useTotal, getTaxPrice, getSubtotal } from '../../store/selector'
@@ -6,6 +6,8 @@ import { ProductItem } from '../../components'
 import { currency } from '../../utils/currency'
 import { Redirect } from 'react-router-dom'
 import { Breadcrumbs } from 'components/Breadcrumbs'
+import { StateStore } from 'store'
+import authService from 'services/authService'
 
 const ViewCart: React.FC = () => {
 
@@ -13,8 +15,19 @@ const ViewCart: React.FC = () => {
     let total = useTotal()
     // let taxPrice = useSelector(getTaxPrice)
     const subTotal = useSelector(getSubtotal)
+    let { user } = useSelector((store: StateStore) => store.auth)
 
-    if (list.length === 0) {
+    let [isActive, setIsActive] = useState(true)
+    useEffect(() => {
+        (async () => {
+            let retailer = await authService.getRetailerById(user?.actorId || '')
+            if (retailer && retailer.data) {
+                setIsActive(retailer.data.isActive)
+            }
+        })()
+    }, [])
+    
+    if (list.length === 0 || isActive === false) {
         return <Redirect to="/" />
     }
 

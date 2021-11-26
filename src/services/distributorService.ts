@@ -6,7 +6,7 @@ let productAPI = process.env.REACT_APP_API_KEY_SHOP || ''
 const distributorService = {
     getDistributor(filter?: Object) {
         let url = productAPI + '/distributor'
-        return http.get<Distributor<User>>(url)
+        return http.get<Distributor<User['data']>>(url)
     }
 }
 

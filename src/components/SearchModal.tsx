@@ -1,5 +1,5 @@
 import { CategoryTree, Distributor, PaginateData, Product01, User } from '@types'
-import { useForm } from 'core'
+import { history, useForm } from 'core'
 import { NONAME } from 'dns'
 import { FilterQuery } from 'pages/product'
 import React, { useEffect, useState } from 'react'
@@ -30,7 +30,7 @@ export const SearchModal: React.FC = () => {
 
     let [loading, setLoading] = useState(true)
 
-    let [listDis, setListDis] = useState<Distributor<User>>()
+    let [listDis, setListDis] = useState<Distributor<User['data']>>()
     // console.log('objectUrl: ', objectURL)
 
     useEffect(() => {
@@ -49,6 +49,7 @@ export const SearchModal: React.FC = () => {
                 setData(list)
                 setLoading(false)
             })()
+
         }, 1000)
         return () => {
             clearTimeout(timeout)
@@ -72,19 +73,23 @@ export const SearchModal: React.FC = () => {
             // console.log(listDis)
             if (listDis) {
                 // console.log(listDis?.data[i])
-                userId = listDis.data[i]?.userId
+                if (listDis.data[i].user?.id)
+                    userId = listDis.data[i].user?.id || ''
             }
             (async () => {
                 let user = await authService.getInfo(userId)
                 // cateDisData.data[i].user = user
-                listDis.data[i].user = user
+                listDis.data[i].user = user['data']
             })()
 
         }
     }
 
+    console.log('LIST DIS: ', listDis)
     const submit = (form: Form) => {
+        // history.push('/')
         // console.log('FORM:', form)
+        // history.push('/')
         setSearchVal(form)
     }
 
@@ -94,9 +99,16 @@ export const SearchModal: React.FC = () => {
             <div className="modal-dialog modal-dialog-vertical" onClick={ev => ev.stopPropagation()} role="document">
                 <div className="modal-content">
                     {/* Close */}
+
                     <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={(ev) => { dispatch(toggleSearch(false)) }}>
                         <i className="fe fe-x" aria-hidden="true" />
                     </button>
+                    {/* <Link type="submit" className="close" to={`//?DistributorId=${form.DistributorId || ''}&SearchValue=${form.SearchValue || ''}`} onClick={(ev) => { dispatch(toggleSearch(false)) }}>
+                        <i className="fe fe-x" aria-hidden="true" />
+                    </Link> */}
+                    {/* <Link className="btn btn-link px-0 text-reset" type="submit" to={`/?DistributorId=${form.DistributorId || ''}&SearchValue=${form.SearchValue || ''}`} onClick={(ev) => { dispatch(toggleSearch(false)) }}>
+                            Xem tất cả <i className="fe fe-arrow-right ml-2" />
+                        </Link> */}
                     {/* Header*/}
                     <div className="modal-header line-height-fixed font-size-lg">
                         <strong className="mx-auto">Tìm kiếm sản phẩm</strong>
@@ -110,9 +122,9 @@ export const SearchModal: React.FC = () => {
                                 <select className="custom-select" id="modalSearchCategories" {...register('DistributorId')}>
                                     <option selected value=''>Tất cả</option>
                                     {
-                                        listDis?.data && listDis.data.map(i => {
+                                        listDis && listDis.data && listDis.data.map(i => {
                                             return (
-                                                <option value={i.id}>{i.user?.data.displayName}</option>
+                                                <option value={i.id}>{i.user && i.user.displayName}</option>
                                             )
                                         })
                                     }
@@ -121,12 +133,12 @@ export const SearchModal: React.FC = () => {
                             <div className="input-group input-group-merge">
                                 <input className="form-control" type="search" placeholder="Tìm kiếm" {...register('SearchValue')} />
                                 <div className="input-group-append">
-                                    <button className="btn btn-outline-border" type="submit" >
+                                    <Link to={`/?DistributorId=${form.DistributorId || ''}&SearchValue=${form.SearchValue || ''}`} className="btn btn-outline-border" type="submit" onClick={(ev) => { dispatch(toggleSearch(false)) }} >
                                         <i className="fe fe-search" />
-                                    </button>
+                                    </Link>
+
                                 </div>
                             </div>
-
                         </div>
                         {/* Body: Results (add `.d-none` to disable it) */}
                         <div className="modal-body border-top font-size-sm" >
@@ -174,9 +186,9 @@ export const SearchModal: React.FC = () => {
                             }
 
                             {/* Button */}
-                            <button className="btn btn-link px-0 text-reset" type="submit" onClick={(ev) => { dispatch(toggleSearch(false)) }}>
+                            <Link className="btn btn-link px-0 text-reset" type="submit" to={`/?DistributorId=${form.DistributorId || ''}&SearchValue=${form.SearchValue || ''}`} onClick={(ev) => { dispatch(toggleSearch(false)) }}>
                                 Xem tất cả <i className="fe fe-arrow-right ml-2" />
-                            </button>
+                            </Link>
                         </div>
                     </form>
                     {/* Body: Empty (remove `.d-none` to disable it) */}

@@ -21,6 +21,8 @@ import { useCart } from 'store/selector'
 import { Link } from 'react-router-dom'
 import distributorService from 'services/distributorService'
 import authService from 'services/authService'
+import { useSelector } from 'react-redux'
+import { StateStore } from 'store'
 
 export type FilterQuery = {
     // page: string,
@@ -37,7 +39,7 @@ const ProductPage: React.FC = () => {
     // console.log('LIST: ', list )
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
-    
+
     let [data, setData] = useState<PaginateData<Product01>>()
 
     let [cateData, setCateData] = useState<CategoryTree[]>()
@@ -59,6 +61,9 @@ const ProductPage: React.FC = () => {
 
     let [distributor, setDistributor] = useState<User>()
 
+    let { user } = useSelector((store: StateStore) => store.auth)
+
+    let [isActive, setIsActive] = useState(true)
     useEffect(() => {
         (async () => {
             if (status > -2) {
@@ -71,8 +76,8 @@ const ProductPage: React.FC = () => {
                 let dis = cateDis.data.find(e => e.id === queryUrl.DistributorId)
                 console.log('DIS: ', dis)
                 // setQueryUrlCate({ DistributorId: queryUrl.DistributorId })
-                if (dis) {
-                    let user = await authService.getInfo(dis.userId)
+                if (dis && dis.user) {
+                    let user = await authService.getInfo(dis.user.id)
                     // console.log('DISTRIBUTOR USER: ', user)
                     setDistributor(user)
                     setQueryUrlCate(dis.id)
@@ -105,7 +110,14 @@ const ProductPage: React.FC = () => {
         // setData(product.products)
     }, [queryUrl.PageNumber, queryUrl.CategoryId, queryUrl.SubCategoryId, status, queryUrl.DistributorId])
 
-
+    useEffect(() => {
+        (async () => {
+            let retailer = await authService.getRetailerById(user?.actorId || '')
+            if (retailer && retailer.data) {
+                setIsActive(retailer.data.isActive)
+            }
+        })()
+    }, [])
 
     // console.log("data: ", data)
 
@@ -117,15 +129,21 @@ const ProductPage: React.FC = () => {
     }
     // console.log(queryUrl)
     // console.log('sjfbvuysgdviuwguvfwjevgiuwehgvw: ', cateDisData)
-
+    console.log('IS ACTIVE ?: ', isActive)
     return (
         <section className="py-5">
             <div className="container">
+
                 <div className="row">
                     {/* <Filter /> */}
                     <Filter cateData={cateData} />
 
                     <div className="col-12 col-md-8 col-lg-9">
+                        {
+                            isActive === false && <div className="alert">
+                                <strong>Tài khoản chưa được kích hoạt ! Xin hãy cập nhật đầy đủ thông tin</strong>
+                            </div>
+                        }
                         {/* Slider */}
                         <Slider />
                         {/* { queryUrl.DistributorId ? <SliderDis/> : <Slider/>} */}
@@ -159,19 +177,18 @@ const ProductPage: React.FC = () => {
                             </div>
                             <div className="col-12 col-md-auto">
                                 {/* Select */}
-                                <form>
+                                {/* <form>
                                     <select className="custom-select custom-select-xs" onChange={(ev) => { setStatus(parseInt(ev.currentTarget.value)) }}>
                                         <option value=''>
                                             trạng thái
                                         </option>
                                         <option value="0">
-                                            {/* <Link to={ status > -2 ? changeQueryURL({ ...queryUrl, Status: status }) : '#' }>Ngừng bán</Link> */}
                                             Ngừng bán
                                         </option>
                                         <option value="1">Còn hàng</option>
                                         <option value="2">Hết hàng</option>
                                     </select>
-                                </form>
+                                </form> */}
                                 {/* <div className="col-12" style={{ display: 'flex', justifyContent: 'flex-end', padding: '10px 0px' }}>
                                     <form >
                                         
@@ -236,7 +253,7 @@ const ProductPage: React.FC = () => {
                         }
                         <div className="row">
                             {
-                                typeof data === 'undefined' ? [...Array(30)].map((e, i) => <ProductCard key={i} />) :
+                                typeof data === 'undefined' ? [...Array(30)].map((e, i) => <ProductCard key={i} isActive={isActive} />) :
                                     data.data.map(e => <ProductCard key={e.id} product={e} />)
                             }
                             {/* {
