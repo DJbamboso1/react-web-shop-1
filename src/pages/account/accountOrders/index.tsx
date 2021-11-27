@@ -63,7 +63,8 @@ const AccountOrders: React.FC = () => {
     return <LoadingPage />
   }
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (ev: any) => {
+    ev.preventDefault()
     setOpen(true);
   };
   const handleClose = () => {
@@ -71,7 +72,7 @@ const AccountOrders: React.FC = () => {
   };
 
   const reOrderHandle = async (ev: any, id: string) => {
-    ev.preventDefault()
+    // ev.preventDefault()
     dispatch(cartRemoveAll())
     handleClose()
     let ordDetail = await orderService.getOrderDetail({ OrderId: id })
@@ -215,7 +216,7 @@ const AccountOrders: React.FC = () => {
                         <div className='col-5'>
                           {
                             ord.status === 1 && (<>
-                              <Link className="btn btn-sm btn-block btn-outline-dark" style={{ minWidth: '120px' }} to='#' onClick={handleClickOpen}  >
+                              <Link className="btn btn-sm btn-block btn-outline-dark" style={{ minWidth: '120px' }} to='' onClick={(ev) => {handleClickOpen(ev)}}  >
                                 Đặt lại đơn
                               </Link>
                               <Dialog

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { productService } from 'services/productService'
 import Flickity from 'react-flickity-component'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useCartNumber } from 'store/selector'
 import { addToCart, cartDecrement, cartIncrement } from 'store/actions/cartAction'
 import { currency } from 'utils'
@@ -12,6 +12,8 @@ import { style } from '@mui/system'
 import LoadingPage from 'components/LoadingPage'
 import { Breadcrumbs } from 'components/Breadcrumbs'
 import { useHistory } from 'react-router'
+import { StateStore } from 'store'
+import authService from 'services/authService'
 
 const ProductDetail: React.FC = () => {
 
@@ -25,6 +27,10 @@ const ProductDetail: React.FC = () => {
     let { slug } = useParams<{ slug: string }>()
     let [data, setData] = useState<Product02<Product01>>()
     let [loading, setLoading] = useState(true)
+    const dispatch = useDispatch()
+    let { user } = useSelector((store: StateStore) => store.auth)
+    let [isActive, setIsActive] = useState(true)
+
     useEffect(() => {
         (async () => {
             let product = await productService.getProductById(slug)
@@ -33,14 +39,23 @@ const ProductDetail: React.FC = () => {
             setLoading(false)
         })()
     }, [num])
-    const dispatch = useDispatch()
+    
+
+    useEffect(() => {
+        (async () => {
+            let retailer = await authService.getRetailerById(user?.actorId || '')
+            if (retailer && retailer.data) {
+                setIsActive(retailer.data.isActive)
+            }
+        })()
+    }, [])
 
     // console.log('num: ', num)
 
     if (loading) {
         return <LoadingPage />
     }
-
+    console.log('isActive: ', isActive)
     return (
         <>
             <section style={{ padding: '40px 0px' }}>
@@ -49,7 +64,7 @@ const ProductDetail: React.FC = () => {
                         {
                             title: 'Home',
                             link: '/',
-                            onClick: () => {history.goBack()}
+                            onClick: () => { history.goBack() }
                         },
                         {
                             title: `${data && data?.data.name}`,
@@ -178,10 +193,12 @@ const ProductDetail: React.FC = () => {
                                                         {num > 0 && <input onChange={_changeNumber} type="number" className="cart-input-num" value={num} style={{ height: '90%' }} />}
                                                     </div> */}
                                                     <div className="col-12 col-lg" style={{ flexBasis: num === 0 ? 'unset' : 0 }}>
-                                                        {/* Submit */}
-                                                        <button disabled={data && data.data.status === 1 ? false : true} type="submit" className="btn btn-block btn-dark mb-2" onClick={(ev) => { ev.preventDefault(); data && (data.data.listPrice && data.data.listPrice.length > 0) && dispatch(addToCart(data.data)) }}>
-                                                            Thêm vào giỏ hàng <i className="fe fe-shopping-cart ml-2" />
-                                                        </button>
+                                                        {/* Submit */}  
+                                                        {
+                                                            <button disabled={isActive === true ? (data && data.data.status === 1 ? false : true) : true} type="submit" className="btn btn-block btn-dark mb-2" onClick={(ev) => { ev.preventDefault(); data && (data.data.listPrice && data.data.listPrice.length > 0) && dispatch(addToCart(data.data)) }}>
+                                                                Thêm vào giỏ hàng <i className="fe fe-shopping-cart ml-2" />
+                                                            </button>
+                                                        }
                                                     </div>
                                                 </div>
                                             </div>

@@ -253,8 +253,8 @@ const ProductPage: React.FC = () => {
                         }
                         <div className="row">
                             {
-                                typeof data === 'undefined' ? [...Array(30)].map((e, i) => <ProductCard key={i} isActive={isActive} />) :
-                                    data.data.map(e => <ProductCard key={e.id} product={e} />)
+                                typeof data === 'undefined' ? [...Array(30)].map((e, i) => <ProductCard key={i}  />) :
+                                    data.data.map(e => <ProductCard key={e.id} product={e} isActive={isActive}/>)
                             }
                             {/* {
                                 data.data.map(e => <ProductCard key={e.id} product={e} />)

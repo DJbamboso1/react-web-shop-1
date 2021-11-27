@@ -77,7 +77,7 @@ const AccountInfo: React.FC = () => {
             let retailer = await authService.getRetailerById(user?.actorId || '')
             if (retailer && retailer.data) {
                 setStatus(retailer.data.isActive)
-                console.log('STTTTAAAAAAAAAAAAAAAAAATUSSSSSSSS: ', retailer.data.isActive)
+
             }
         })()
     }, [])
@@ -93,58 +93,59 @@ const AccountInfo: React.FC = () => {
 
     }, [form.month, form.year])
 
+    useEffect(() => {
+        // setLoading(true)
+        let license = form.businessLicenseFile
+        console.log('LICENSE: ', license)
+        if (license) {
+            // setLicen(license.name)
+            setLoading(true)
+            const storageRef = ref(storage, '/licenses/license');
+            const uploadTask = uploadBytesResumable(storageRef, license);
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                },
+                (error) => {
+                },
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                        console.log('File available at', downloadURL);
+                        // setForm({ ...form, businessLicense: downloadURL })
+                        setForm({ ...form, businessLicense: downloadURL })
+                        setLoading(false)
+                        let user = await authService.getInfo(form.id)
+                        if (user.data.businessLicense) {
+                            // setMessage('')
+                            // setOpen(true)
+                        }
+
+                    })
+                }
+            )
+        }
+    }, [form.businessLicenseFile])
 
 
-
-    const submit = (form: Form) => {
+    const submit = async (form: Form) => {
         // setLoading(true)
         form.doB = `${form.year}/${form.month > 9 ? '' : '0'}${form.month}/${form.day > 9 ? '' : '0'}${form.day}`;
         // if (form.businessLicense) {
         //     changeLicense(form.businessLicense)
         // }
-        (async () => {
-            let license = form.businessLicenseFile
-            console.log('LICENSE: ', license)
-            if (license) {
-                if (license.type === 'application/pdf') {
-                    setIsFile(true)
-                }
-                setLoading(true)
-                const storageRef = ref(storage, '/licenses/license');
-                const uploadTask = uploadBytesResumable(storageRef, license);
-                uploadTask.on('state_changed',
-                    (snapshot) => {
-                    },
-                    (error) => {
-                    },
-                    () => {
-                        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-                            console.log('File available at', downloadURL);
 
-                            setForm({ ...form, businessLicense: downloadURL })
-                            setLoading(false)
-                            let user = await authService.getInfo(form.id)
-                            // console.log("HELLO WORLD: ", user)
-                            if (user.data.businessLicense) {
-                                // setOpen(true)
-                            }
+        let profile = await authService.updateProfile(form)
+        setLoading(false)
+        if (profile.succeeded) {
+            dispatch(updateInfo(form))
+            setMessage('Cập nhật thành công')
+        } else {
+            setMessage('Cập nhật không thành công')
+        }
+        setOpen(true)
 
-                        })
-                    }
-                )
-            }
-            let profile = await authService.updateProfile(form)
-            setLoading(false)
-            if (profile.succeeded) {
-                dispatch(updateInfo(form))
-                setMessage('Cập nhật thành công')
-            } else {
-                setMessage('Cập nhật không thành công')
-            }
-            setOpen(true)
-        })()
         // console.log('old', form.oldPassword)
         // console.log('new', form.newPassword)
+        console.log('FORM PHASE 2: ', form)
     }
     // if (state) {
     //     return <LoadingPage />
@@ -178,38 +179,39 @@ const AccountInfo: React.FC = () => {
         }
     }
 
-    // const changeLicense = (ev: React.ChangeEvent<HTMLInputElement>) => {
-    //     setLoading(true)
-    //     let license = ev.currentTarget.files?.[0]
-    //     console.log('LICENSE: ', license)
-    //     if (license) {
-    //         setLicen(license.name)
-    //         const storageRef = ref(storage, '/licenses/license');
-    //         const uploadTask = uploadBytesResumable(storageRef, license);
-    //         uploadTask.on('state_changed',
-    //             (snapshot) => {
-    //             },
-    //             (error) => {
-    //             },
-    //             () => {
-    //                 getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-    //                     console.log('File available at', downloadURL);
-    //                     setForm({ ...form, businessLicense: downloadURL })
-    //                     setLoading(false)
-    //                     let user = await authService.getInfo(form.id)
+    const changeLicense = (file?: File) => {
+        setLoading(true)
+        let license = file
+        console.log('LICENSE: ', license)
+        if (license) {
+            // setLicen(license.name)
+            const storageRef = ref(storage, '/licenses/license');
+            const uploadTask = uploadBytesResumable(storageRef, license);
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                },
+                (error) => {
+                },
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                        console.log('File available at', downloadURL);
+                        // setForm({ ...form, businessLicense: downloadURL })
+                        setForm({ ...form, businessLicense: downloadURL })
+                        setLoading(false)
+                        let user = await authService.getInfo(form.id)
 
-    //                     if (user.data.businessLicense) {
-    //                         setOpen(true)
-    //                     }
+                        if (user.data.businessLicense) {
+                            setOpen(true)
+                        }
 
-    //                 })
-    //             }
-    //         )
-    //     }
-    // }
-    console.log('FORM: ', form)
-    console.log('USER: ', user)
-    console.log('STATUS: ', status)
+                    })
+                }
+            )
+        }
+    }
+
+    // console.log('USER: ', user)
+    // console.log('STATUS: ', status)
     if (open === true) {
         return (
             <Modal
@@ -230,7 +232,7 @@ const AccountInfo: React.FC = () => {
                     p: 4,
                 }} >
                     <Typography id="modal-modal-title" variant="h6" component="h2">
-                        {message.length > 0 ? message : 'Cập nhật ảnh đại diện thành công'}
+                        {message.length > 0 ? message : 'Cập nhật ảnh thành công'}
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                         Ấn bên ngoài cửa số thông báo để tắt
@@ -239,7 +241,6 @@ const AccountInfo: React.FC = () => {
             </Modal>
         )
     }
-
 
     return (
         <>
@@ -389,7 +390,7 @@ const AccountInfo: React.FC = () => {
                         </div>
                         <div className="col-12">
                             {form.id ? <label htmlFor="accountEmail">
-                                Giấy phép *
+                                Giấy phép
                             </label> : <Skeleton width='30%' height={35} />}
                             <div className="form-group" >
                                 {/* <input className="form-control form-control-sm" id="accountFirstName" type="text" placeholder="First Name *" {...register('displayName')} />  */}
@@ -409,7 +410,7 @@ const AccountInfo: React.FC = () => {
                                 {form.email ? <label htmlFor="accountEmail">
                                     Mã số thuế
                                 </label> : <Skeleton width='30%' height={35} />}
-                                {form.id ? <input className="form-control form-control-sm" id="accountEmail" type="text" disabled={status === true ? true : false} hidden={status === true ? true : false} {...register('taxId', { required: true, min: 10, max: 10 }, { required: 'Cần nhập mã sô thuế', min: 'Mã số thuế cần 10 ký tự', max: 'Mã số thuế cần 10 ký tự' })} /> : <Skeleton width='100%' height={75} />}
+                                {form.id ? <input className="form-control form-control-sm"  type="text" disabled={status === true ? true : false} {...register('taxId', { required: true, min: 10, max: 10 }, { required: 'Cần nhập mã sô thuế', min: 'Mã số thuế cần 10 ký tự', max: 'Mã số thuế cần 10 ký tự' })} /> : <Skeleton width='100%' height={75} />}
                             </div>
                             <ErrorInput error={error.taxId} />
                         </div>

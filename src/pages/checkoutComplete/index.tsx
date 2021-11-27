@@ -69,25 +69,52 @@ const CheckoutCompleteComponent: React.FC = () => {
         <section className="py-12 orderComplete">
             {!loading ? (<div className="container">
                 <div className="row justify-content-center">
-                    <div className="col-12 col-md-10 col-lg-8 col-xl-6 text-center">
-                        {/* Icon */}
-                        <div className="mb-7 font-size-h1">{session ? '❤️' : '😞'}</div>
-                        {/* Heading */}
-                        <h2 className="mb-5">Đặt hàng {session ? 'thành công!' : 'thất bại'}</h2>
-                        {/* Text */}
-                        {
-                            session ? (<>
-                                {/* <p className="mb-7 text-gray-500">
-                                     <span className="text-body text-decoration-underline">{slug ? slug : queryUrl.orderId}</span> has been completed.
-                                </p> */}
-                                <Link className="btn btn-dark" to='#' onClick={() => { history.push(`/`) }}>
-                                    Quay về trang chủ
-                                </Link>
-                            </>) : ''
-                        }
-                        {/* Button */}
+                    {
+                        queryUrl.message === 'Transaction%20denied%20by%20user' ? <>
+                            <div className="col-12 col-md-10 col-lg-8 col-xl-6 text-center">
 
-                    </div>
+                                {/* Icon */}
+                                <div className="mb-7 font-size-h1">{'😞'}</div>
+                                {/* Heading */}
+                                <h2 className="mb-5">Hủy đặt hàng</h2>
+                                {/* Text */}
+                                {
+                                    session ? (<>
+                                        {/* <p className="mb-7 text-gray-500">
+             <span className="text-body text-decoration-underline">{slug ? slug : queryUrl.orderId}</span> has been completed.
+        </p> */}
+                                        <Link className="btn btn-dark" to='#' onClick={() => { history.push(`/`) }}>
+                                            Quay về trang chủ
+                                        </Link>
+                                    </>) : ''
+                                }
+                                {/* Button */}
+
+                            </div>
+                        </> : <>
+                            <div className="col-12 col-md-10 col-lg-8 col-xl-6 text-center">
+
+                                {/* Icon */}
+                                <div className="mb-7 font-size-h1">{session ? '❤️' : '😞'}</div>
+                                {/* Heading */}
+                                <h2 className="mb-5">Đặt hàng {session ? 'thành công!' : 'thất bại'}</h2>
+                                {/* Text */}
+                                {
+                                    session ? (<>
+                                        {/* <p className="mb-7 text-gray-500">
+             <span className="text-body text-decoration-underline">{slug ? slug : queryUrl.orderId}</span> has been completed.
+        </p> */}
+                                        <Link className="btn btn-dark" to='#' onClick={() => { history.push(`/`) }}>
+                                            Quay về trang chủ
+                                        </Link>
+                                    </>) : ''
+                                }
+                                {/* Button */}
+
+                            </div>
+                        </>
+                    }
+
                 </div>
             </div>) : <LoadingPage />}
         </section>

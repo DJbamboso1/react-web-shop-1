@@ -24,7 +24,7 @@ export interface User {
         newPassword?: string,
         confirmPassword?: string,
         businessLicense: string,
-        businessLicenseFile?: Blob,
+        businessLicenseFile?: File,
         taxId: string,
     }
 }

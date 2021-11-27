@@ -1,30 +1,17 @@
 
-import {Product01 } from '../@types'
-
+import { Product, Product01, Categories } from '../@types'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { addToCart } from 'store/actions/cartAction'
 import { Skeleton } from '@mui/material'
-// import { StateStore } from 'store'
-// import authService from 'services/authService'
 
 // export const ProductCard: React.FC<Product> = ({ name, price, real_price, slug, thumbnail_url }) => {
 export const ProductCard: React.FC<{ product?: Product01, isActive?: boolean }> = ({ product, isActive }) => {
     const dispatch = useDispatch()
-    // let { user } = useSelector((store: StateStore) => store.auth)
 
-    // let [isActive, setIsActive] = useState(true)
-
-    // // console.log(product.listPrice)
-    // useEffect(() => {
-    //     (async () => {
-    //         let retailer = await authService.getRetailerById(user?.actorId || '')
-    //         if (retailer && retailer.data) {
-    //             setIsActive(retailer.data.isActive)
-    //         }
-    //     })()
-    // }, [])
-
+    // console.log(product.listPrice)
+    console.log('AAAAAAAAAAAAAAAAAAAAAA: ', isActive)
     return (
         <div className="col-6 col-md-4">
             {/* Card */}
@@ -57,16 +44,17 @@ export const ProductCard: React.FC<{ product?: Product01, isActive?: boolean }> 
                                         <i className="fe fe-eye" />
                                     </Link>
                                 </span>
-                                <span className="card-action">
-                                    {
-                                        product && product.status === 1 && (
-                                            isActive === true && <button onClick={() => { (product.listPrice && product.listPrice.length > 0) && dispatch(addToCart(product)) }} className="btn btn-xs btn-circle btn-white-primary" data-toggle="button">
-                                                <i className="fe fe-shopping-cart" />
-                                            </button>
-                                        )
-                                    }
-
-                                </span>
+                                {
+                                    isActive === true && <span className="card-action">
+                                        {
+                                            product && product.status === 1 && (
+                                                <button onClick={() => { (product.listPrice && product.listPrice.length > 0) && dispatch(addToCart(product)) }} className="btn btn-xs btn-circle btn-white-primary" data-toggle="button">
+                                                    <i className="fe fe-shopping-cart" />
+                                                </button>
+                                            )
+                                        }
+                                    </span>
+                                }
                                 {/* <span className="card-action">
                                     <button className="btn btn-xs btn-circle btn-white-primary" data-toggle="button">
                                         <i className="fe fe-heart" />

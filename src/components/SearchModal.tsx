@@ -85,7 +85,7 @@ export const SearchModal: React.FC = () => {
         }
     }
 
-    console.log('LIST DIS: ', listDis)
+    // console.log('LIST DIS: ', listDis)
     const submit = (form: Form) => {
         // history.push('/')
         // console.log('FORM:', form)
