@@ -2,24 +2,25 @@
 import { Product, Product01, Categories } from '../@types'
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { addToCart } from 'store/actions/cartAction'
 import { Skeleton } from '@mui/material'
+import { StateStore } from 'store'
 
 // export const ProductCard: React.FC<Product> = ({ name, price, real_price, slug, thumbnail_url }) => {
 export const ProductCard: React.FC<{ product?: Product01, isActive?: boolean }> = ({ product, isActive }) => {
     const dispatch = useDispatch()
-
+    let { login } = useSelector((store: StateStore) => store.auth)
     // console.log(product.listPrice)
-    console.log('AAAAAAAAAAAAAAAAAAAAAA: ', isActive)
+    // console.log('AAAAAAAAAAAAAAAAAAAAAA: ', isActive)
     return (
         <div className="col-6 col-md-4">
             {/* Card */}
             <div className="card mb-7">
                 {/* Badge */}
-                <div className="badge badge-white card-badge card-badge-left text-uppercase">
-                    {product?.status === 0 ? <span style={{ color: 'gray' }}>Ngừng bán</span> : product?.status === 1 ? <span style={{ color: 'green' }}>Còn hàng</span> : product?.status === 2 && <span style={{ color: 'redy' }}>Hết hàng</span>}
-                </div>
+                {/* <div className="badge badge-white card-badge card-badge-left text-uppercase">
+                    {product?.status === 0 ? <span style={{ color: 'red' }}>Ngừng bán</span> : product?.status === 1 ? <span style={{ color: '#6fbfc2' }}>Còn hàng</span> : product?.status === 2 && <span style={{ color: 'orange' }}>Hết hàng</span>}
+                </div> */}
                 {/* Image */}
                 <div className="card-img">
                     {/* Image */}
@@ -45,7 +46,7 @@ export const ProductCard: React.FC<{ product?: Product01, isActive?: boolean }> 
                                     </Link>
                                 </span>
                                 {
-                                    isActive === true && <span className="card-action">
+                                    !login ? <span className="card-action">
                                         {
                                             product && product.status === 1 && (
                                                 <button onClick={() => { (product.listPrice && product.listPrice.length > 0) && dispatch(addToCart(product)) }} className="btn btn-xs btn-circle btn-white-primary" data-toggle="button">
@@ -53,7 +54,18 @@ export const ProductCard: React.FC<{ product?: Product01, isActive?: boolean }> 
                                                 </button>
                                             )
                                         }
-                                    </span>
+                                    </span> :
+                                        (
+                                            isActive && <span className="card-action">
+                                                {
+                                                    product && product.status === 1 && (
+                                                        <button onClick={() => { (product.listPrice && product.listPrice.length > 0) && dispatch(addToCart(product)) }} className="btn btn-xs btn-circle btn-white-primary" data-toggle="button">
+                                                            <i className="fe fe-shopping-cart" />
+                                                        </button>
+                                                    )
+                                                }
+                                            </span>
+                                        )
                                 }
                                 {/* <span className="card-action">
                                     <button className="btn btn-xs btn-circle btn-white-primary" data-toggle="button">
@@ -67,9 +79,9 @@ export const ProductCard: React.FC<{ product?: Product01, isActive?: boolean }> 
                 {/* Body */}
                 <div className="card-body px-0">
                     {/* Category */}
-                    <div className="font-size-xs">
+                    {/* <div className="font-size-xs">
                         <a className="text-muted" href="shop.html">{ }</a>
-                    </div>
+                    </div> */}
                     {/* Title */}
                     <div className="font-weight-bold">
                         {
@@ -83,7 +95,7 @@ export const ProductCard: React.FC<{ product?: Product01, isActive?: boolean }> 
                         }
                     </div>
                     {/* Price */}
-                    <div className="font-weight-bold text-muted">
+                    <div className="font-weight-bold" style={{color: 'orange'}}>
                         {/* {price?.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })} */}
                         {/* <h6 style={{color: 'red'}}>Price ?</h6> */}
                         {

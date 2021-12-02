@@ -48,7 +48,7 @@ const MainLayout: React.FC = ({ children }) => {
                 {/* <Header hoverEvent={hoverEvent} mouseLeaveEvent={mouseLeaveEvent} /> */}
                 <Navbar hoverEvent={hoverEvent} mouseLeaveEvent={mouseLeaveEvent} />
             </div>
-            <div style={{ paddingTop: '100px' }}>
+            <div style={{ paddingTop: '100px', backgroundColor: 'whitesmoke' }}>
                 {children}
             </div>
 

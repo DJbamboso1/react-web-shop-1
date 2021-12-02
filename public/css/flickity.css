@@ -43,12 +43,7 @@ https://flickity.metafizzy.co
   
   /* ---- flickity-button ---- */
   
-  .flickity-button {
-    position: absolute;
-    background: hsla(0, 0%, 100%, 0.75);
-    border: none;
-    color: #333;
-  }
+  z
   
   .flickity-button:hover {
     background: white;

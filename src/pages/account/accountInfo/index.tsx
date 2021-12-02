@@ -54,8 +54,9 @@ const AccountInfo: React.FC = () => {
 
     let [message, setMessage] = useState('')
 
-    let [isFile, setIsFile] = useState(false)
-
+    let [urlImg, setUrlImg] = useState('')
+    let [urlImgLicense, setUrlImgLicense] = useState('')
+    let [typeLicense, setTypeLicense] = useState('')
     let [status, setStatus] = useState(true)
 
     let { user } = useSelector((store: StateStore) => store.auth)
@@ -94,45 +95,91 @@ const AccountInfo: React.FC = () => {
     }, [form.month, form.year])
 
     useEffect(() => {
-        // setLoading(true)
-        let license = form.businessLicenseFile
-        console.log('LICENSE: ', license)
-        if (license) {
-            // setLicen(license.name)
-            setLoading(true)
-            const storageRef = ref(storage, '/licenses/license');
-            const uploadTask = uploadBytesResumable(storageRef, license);
-            uploadTask.on('state_changed',
-                (snapshot) => {
-                },
-                (error) => {
-                },
-                () => {
-                    getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-                        console.log('File available at', downloadURL);
-                        // setForm({ ...form, businessLicense: downloadURL })
-                        setForm({ ...form, businessLicense: downloadURL })
-                        setLoading(false)
-                        let user = await authService.getInfo(form.id)
-                        if (user.data.businessLicense) {
-                            // setMessage('')
-                            // setOpen(true)
-                        }
-
-                    })
+        console.log(form.avatarFile)
+        if (form.avatarFile) {
+            var reader = new FileReader();
+            reader.readAsDataURL(form.avatarFile);
+            reader.onloadend = function () {
+                var base64String = reader.result;
+                console.log('Base64 String - ', base64String);
+                if (base64String) {
+                    form.avatar = base64String.toString()
+                    setUrlImg(base64String.toString())
+                    // console.log('Base64 String without Tags- ',
+                    //     base64String.toString().substr(base64String.toString().indexOf(', ') + 1));
                 }
-            )
+            }
         }
-    }, [form.businessLicenseFile])
+
+    }, [urlImg])
+
+    useEffect(() => {
+        console.log(form.businessLicenseFile)
+        if (form.businessLicenseFile) {
+            var reader = new FileReader();
+            reader.readAsDataURL(form.businessLicenseFile);
+            reader.onloadend = function () {
+                var base64String = reader.result;
+                console.log('Base64 String - ', base64String);
+                if (base64String) {
+                    form.businessLicense = base64String.toString()
+                    setUrlImgLicense(base64String.toString())
+                    // setTypeLicense( base64String.slice(start, end).toString())
+
+                    // console.log("abciaudvbyvuwevbk: ", base64String.slice(start, end).toString())
+                }
+
+
+            }
+        }
+    }, [urlImgLicense])
+
+
+    // useEffect(() => {
+    //     // setLoading(true)
+    //     let license = form.businessLicenseFile
+    //     console.log('LICENSE: ', license)
+    //     if (license) {
+    //         // setLicen(license.name)
+    //         setLoading(true)
+    //         const storageRef = ref(storage, `/licenses/${user?.id}`);
+    //         const uploadTask = uploadBytesResumable(storageRef, license);
+    //         uploadTask.on('state_changed',
+    //             (snapshot) => {
+    //             },
+    //             (error) => {
+    //             },
+    //             () => {
+    //                 getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+    //                     console.log('File available at', downloadURL);
+    //                     // setForm({ ...form, businessLicense: downloadURL })
+    //                     setForm({ ...form, businessLicense: downloadURL })
+    //                     setLoading(false)
+    //                     let user = await authService.getInfo(form.id)
+    //                     if (user.data.businessLicense) {
+    //                         // setMessage('')
+    //                         // setOpen(true)
+    //                     }
+
+    //                 })
+    //             }
+    //         )
+    //     }
+    // }, [form.businessLicenseFile])
 
 
     const submit = async (form: Form) => {
-        // setLoading(true)
+        setLoading(true)
         form.doB = `${form.year}/${form.month > 9 ? '' : '0'}${form.month}/${form.day > 9 ? '' : '0'}${form.day}`;
         // if (form.businessLicense) {
         //     changeLicense(form.businessLicense)
         // }
-
+        if (form.avatarFile) {
+            changeAvatar(form.avatarFile)
+        }
+        if (form.businessLicenseFile) {
+            changeLicense(form.businessLicenseFile)
+        }
         let profile = await authService.updateProfile(form)
         setLoading(false)
         if (profile.succeeded) {
@@ -143,19 +190,19 @@ const AccountInfo: React.FC = () => {
         }
         setOpen(true)
 
-        // console.log('old', form.oldPassword)
-        // console.log('new', form.newPassword)
+        console.log('old', form.oldPassword)
+        console.log('new', form.newPassword)
         console.log('FORM PHASE 2: ', form)
     }
     // if (state) {
     //     return <LoadingPage />
     // }
 
-    const changeAvatar = (ev: React.ChangeEvent<HTMLInputElement>) => {
-        setLoading(true)
-        let avatar = ev.currentTarget.files?.[0]
+    const changeAvatar = (file?: File) => {
+        // setLoading(true)
+        let avatar = file
         if (avatar) {
-            const storageRef = ref(storage, '/avatars/avatar');
+            const storageRef = ref(storage, `/avatars/${user?.id}`);
             const uploadTask = uploadBytesResumable(storageRef, avatar);
             uploadTask.on('state_changed',
                 (snapshot) => {
@@ -166,13 +213,13 @@ const AccountInfo: React.FC = () => {
                     getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
                         // console.log('File available at', downloadURL);
                         setForm({ ...form, avatar: downloadURL })
-                        setLoading(false)
+
                         let user = await authService.getInfo(form.id)
                         // console.log("HELLO WORLD: ", user)
                         if (user.data.avatar) {
-                            setOpen(true)
+                            // setOpen(true)
                         }
-
+                        // setLoading(false)
                     })
                 }
             )
@@ -180,12 +227,12 @@ const AccountInfo: React.FC = () => {
     }
 
     const changeLicense = (file?: File) => {
-        setLoading(true)
+        // setLoading(true)
         let license = file
         console.log('LICENSE: ', license)
         if (license) {
             // setLicen(license.name)
-            const storageRef = ref(storage, '/licenses/license');
+            const storageRef = ref(storage, `/licenses/${user?.id}`);
             const uploadTask = uploadBytesResumable(storageRef, license);
             uploadTask.on('state_changed',
                 (snapshot) => {
@@ -197,11 +244,11 @@ const AccountInfo: React.FC = () => {
                         console.log('File available at', downloadURL);
                         // setForm({ ...form, businessLicense: downloadURL })
                         setForm({ ...form, businessLicense: downloadURL })
-                        setLoading(false)
+                        // setLoading(false)
                         let user = await authService.getInfo(form.id)
 
                         if (user.data.businessLicense) {
-                            setOpen(true)
+                            // setOpen(true)
                         }
 
                     })
@@ -257,168 +304,173 @@ const AccountInfo: React.FC = () => {
             ]} />
             <form onSubmit={handleSubmit(submit)}>
                 <div className="row">
-                    <div className="col-12">
-                        {/* Email */}
-                        <div className="form-group" style={{ textAlign: 'center' }}>
-                            {/* <input className="form-control form-control-sm" id="accountFirstName" type="text" placeholder="First Name *" {...register('displayName')} />  */}
-                            {!loading ? <img className='avatar' src={form.avatar || '/img/avatar.jpg'} alt="" onClick={() => { avatarRef.current?.dispatchEvent(new MouseEvent('click')) }} /> : <LoadingAvatar />}
-                            <input type="file" className='form-control form-control-sm' style={{ display: 'none' }} ref={avatarRef} accept="image/*" onChange={changeAvatar} />
+                    {!loading ? (
+                        <>
+                            <div className="col-12">
+                                {/* Email */}
+                                <div className="form-group" style={{ textAlign: 'center' }}>
+                                    {/* <input className="form-control form-control-sm" id="accountFirstName" type="text" placeholder="First Name *" {...register('displayName')} />  */}
+                                    <img className='avatar' src={form.avatar || '/img/avatar.jpg'} alt="" onClick={() => { avatarRef.current?.dispatchEvent(new MouseEvent('click')) }} />
+                                    <input type="file" className='form-control form-control-sm' style={{ display: 'none' }} ref={avatarRef} accept="image/*" {...register('avatarFile')} />
 
-                        </div>
-                    </div>
-                    {!loading ? (<>
-                        <div className="col-12">
-                            {/* Email */}
-                            <div className="form-group">
-                                {form.displayName ? <label htmlFor="accountFirstName">
-                                    Họ tên *
-                                </label> : <Skeleton width='30%' height={35} />}
-                                {form.displayName ? <input className="form-control form-control-sm" id="accountFirstName" type="text"  {...register('displayName', { required: true })} /> : <Skeleton width='100%' height={75} />}
+                                </div>
                             </div>
-                        </div>
-                        <ErrorInput error={error.displayName} />
-                        <div className="col-12">
-                            {/* Email */}
-                            <div className="form-group">
-                                {form.email ? <label htmlFor="accountEmail">
-                                    Email *
-                                </label> : <Skeleton width='30%' height={35} />}
-                                {form.email ? <input className="form-control form-control-sm" id="accountEmail" type="email"    {...register('email', { pattern: 'email', required: true })} /> : <Skeleton width='100%' height={75} />}
-                            </div>
-                            <ErrorInput error={error.email} />
-                        </div>
-                        <div className="col-12">
-                            {/* Email */}
-                            <div className="form-group">
-                                {form.address ? <label htmlFor="accountEmail">
-                                    Địa chỉ *
-                                </label> : <Skeleton width='30%' height={35} />}
-                                {form.address ? <input className="form-control form-control-sm" id="accountEmail" type="text"    {...register('address', { required: true, min: 5 })} /> : <Skeleton width='100%' height={75} />}
-                            </div>
-                            <ErrorInput error={error.address} />
-                        </div>
-                        <div className="col-12 col-md-6">
 
-                            <div className="form-group">
-                                {
-                                    form.id ? <label htmlFor="accountPassword">
-                                        Mật khẩu cũ
-                                    </label> : <Skeleton width='30%' height={35} />
-                                }
-                                {
-                                    form.id ? <input className="form-control form-control-sm" id="accountPassword" type="password"  {...register('oldPassword', { min: 6, max: 30, required: true })} /> : <Skeleton width='100%' height={75} />
-                                }
-
+                            <div className="col-12">
+                                {/* Email */}
+                                <div className="form-group">
+                                    {form.displayName ? <label htmlFor="accountFirstName">
+                                        Họ tên *
+                                    </label> : <Skeleton width='30%' height={35} />}
+                                    {form.displayName ? <input className="form-control form-control-sm" id="accountFirstName" type="text"  {...register('displayName', { required: true })} /> : <Skeleton width='100%' height={75} />}
+                                </div>
                             </div>
-                            <ErrorInput error={error.oldPassword} />
-                        </div>
-                        <div className="col-12 col-md-6">
-
-                            <div className="form-group">
-                                {
-                                    form.roleId ? <label htmlFor="AccountNewPassword">
-                                        Mật khẩu mới
-                                    </label> : <Skeleton width='30%' height={35} />
-                                }
-                                {
-                                    form.roleId ? <input className="form-control form-control-sm" id="AccountNewPassword" type="password"  {...register('newPassword', { min: 6, max: 30, required: true })} /> : <Skeleton width='100%' height={75} />
-                                }
+                            <ErrorInput error={error.displayName} />
+                            <div className="col-12">
+                                {/* Email */}
+                                <div className="form-group">
+                                    {form.email ? <label htmlFor="accountEmail">
+                                        Email *
+                                    </label> : <Skeleton width='30%' height={35} />}
+                                    {form.email ? <input className="form-control form-control-sm" id="accountEmail" type="email"    {...register('email', { pattern: 'email', required: true })} /> : <Skeleton width='100%' height={75} />}
+                                </div>
+                                <ErrorInput error={error.email} />
                             </div>
-                            <ErrorInput error={error.newPassword} />
-                        </div>
-                        <div className="col-12 col-lg-7">
-                            {/* Birthday */}
-                            <div className="form-group">
-                                {/* Label */}
-                                {form.doB ? <label>Ngày sinh</label> : <Skeleton width="60%" height={24} />}
-                                {/* Inputs */}
-                                {form.doB ? (<div className="form-row">
-                                    <div className="col-auto">
-                                        {/* Date */}
-                                        <label className='sr-only' htmlFor="accountDate">
-                                            Day
-                                        </label>
-                                        {
-                                            countDay && <select className="custom-select custom-select-sm" id="accountDate" {...register('day')}  >
+                            <div className="col-12">
+                                {/* Email */}
+                                <div className="form-group">
+                                    {form.address ? <label htmlFor="accountEmail">
+                                        Địa chỉ *
+                                    </label> : <Skeleton width='30%' height={35} />}
+                                    {form.address ? <input className="form-control form-control-sm" id="accountEmail" type="text"    {...register('address', { required: true, min: 5 })} /> : <Skeleton width='100%' height={75} />}
+                                </div>
+                                <ErrorInput error={error.address} />
+                            </div>
+                            <div className="col-12 col-md-6">
+
+                                <div className="form-group">
+                                    {
+                                        form.id ? <label htmlFor="accountPassword">
+                                            Mật khẩu cũ
+                                        </label> : <Skeleton width='30%' height={35} />
+                                    }
+                                    {
+                                        form.id ? <input className="form-control form-control-sm" id="accountPassword" type="password"  {...register('oldPassword', { min: 6, max: 30, required: true })} /> : <Skeleton width='100%' height={75} />
+                                    }
+
+                                </div>
+                                <ErrorInput error={error.oldPassword} />
+                            </div>
+                            <div className="col-12 col-md-6">
+
+                                <div className="form-group">
+                                    {
+                                        form.roleId ? <label htmlFor="AccountNewPassword">
+                                            Mật khẩu mới
+                                        </label> : <Skeleton width='30%' height={35} />
+                                    }
+                                    {
+                                        form.roleId ? <input className="form-control form-control-sm" id="AccountNewPassword" type="password"  {...register('newPassword', { min: 6, max: 30, required: true })} /> : <Skeleton width='100%' height={75} />
+                                    }
+                                </div>
+                                <ErrorInput error={error.newPassword} />
+                            </div>
+                            <div className="col-12 col-lg-7">
+                                {/* Birthday */}
+                                <div className="form-group">
+                                    {/* Label */}
+                                    {form.doB ? <label>Ngày sinh</label> : <Skeleton width="60%" height={24} />}
+                                    {/* Inputs */}
+                                    {form.doB ? (<div className="form-row">
+                                        <div className="col-auto">
+                                            {/* Date */}
+                                            <label className='sr-only' htmlFor="accountDate">
+                                                Day
+                                            </label>
+                                            {
+                                                countDay && <select className="custom-select custom-select-sm" id="accountDate" {...register('day')}  >
+                                                    {
+                                                        [...Array(countDay)].map((e, i) => <option value={i + 1}>{i + 1}</option>)
+                                                    }
+                                                </select>
+                                            }
+                                        </div>
+                                        <div className="col">
+                                            {/* Date */}
+                                            <label className='sr-only' htmlFor="accountMonth">
+                                                Month
+                                            </label>
+                                            <select className="custom-select custom-select-sm" id="accountMonth"  {...register('month')}  >
                                                 {
-                                                    [...Array(countDay)].map((e, i) => <option value={i + 1}>{i + 1}</option>)
+                                                    [...Array(12)].map((e, i) => <option value={i + 1}>{i + 1}</option>)
                                                 }
                                             </select>
-                                        }
-                                    </div>
-                                    <div className="col">
-                                        {/* Date */}
-                                        <label className='sr-only' htmlFor="accountMonth">
-                                            Month
-                                        </label>
-                                        <select className="custom-select custom-select-sm" id="accountMonth"  {...register('month')}  >
-                                            {
-                                                [...Array(12)].map((e, i) => <option value={i + 1}>{i + 1}</option>)
-                                            }
-                                        </select>
-                                    </div>
-                                    <div className="col-auto">
-                                        {/* Date */}
-                                        <label className='sr-only' htmlFor="accountYear">
-                                            Year
-                                        </label>
-                                        <select className="custom-select custom-select-sm" id="accountYear"  {...register('year')} >
-                                            {
-                                                [...Array(50)].map((e, i) => <option value={yearNow - i}>{yearNow - i}</option>)
-                                            }
-                                            {/* <option>1990</option>
+                                        </div>
+                                        <div className="col-auto">
+                                            {/* Date */}
+                                            <label className='sr-only' htmlFor="accountYear">
+                                                Year
+                                            </label>
+                                            <select className="custom-select custom-select-sm" id="accountYear"  {...register('year')} >
+                                                {
+                                                    [...Array(50)].map((e, i) => <option value={yearNow - i}>{yearNow - i}</option>)
+                                                }
+                                                {/* <option>1990</option>
                                     <option selected>1991</option>
                                     <option>1992</option> */}
-                                        </select>
-                                    </div>
-                                </div>) : <Skeleton className='form-row' height={51} />}
+                                            </select>
+                                        </div>
+                                    </div>) : <Skeleton className='form-row' height={51} />}
+                                </div>
                             </div>
-                        </div>
-                        <div className="col-12 col-lg-5">
-                            {/* Gender */}
-                            <div className="form-group mb-8">
-                                {form.sex ? <label>Giới tính</label> : <Skeleton width="60%" height={24} />}
-                                {form.sex ? (<div className="btn-group-toggle" data-toggle="buttons">
-                                    <label className={`btn btn-sm btn-outline-border ${form.sex === TYPE_MALE ? 'active' : ''}`} onClick={e => setForm({ ...form, sex: TYPE_MALE })}>
-                                        <input type="radio" name="gender" /> Nam
-                                    </label>
-                                    <label className={`btn btn-sm btn-outline-border ${form.sex === TYPE_FEMALE ? 'active' : ''}`} onClick={e => setForm({ ...form, sex: TYPE_FEMALE })}>
-                                        <input type="radio" name="gender" /> Nữ
-                                    </label>
-                                </div>) : <Skeleton className='btn-group-toggle' height={51} />}
+                            <div className="col-12 col-lg-5">
+                                {/* Gender */}
+                                <div className="form-group mb-8">
+                                    {form.sex ? <label>Giới tính</label> : <Skeleton width="60%" height={24} />}
+                                    {form.sex ? (<div className="btn-group-toggle" data-toggle="buttons">
+                                        <label className={`btn btn-sm btn-outline-border ${form.sex === TYPE_MALE ? 'active' : ''}`} onClick={e => setForm({ ...form, sex: TYPE_MALE })}>
+                                            <input type="radio" name="gender" /> Nam
+                                        </label>
+                                        <label className={`btn btn-sm btn-outline-border ${form.sex === TYPE_FEMALE ? 'active' : ''}`} onClick={e => setForm({ ...form, sex: TYPE_FEMALE })}>
+                                            <input type="radio" name="gender" /> Nữ
+                                        </label>
+                                    </div>) : <Skeleton className='btn-group-toggle' height={51} />}
+                                </div>
                             </div>
-                        </div>
-                        <div className="col-12">
-                            {form.id ? <label htmlFor="accountEmail">
-                                Giấy phép
-                            </label> : <Skeleton width='30%' height={35} />}
-                            <div className="form-group" >
-                                {/* <input className="form-control form-control-sm" id="accountFirstName" type="text" placeholder="First Name *" {...register('displayName')} />  */}
-                                {/* {
+                            <div className="col-12">
+                                {form.id ? <label htmlFor="accountEmail">
+                                    Giấy phép
+                                </label> : <Skeleton width='30%' height={35} />}
+                                <div className="form-group" >
+                                    {/* <input className="form-control form-control-sm" id="accountFirstName" type="text" placeholder="First Name *" {...register('displayName')} />  */}
+                                    {/* {
                                         form.businessLicense ? (isFile === true ? <a href={form.businessLicense}>{form.businessLicense}</a> : <img style={{ width: '50%', padding: '10px 0px' }} src={form.businessLicense || '/img/file.png'} alt="" onClick={() => { licenseRef.current?.dispatchEvent(new MouseEvent('click')) }} />) : ''
                                     } */}
-                                {
-                                    !loading ? (form.businessLicense && <><a href={form.businessLicense}>{form.businessLicense}</a><br /></>) : <LoadingAvatar />
-                                }
-                                {/* {!loading ? (isFile === true ? <a href={form.businessLicense}>{form.businessLicense}</a> : <img style={{ width: '50%', padding: '10px 0px' }} src={form.businessLicense } alt="" onClick={() => { licenseRef.current?.dispatchEvent(new MouseEvent('click')) }} />) : <LoadingAvatar />} */}
-                                {form.id ? <input type="file" className='form-control form-control-sm' ref={licenseRef} accept="image/*, application/pdf" disabled={status === true ? true : false} hidden={status === true ? true : false} {...register('businessLicenseFile')} /> : <Skeleton width='100%' height={75} />}
+                                    {
+                                        form.businessLicense && <>
+                                            {/* <img style={{ width: '50%', padding: '10px 0px' }} src={form.businessLicense || '/img/file.png'} alt="" onClick={() => { licenseRef.current?.dispatchEvent(new MouseEvent('click')) }} /> */}
+                                            <a href={form.businessLicense} style={{ width: '100%' }} >{form.businessLicense}</a><br />
+                                        </>
+                                    }
+                                    {/* {!loading ? (isFile === true ? <a href={form.businessLicense}>{form.businessLicense}</a> : <img style={{ width: '50%', padding: '10px 0px' }} src={form.businessLicense } alt="" onClick={() => { licenseRef.current?.dispatchEvent(new MouseEvent('click')) }} />) : <LoadingAvatar />} */}
+                                    {form.id ? <input type="file" className='form-control form-control-sm' ref={licenseRef} accept="image/*, application/pdf" disabled={status === true ? true : false} hidden={status === true ? true : false} {...register('businessLicenseFile')} /> : <Skeleton width='100%' height={75} />}
+                                </div>
                             </div>
-                        </div>
-                        <div className="col-12">
-                            {/* Email */}
-                            <div className="form-group">
-                                {form.email ? <label htmlFor="accountEmail">
-                                    Mã số thuế
-                                </label> : <Skeleton width='30%' height={35} />}
-                                {form.id ? <input className="form-control form-control-sm"  type="text" disabled={status === true ? true : false} {...register('taxId', { required: true, min: 10, max: 10 }, { required: 'Cần nhập mã sô thuế', min: 'Mã số thuế cần 10 ký tự', max: 'Mã số thuế cần 10 ký tự' })} /> : <Skeleton width='100%' height={75} />}
+                            <div className="col-12">
+                                {/* Email */}
+                                <div className="form-group">
+                                    {form.email ? <label htmlFor="accountEmail">
+                                        Mã số thuế
+                                    </label> : <Skeleton width='30%' height={35} />}
+                                    {form.id ? <input className="form-control form-control-sm" type="text" disabled={status === true ? true : false} {...register('taxId', { required: true, min: 10, max: 10 }, { required: 'Cần nhập mã sô thuế', min: 'Mã số thuế cần 10 ký tự', max: 'Mã số thuế cần 10 ký tự' })} /> : <Skeleton width='100%' height={75} />}
+                                </div>
+                                <ErrorInput error={error.taxId} />
                             </div>
-                            <ErrorInput error={error.taxId} />
-                        </div>
-                        <div className="col-12">
-                            {/* Button */}
-                            <button className="btn btn-dark" type="submit" disabled={form.id ? false : true}>Lưu</button>
-                        </div>
-                    </>) :
+                            <div className="col-12">
+                                {/* Button */}
+                                <button className="btn btn-dark" type="submit" disabled={form.id ? false : true}>Lưu</button>
+                            </div>
+                        </>) :
                         <div className='col-12' style={{ textAlign: 'center' }}>
                             <LoadingAvatar />
                         </div>}

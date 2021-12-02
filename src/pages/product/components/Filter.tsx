@@ -18,7 +18,7 @@ export const Filter: React.FC<{ cateData: any }> = ({ cateData }) => {
 
     useEffect(() => {
         (async () => {
-            let cateDis = await distributorService.getDistributor()
+            let cateDis = await distributorService.getDistributor({IsActive: true})
 
             if (cateDis) {
                 for (let i = 0; i < cateDis.data.length; i++) {

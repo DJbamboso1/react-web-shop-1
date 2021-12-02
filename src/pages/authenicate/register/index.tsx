@@ -3,9 +3,10 @@ import ErrorInput from 'components/ErrorInput'
 import LoadingPage from 'components/LoadingPage'
 import { history, useForm, useTranslate } from 'core'
 import React, { useEffect, useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link, Redirect } from 'react-router-dom'
 import authService from 'services/authService'
+import { StateStore } from 'store'
 
 type RegisterForm = {
     roleId: string,
@@ -43,7 +44,7 @@ const Register: React.FC = () => {
     // useEffect(() => {
     //     changeDate()
     // }, [])
-
+    let { login, role } = useSelector((store: StateStore) => store.auth)
     let { register, form, handleSubmit, error, setForm } = useForm<RegisterForm>()
 
     useEffect(() => {
@@ -108,7 +109,14 @@ const Register: React.FC = () => {
         }
         setLoading(false)
     }
-
+    if (login && role) {
+        switch (role) {
+            case 'Retailer': {
+                console.log('AAAAAAAAAAAAAAAAAAAAA LOG LOG LOG')
+                return <Redirect to='/' />
+            }
+        }
+    }
 
     return (
         <div className="card card-lg" style={{ maxWidth: 700, margin: '0 auto' }}>

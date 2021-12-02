@@ -7158,13 +7158,15 @@
 
 .flickity-button {
     position: absolute;
-    background: hsla(0, 0%, 100%, .75);
+    /* background: hsla(0, 0%, 100%, .75); */
+    background: #333;
     border: none;
-    color: #333
+    /* color: #333 */
 }
 
 .flickity-button:hover {
-    background: #fff;
+    /* background: #fff; */
+    background: #F90;
     cursor: pointer
 }
 
@@ -7175,7 +7177,8 @@
 }
 
 .flickity-button-icon {
-    fill: currentColor
+    /* fill: currentColor */
+    fill: white;
 }
 
 .flickity-prev-next-button {
@@ -7187,11 +7190,13 @@
 }
 
 .flickity-prev-next-button.previous {
-    left: 10px
+    /* left: 10px */
+    left: -40px;
 }
 
 .flickity-prev-next-button.next {
-    right: 10px
+    /* right: 10px */
+    right: -40px;
 }
 
 .flickity-rtl .flickity-prev-next-button.previous {
@@ -19191,8 +19196,8 @@ a.text-dark:focus, a.text-dark:hover {
 }
 
 .btn-white-primary:focus, .btn-white-primary:hover {
-    background-color: #ff6f61;
-    border-color: #ff6f61;
+    background-color: orange;
+    border-color: orange;
     color: #fff
 }
 
@@ -22755,11 +22760,11 @@ a.text-decoration-underline:focus, a.text-decoration-underline:hover {
     align-items: center;
     justify-content: center;
     width: 42px;
-    height: 100%;
-    border-radius: 0;
-    background-color: #fff;
+    /* height: 100%; */
+    border-radius: 50%;
+    /* background-color: #fff; */
     z-index: 1;
-    transition: all .1s ease-in-out
+    transition: all .1s ease-in-out;
 }
 
 .flickity-button:active, .flickity-button:focus, .flickity-button:hover {
@@ -22777,7 +22782,8 @@ a.text-decoration-underline:focus, a.text-decoration-underline:hover {
 .flickity-button::before {
     font-family: Feather;
     font-size: 1.125rem;
-    line-height: 1
+    line-height: 1;
+    color: white
 }
 
 .flickity-button>svg {

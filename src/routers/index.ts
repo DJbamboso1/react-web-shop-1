@@ -40,6 +40,7 @@ export const routers: RouterParam[] = [
                         path: '/register',
                         component: lazy(() => import('../pages/authenicate/register')),
                         exact: true,
+                        auth: false,
                     },
                 ]
             },

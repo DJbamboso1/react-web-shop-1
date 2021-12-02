@@ -11,8 +11,8 @@ export interface PaginateData<T> {
     pageNumber: number,
     pageSize: number,
     total: number,
-    // succeeded: boolean,
-    // message: string,
-    // errors: boolean,
+    succeeded: boolean,
+    message: string,
+    errors: boolean,
     data: T[],
 }

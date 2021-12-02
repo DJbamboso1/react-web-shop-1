@@ -36,6 +36,7 @@ const Login: React.FC = () => {
     if (login && role) {
         switch (role) {
             case 'Retailer': {
+                
                 return <Redirect to='/' />
             }
         }
@@ -92,13 +93,13 @@ const Login: React.FC = () => {
                             <ErrorInput error={errorMsg}/>
                             <div className="wrap-input100" >
                                 
-                            <input className={`input100 ${form.username && form.username.length > 0 && 'has-val'}`} type="text" {...register('username', { required: true, pattern: 'username' }, { required: 'Tài khoản không được để trống !', pattern: 'Yêu cầu tài khoản không chứa các ký tự đặt biệt' })} />
+                            <input className={`input100 ${form.username && form.username.length > 0 && 'has-val'}`} type="text" {...register('username', { required: true, pattern: 'username', min: 6, max: 12 }, { required: 'Tài khoản không được để trống !', pattern: 'Yêu cầu tài khoản không chứa các ký tự đặt biệt', min: 'Yêu cầu tài khoản có ít nhất 6 ký tự', max: 'Yêu cầu tài khoản có nhiều nhất 12 ký tự' })} />
                                 <span className="focus-input100" />
                                 <span className="label-input100">Tài khoản<span style={{color: 'red'}}>* </span></span>
                             </div>
                             <ErrorInput error={error.username} />
                             <div className="wrap-input100">
-                                <input {...register('password', { min: 6, max: 32, required: true }, { required: 'Mật khẩu không được để trống', min: 'Mật khẩu có ít nhất 6 ký tự', max: 'Mất khẩu có nhiều nhất 32 ký tự' })} className={`input100 ${form && form.password.length > 0 && 'has-val'}`} type="password" />
+                                <input {...register('password', { min: 6, max: 20, required: true, pattern: 'password' }, { required: 'Mật khẩu không được để trống', min: 'Mật khẩu có ít nhất 6 ký tự', max: 'Mất khẩu có nhiều nhất 20 ký tự', pattern: 'Yêu cầu mật khẩu không chứa các ký tự đặt biệt' })} className={`input100 ${form && form.password.length > 0 && 'has-val'}`} type="password" />
                                 <span className="focus-input100" />
                                 <span className="label-input100">Mật khẩu<span style={{color: 'red'}}>* </span> </span>
                             </div>

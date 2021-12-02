@@ -61,7 +61,7 @@ export const SearchModal: React.FC = () => {
     useEffect(() => {
         (async () => {
             setLoading(true)
-            let distributors = await distributorService.getDistributor()
+            let distributors = await distributorService.getDistributor({IsActive: true})
             setListDis(distributors)
             setLoading(false)
         })()

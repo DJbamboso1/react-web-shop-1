@@ -10,13 +10,13 @@ export function* fetchLogin(action: any): any {
         if (!user.data) {
             yield put({
                 type: LOGIN_ERROR,
-                payload: 'Không tồn tại tài khoản này !'
+                payload: 'Tài khoản này không tồn tại hoặc chưa được kích hoạt'
             })
         }
         else if (user.data.role && user.data.role.name !== 'Retailer') {
             yield put({
                 type: LOGIN_ERROR,
-                payload: 'Không tồn tại tài khoản này !'
+                payload: 'Tài khoản này không tồn tại hoặc chưa được kích hoạt'
             })
         }
         else {
@@ -27,7 +27,10 @@ export function* fetchLogin(action: any): any {
 
         }
     } catch (err) {
-
+        yield put({
+            type: LOGIN_ERROR,
+            payload: 'Tài khoản này không tồn tại hoặc chưa được kích hoạt'
+        })
     }
 }
 

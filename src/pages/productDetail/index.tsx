@@ -14,6 +14,7 @@ import { Breadcrumbs } from 'components/Breadcrumbs'
 import { useHistory } from 'react-router'
 import { StateStore } from 'store'
 import authService from 'services/authService'
+import {RelatedProducts} from './components/RelatedProducts'
 
 const ProductDetail: React.FC = () => {
 
@@ -38,7 +39,7 @@ const ProductDetail: React.FC = () => {
             setData(product)
             setLoading(false)
         })()
-    }, [num])
+    }, [num, slug])
     
 
     useEffect(() => {
@@ -247,6 +248,7 @@ const ProductDetail: React.FC = () => {
                     </div>
                 </div>
             </section>
+            <RelatedProducts />
         </>
     )
 }

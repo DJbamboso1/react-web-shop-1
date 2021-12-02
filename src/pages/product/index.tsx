@@ -133,7 +133,7 @@ const ProductPage: React.FC = () => {
     return (
         <section className="py-5">
             <div className="container">
-
+                <Slider />
                 <div className="row">
                     {/* <Filter /> */}
                     <Filter cateData={cateData} />
@@ -145,7 +145,7 @@ const ProductPage: React.FC = () => {
                             </div>
                         }
                         {/* Slider */}
-                        <Slider />
+                        {/* <Slider /> */}
                         {/* { queryUrl.DistributorId ? <SliderDis/> : <Slider/>} */}
                         {/* Header */}
                         <div className="row align-items-center mb-7">
@@ -253,8 +253,8 @@ const ProductPage: React.FC = () => {
                         }
                         <div className="row">
                             {
-                                typeof data === 'undefined' ? [...Array(30)].map((e, i) => <ProductCard key={i}  />) :
-                                    data.data.map(e => <ProductCard key={e.id} product={e} isActive={isActive}/>)
+                                typeof data === 'undefined' ? [...Array(30)].map((e, i) => <ProductCard key={i} />) :
+                                    data.data.map(e => <ProductCard key={e.id} product={e} isActive={isActive} />)
                             }
                             {/* {
                                 data.data.map(e => <ProductCard key={e.id} product={e} />)

@@ -10,10 +10,12 @@ import { TextField } from "./components"
 import { paymentService } from '../../services/paymentService'
 import { StateStore } from "store"
 import { stringify } from "querystring"
-import { formGroupClasses } from "@mui/material"
+import { formGroupClasses, Modal, Typography } from "@mui/material"
 import { cartCheckout, cartRemove, cartRemoveAll } from "store/actions/cartAction"
 import authService from "services/authService"
 import { Breadcrumbs } from "components/Breadcrumbs"
+import { Box } from "@mui/system"
+import LoadingPage from "components/LoadingPage"
 
 type Form = User['data']
 
@@ -41,10 +43,14 @@ const CheckoutComponent: React.FC = () => {
 
     const [actor, setActor] = useState('')
     let [isActive, setIsActive] = useState(true)
-
+    let [loading, setLoading] = useState(false)
+    let [open, setOpen] = useState(false);
     useEffect(() => {
+        
         (async () => {
+            
             if (user) {
+                setLoading(true)
                 let payment = await paymentService.getAllPayments()
                 // console.log('PAYMENT: ', payment.data)
                 setPaymentMethod(payment)
@@ -53,16 +59,19 @@ const CheckoutComponent: React.FC = () => {
                 // setInfo(inf)
                 setForm(inf.data)
                 setActor(user.actorId)
+                setLoading(false)
             }
         })()
     }, [])
 
     useEffect(() => {
         (async () => {
+            setLoading(true)
             let retailer = await authService.getRetailerById(user?.actorId || '')
             if (retailer && retailer.data) {
                 setIsActive(retailer.data.isActive)
             }
+            setLoading(false)
         })()
     }, [])
 
@@ -70,7 +79,8 @@ const CheckoutComponent: React.FC = () => {
 
 
 
-    const formSubmit = (form: Form) => {
+    const formSubmit = async (form: Form) => {
+        setLoading(true)
         let cart = []
         for (let i = 0; i < list.length; i++) {
             cart.push({ id: list[i].id, quantity: list[i].num })
@@ -83,18 +93,55 @@ const CheckoutComponent: React.FC = () => {
             shippingAddress: form.address,
             redirectUrl: `${url + '/order-complete'}`
         };
-        (async () => {
+
+        try {
             let obj = await paymentService.checkout(checkoutObj)
             if (obj) {
                 dispatch(cartRemoveAll())
                 localStorage.removeItem('cart')
+                setLoading(false)
                 if (obj.data.paymentResponse !== null) {
                     window.location.href = obj.data.paymentResponse.payUrl
                 } else {
                     history.push(`/order-complete/${obj.data.sessionId}`)
                 }
             }
-        })()
+        } catch (err) {
+            console.log('ERROR GOES HERE    ')
+            setOpen(true)
+
+        }
+
+    }
+
+    if (open === true) {
+        return (
+            <Modal
+                open={open}
+                onClose={() => { setOpen(false); setLoading(false) }}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: 400,
+                    bgcolor: 'background.paper',
+                    border: '2px solid #000',
+                    boxShadow: 24,
+                    p: 4,
+                }} >
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Thanh toán thất bại
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        Xin hãy kiểm tra lại đon hàng của mình<br />Đơn hàng nên có giá trị lớn hơn 1.000 VNĐ
+                    </Typography>
+                </Box>
+            </Modal>
+        )
     }
 
     // } else {
@@ -109,88 +156,89 @@ const CheckoutComponent: React.FC = () => {
 
 
     if (list.length === 0) {
-        return <Redirect to='/'/>
+        return <Redirect to='/' />
     }
 
     if (isActive === false) {
-        return  <Redirect to='/'/>
+        return <Redirect to='/' />
     }
 
     return (
         <section className="pt-7 pb-12">
-            <div className="container">
-                <div className="row">
-                    <div className="col-12 text-center">
-                        {/* Heading */}
-                        <h3 className="mb-4">Thanh toán</h3>
-                        {/* Subheading */}
-                        {/* <p className="mb-10">
+            {
+                !loading ? <div className="container">
+                    <div className="row">
+                        <div className="col-12 text-center">
+                            {/* Heading */}
+                            <h3 className="mb-4">Thanh toán</h3>
+                            {/* Subheading */}
+                            {/* <p className="mb-10">
                             Already have an account? <a className="font-weight-bold text-reset" href="#!">Click here to login</a>
                         </p> */}
+                        </div>
+                        <Breadcrumbs list={[
+                            {
+                                title: 'Trang chủ',
+                                link: '/'
+                            },
+                            {
+                                title: 'Xem chi tiết giỏ hàng',
+                                link: '/view-cart'
+                            },
+                            {
+                                title: 'Thanh toán',
+                                link: '/checkout'
+                            },
+                        ]} />
                     </div>
-                    <Breadcrumbs list={[
-                        {
-                            title: 'Trang chủ',
-                            link: '/'
-                        },
-                        {
-                            title: 'Xem chi tiết giỏ hàng',
-                            link: '/view-cart'
-                        },
-                        {
-                            title: 'Thanh toán',
-                            link: '/checkout'
-                        },
-                    ]} />
-                </div>
-                <form onSubmit={handleSubmit(formSubmit)}>
-                    <div className="row">
+                    <form onSubmit={handleSubmit(formSubmit)}>
+                        <div className="row">
 
-                        <div className="col-12 col-md-7">
-                            {/* Form */}
+                            <div className="col-12 col-md-7">
+                                {/* Form */}
 
-                            {/* Heading */}
-                            <h6 className="mb-7" style={{ fontWeight: 'bold' }}>Hóa đơn chi tiết</h6>
-                            {/* Billing details */}
-                            <div className="row mb-9">
-                                {/* <TextField className="col-md-6" {...register('firstName', { required: true })} error={error.firstName} required label="First Name" placeholder="First Name" />
+                                {/* Heading */}
+                                <h6 className="mb-7" style={{ fontWeight: 'bold' }}>Hóa đơn chi tiết</h6>
+                                {/* Billing details */}
+                                <div className="row mb-9">
+                                    {/* <TextField className="col-md-6" {...register('firstName', { required: true })} error={error.firstName} required label="First Name" placeholder="First Name" />
                                 <TextField className="col-md-6" {...register('lastName', { required: true })} error={error.lastName} required label="Last Name" placeholder="Last Name" /> */}
-                                <TextField {...register('displayName', { required: true })} error={error.displayName} required label="Họ tên" placeholder="Last Name" disable />
-                                <TextField {...register('email', { required: true })} error={error.email} required label="Email" placeholder="Email" disable />
-                                <TextField {...register('phoneNumber', { required: true })} error={error.phoneNumber} required label="Số điện thoại" placeholder="Phone" disable />
-                                <TextField {...register('address', { required: true })} error={error.address} required label="Địa chỉ" placeholder="Address" disable />
-                            </div>
-                            <h6 className="mb-7">Phương thức thanh toán</h6>
-                            <div className="table-responsive mb-6">
-                                <table className="table table-bordered table-sm table-hover mb-0">
-                                    <tbody>
-                                        {
-                                            paymentMethod && (paymentMethod.data.map(pm => {
-                                                return (
-                                                    <tr>
-                                                        <td>
-                                                            <div className="custom-control custom-radio">
+                                    <TextField {...register('displayName', { required: true })} error={error.displayName} required label="Họ tên" placeholder="Last Name" disable />
+                                    <TextField {...register('email', { required: true })} error={error.email} required label="Email" placeholder="Email" disable />
+                                    <TextField {...register('phoneNumber', { required: true })} error={error.phoneNumber} required label="Số điện thoại" placeholder="Phone" disable />
+                                    <TextField {...register('address', { required: true })} error={error.address} required label="Địa chỉ" placeholder="Address" disable />
+                                </div>
+                                <h6 className="mb-7">Phương thức thanh toán</h6>
+                                <div className="table-responsive mb-6">
+                                    <table className="table table-bordered table-sm table-hover mb-0">
+                                        <tbody>
+                                            {
+                                                paymentMethod && (paymentMethod.data.map(pm => {
+                                                    return (
+                                                        <tr>
+                                                            <td>
+                                                                <div className="custom-control custom-radio">
 
-                                                                <input onChange={changePaymentMethod} className="custom-control-input" checked={payment === pm.id}
-                                                                    id={pm.id} value={pm.id} name="paymentMethodId" type="radio" />
+                                                                    <input onChange={changePaymentMethod} className="custom-control-input" checked={payment === pm.id}
+                                                                        id={pm.id} value={pm.id} name="paymentMethodId" type="radio" />
 
-                                                                <label className="custom-control-label text-body text-nowrap" htmlFor={pm.id}>
-                                                                    {/* {console.log(pm.id)} */}
-                                                                    {pm.description === 'Cash on Delivery' ? 'Thanh toán tiên mặt' : 'Thanh toán ví Momo'}
-                                                                </label>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                )
-                                            }))
-                                        }
+                                                                    <label className="custom-control-label text-body text-nowrap" htmlFor={pm.id}>
+                                                                        {/* {console.log(pm.id)} */}
+                                                                        {pm.description === 'Cash on Delivery' ? 'Thanh toán tiên mặt' : 'Thanh toán ví Momo'}
+                                                                    </label>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                }))
+                                            }
 
 
 
-                                    </tbody>
-                                </table>
-                            </div>
-                            {/* <div className="mb-9">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {/* <div className="mb-9">
                                 <div className="custom-control custom-checkbox">
                                     <input onChange={(ev) => setIsDifferentAddress(ev.currentTarget.checked)} checked={isDifferentAddress} className="custom-control-input" id="checkoutShippingAddress" type="checkbox" />
                                     <label className="custom-control-label font-size-sm" data-toggle="collapse" data-target="#checkoutShippingAddressCollapse" htmlFor="checkoutShippingAddress">
@@ -210,7 +258,7 @@ const CheckoutComponent: React.FC = () => {
                                     </div>
                                 </div>
                             </div> */}
-                            {/*<h6 className="mb-7">Payment</h6>
+                                {/*<h6 className="mb-7">Payment</h6>
                             <div className="list-group list-group-sm mb-7">
                                 <div className="list-group-item">
                                     <div className="custom-control custom-radio">
@@ -276,56 +324,57 @@ const CheckoutComponent: React.FC = () => {
                                 </div>
                             </div>
                             <textarea className="form-control form-control-sm mb-9 mb-md-0 font-size-xs" rows={5} placeholder="Order Notes (optional)" defaultValue={""} /> */}
-                        </div>
-                        <div className="col-12 col-md-5 col-lg-4 offset-lg-1">
-                            {/* Heading */}
-                            <h6 className="mb-7">Đơn ({list.length})</h6>
-                            {/* Divider */}
-                            <hr className="my-7" />
-                            {/* List group */}
-                            <ul className="list-group list-group-lg list-group-flush-y list-group-flush-x mb-7">
-                                {
-                                    list.map(e => {
+                            </div>
+                            <div className="col-12 col-md-5 col-lg-4 offset-lg-1">
+                                {/* Heading */}
+                                <h6 className="mb-7">Đơn ({list.length})</h6>
+                                {/* Divider */}
+                                <hr className="my-7" />
+                                {/* List group */}
+                                <ul className="list-group list-group-lg list-group-flush-y list-group-flush-x mb-7">
+                                    {
+                                        list.map(e => {
 
-                                        return (
-                                            <CartItem key={e.product.id} product={e.product} num={e.num} />
-                                        )
-                                    })
-                                }
-                            </ul>
-                            {/* Card */}
-                            <div className="card mb-9 bg-light">
-                                <div className="card-body">
-                                    <ul className="list-group list-group-sm list-group-flush-y list-group-flush-x">
-                                        {/* <li className="list-group-item d-flex">
+                                            return (
+                                                <CartItem key={e.product.id} product={e.product} num={e.num} />
+                                            )
+                                        })
+                                    }
+                                </ul>
+                                {/* Card */}
+                                <div className="card mb-9 bg-light" >
+                                    <div className="card-body" style={{ backgroundColor: 'white' }}>
+                                        <ul className="list-group list-group-sm list-group-flush-y list-group-flush-x">
+                                            {/* <li className="list-group-item d-flex">
                                             <span>Subtotal</span> <span className="ml-auto font-size-sm">{currency(subTotal)}</span>
                                         </li> */}
-                                        {/* <li className="list-group-item d-flex">
+                                            {/* <li className="list-group-item d-flex">
                                             <span>id: </span> <span className="ml-auto font-size-sm">{payment}</span>
                                         </li> */}
-                                        {/* <li className="list-group-item d-flex">
+                                            {/* <li className="list-group-item d-flex">
                                             <span>Shipping</span> <span className="ml-auto font-size-sm">{currency(shippingPrice)}</span>
                                         </li> */}
-                                        <li className="list-group-item d-flex font-size-lg font-weight-bold">
-                                            <span>Tổng:</span> <span className="ml-auto">{currency(total)}</span>
-                                        </li>
-                                    </ul>
+                                            <li className="list-group-item d-flex font-size-lg font-weight-bold">
+                                                <span>Tổng:</span> <span className="ml-auto">{currency(total)}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
-                            </div>
-                            {/* Disclaimer */}
-                            {/* <p className="mb-7 font-size-xs text-gray-500">
+                                {/* Disclaimer */}
+                                {/* <p className="mb-7 font-size-xs text-gray-500">
                                 Your personal data will be used to process your order, support
                                 your experience throughout this website, and for other purposes
                                 described in our privacy policy.
                             </p> */}
-                            {/* Button */} 
-                            <button type="submit" className="btn btn-block btn-dark">
-                                Thanh toán
-                            </button>
+                                {/* Button */}
+                                <button type="submit" className="btn btn-block btn-dark">
+                                    Thanh toán
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </form>
-            </div >
+                    </form>
+                </div > : <LoadingPage/>
+            }
         </section >
     )
 }

@@ -15,6 +15,11 @@ export const productService = {
         let url = productAPI + '/Product/' + slug
         console.log('url: ', url)
         return http.get<Product02<Product01>>(url)
+    },
+
+    getRecommendation() {
+        let url = productAPI + '/product/recommendation'
+        return http.get<PaginateData<Product01>>(url)
     }
 }
 
