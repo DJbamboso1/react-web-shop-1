@@ -33,7 +33,6 @@ const Navbar: React.FC<NavbarProp> = ({ hoverEvent, mouseLeaveEvent }) => {
 
     function _openCartModal(ev: React.MouseEvent) {
         ev.preventDefault()
-        ev.currentTarget.querySelector('')
         dispatch(toggleCart(true))
 
     }
