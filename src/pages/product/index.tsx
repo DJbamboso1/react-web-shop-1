@@ -140,7 +140,7 @@ const ProductPage: React.FC = () => {
     return (
         <section className="py-5">
             <div className="container">
-                {
+                {/* {
                     queryUrl.DistributorId && <div className='dis-header'>
                         <div className='header-header'>
                             <h3 className="mb-1">{distributor?.data.displayName || 'Sản phẩm'}</h3>
@@ -151,7 +151,7 @@ const ProductPage: React.FC = () => {
                             {distributor?.data.address ? <p>Địa chỉ: {distributor.data.address}</p> : ''}
                         </div>
                     </div>
-                }
+                } */}
                 {/* <Slider /> */}
                 <div className="row">
                     {/* <Filter /> */}
@@ -172,7 +172,7 @@ const ProductPage: React.FC = () => {
                                 {/* Heading */}
                                 {/* <div className='dis-header'>
                                     <div className='header-header'> */}
-                                { !queryUrl.DistributorId && <h3 className="mb-1">{distributor?.data.displayName || 'Sản phẩm'}</h3>}
+                                {<h3 className="mb-1">{distributor?.data.displayName || 'Sản phẩm'}</h3>}
                                 {/* </div>
                                     <div className='header-info'>
                                         {distributor?.data.phoneNumber ? <p>Số điện thoại: {distributor.data.phoneNumber}</p> : ''}

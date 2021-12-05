@@ -141,13 +141,13 @@ th, td {
   padding-top: 15px;
 }
 
-.list-styled-link {
+#list1 .list-styled-link {
   padding-left: 25px;
 }
 
 .icon-img {
   z-index: 1;
-  width: 18%;
+  width: 100%;
 }
 
 .alert {
@@ -218,19 +218,22 @@ th, td {
   color: orange
 }
 
+.flickity-page-dots-inner.flickity-enabled.is-draggable {
+  width: 100%;
+}
 /* ============================================================================================== */
 
 @media (max-width: 991px) {
-  .navbar .container {
+  /* .navbar .container {
     display: flex;
     flex-wrap: nowrap;
     align-items: unset;
     justify-content: unset;
-  }
+  } */
 
-  .func.collapse:not(.show) {
+  /* .func.collapse:not(.show) {
     display: block;
-  }
+  } */
 
   .navbar-brand {
     text-align: center;

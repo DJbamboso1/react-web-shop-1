@@ -28,7 +28,8 @@ const MainLayout: React.FC = ({ children }) => {
         let scrollTop = document.documentElement.scrollTop
         if ($header) {
             // console.log($header?.scrollHeight)
-            let height = $header?.scrollHeight || 0
+            // let height = $header?.scrollHeight || 0
+            let height = 90
             if (scrollTop > height) {
                 $header.classList.add('fixed')
             } else {
@@ -45,10 +46,12 @@ const MainLayout: React.FC = ({ children }) => {
     return (
         <>
             <div id='header' style={{position: 'fixed' , width: '100%', zIndex: 1000 }}>
-                {/* <Header hoverEvent={hoverEvent} mouseLeaveEvent={mouseLeaveEvent} /> */}
+                <Header hoverEvent={hoverEvent} mouseLeaveEvent={mouseLeaveEvent} />
                 <Navbar hoverEvent={hoverEvent} mouseLeaveEvent={mouseLeaveEvent} />
+                {/* <Header  />
+                <Navbar /> */}
             </div>
-            <div style={{ paddingTop: '100px', backgroundColor: 'whitesmoke' }}>
+            <div style={{ paddingTop: '150px' }}>
                 {children}
             </div>
 

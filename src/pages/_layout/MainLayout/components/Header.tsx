@@ -11,14 +11,14 @@ function Header(props: any) {
             <div className="container">
                 {/* Promo */}
                 <div className="mr-xl-8">
-                    <i className="fe fe-truck mr-2" /> <span className="heading-xxxs">Free shipping worldwide</span>
+                    {/* <i className="fe fe-truck mr-2" /> <span className="heading-xxxs">Free shipping worldwide</span> */}
                 </div>
                 {/* Toggler */}
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#topbarCollapse" aria-controls="topbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon" />
                 </button>
                 {/* Collapse */}
-                <div className="collapse navbar-collapse" id="topbarCollapse">
+                <div className=" navbar-collapse collapse" id="topbarCollapse">
                     {/* Nav */}
                     <ul className="nav nav-divided navbar-nav mr-auto">
                         <li className="nav-item dropdown" onMouseOver={props.hoverEvent} onMouseLeave={props.mouseLeaveEvent}>
@@ -60,7 +60,7 @@ function Header(props: any) {
                         </li>
                     </ul>
                     {/* Nav */}
-                    <ul className="nav navbar-nav mr-8">
+                    {/* <ul className="nav navbar-nav mr-8">
                         <li className="nav-item">
                             <a className="nav-link" href="./shipping-and-returns.html">Shipping</a>
                         </li>
@@ -70,9 +70,9 @@ function Header(props: any) {
                         <li className="nav-item">
                             <a className="nav-link" href="./contact-us.html">Contact</a>
                         </li>
-                    </ul>
+                    </ul> */}
                     {/* Nav */}
-                    <ul className="nav navbar-nav flex-row">
+                    {/* <ul className="nav navbar-nav flex-row">
                         <li className="nav-item">
                             <a className="nav-link text-gray-350" href="#!">
                                 <i className="fab fa-facebook-f" />
@@ -93,7 +93,7 @@ function Header(props: any) {
                                 <i className="fab fa-medium" />
                             </a>
                         </li>
-                    </ul>
+                    </ul> */}
                 </div>
             </div>
         </div>

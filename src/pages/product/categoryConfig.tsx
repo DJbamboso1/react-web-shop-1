@@ -57,7 +57,7 @@ export function categoryConfig(categories: CategoryTree[]) {
                                         {cate.subCategories.map((child: CategoryTree) => {
 
                                             return (
-                                                <li className="list-styled-item">
+                                                <li className="list-styled-item" id='list1'>
                                                     <Link className="list-styled-link" to={changeQueryURL({ ...objectURL, SubCategoryId: child.id, PageNumber: 1, CategoryId: cate.id })} >
                                                         {child.name}
                                                     </Link>

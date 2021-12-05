@@ -8,11 +8,12 @@ import { toggleSearch } from 'store/actions/searchAction'
 import { useCartNumber } from 'store/selector'
 import Blog from './components/Blog'
 import CatalogCard from './components/CatalogCard'
-import HomeCard from './components/HomeCard'
+import Categories from './components/Categories'
 import Pages from './components/Pages'
 import Shop from './components/Shop'
 // import firebase from 'firebase/app';
 import firebase from '../../../../../utils/firebase'
+import DistributorComponent from './components/Distributor'
 // import {requestPermission, M} from 'firebase/app'
 
 type NavbarProp = {
@@ -32,6 +33,7 @@ const Navbar: React.FC<NavbarProp> = ({ hoverEvent, mouseLeaveEvent }) => {
 
     function _openCartModal(ev: React.MouseEvent) {
         ev.preventDefault()
+        ev.currentTarget.querySelector('')
         dispatch(toggleCart(true))
 
     }
@@ -39,7 +41,11 @@ const Navbar: React.FC<NavbarProp> = ({ hoverEvent, mouseLeaveEvent }) => {
     function _openSearchModal(ev: React.MouseEvent) {
         ev.preventDefault()
         dispatch(toggleSearch(true))
+    }
 
+    function _handleMenuToggle(ev: React.MouseEvent) {
+        ev.preventDefault()
+        document.querySelector('.container #navbarCollapse1')?.classList.toggle('show')
     }
 
     // React.useEffect(() => {
@@ -56,35 +62,44 @@ const Navbar: React.FC<NavbarProp> = ({ hoverEvent, mouseLeaveEvent }) => {
         <nav className="navbar navbar-expand-lg navbar-light bg-white">
 
             <div className="container">
-                {/* Toggler */}
-                {/* <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                    <span className="navbar-toggler-icon" />
-                </button> */}
+
                 {/* Brand */}
-                <Link className="navbar-brand" to="/" >
+                <Link className="navbar-brand" style={{ width: '200px' }} to="/" >
                     <img className='icon-img' src="/img/icons/LOGO3.png" alt="" />
                 </Link>
-                
+                {/* Toggler */}
+                <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onClick={_handleMenuToggle}>
+                    <span className="navbar-toggler-icon" />
+                </button>
+
                 {/* Collapse */}
-                <div className="func collapse navbar-collapse" id="navbarCollapse">
+                <div className="collapse navbar-collapse" id="navbarCollapse1">
                     {/* Nav */}
                     <ul className="navbar-nav mx-auto">
                         <li className="nav-item dropdown hovered" onMouseOver={hoverEvent} onMouseLeave={mouseLeaveEvent}>
 
-                            {/* <Link className="nav-link" data-toggle="dropdown" to="/" aria-expanded="true">Home</Link> */}
+                            <Link className="nav-link" data-toggle="dropdown" to="/" aria-expanded="true">Categories</Link>
 
-                            {/* <div className="dropdown-menu">
-                                <HomeCard />
-                            </div> */}
+                            <div className="dropdown-menu">
+                                <Categories />
+                            </div>
                         </li>
-                        <li className="nav-item dropdown position-static" onMouseOver={hoverEvent} onMouseLeave={mouseLeaveEvent}>
-                            {/* Toggle */}
-                            {/* <Link className="nav-link" data-toggle="dropdown" to="/product">{t('Product')}</Link> */}
-                            {/* Menu */}
-                            {/* <div className="dropdown-menu w-100">
+                        <li className="nav-item dropdown hovered" onMouseOver={hoverEvent} onMouseLeave={mouseLeaveEvent}>
+
+                            <Link className="nav-link" data-toggle="dropdown" to="/" aria-expanded="true">Distributor</Link>
+
+                            <div className="dropdown-menu">
+                                <DistributorComponent />
+                            </div>
+                        </li>
+                        {/* <li className="nav-item dropdown position-static" onMouseOver={hoverEvent} onMouseLeave={mouseLeaveEvent}>
+                            
+                            <Link className="nav-link" data-toggle="dropdown" to="/">{t('Distributor')}</Link>
+                            
+                            <div className="dropdown-menu w-100">
                                 <CatalogCard />
-                            </div> */}
-                        </li>
+                            </div>
+                        </li> */}
                         {/* <li className="nav-item dropdown" onMouseOver={hoverEvent} onMouseLeave={mouseLeaveEvent}>
                             
                             <Link className="nav-link" data-toggle="dropdown" to="#">Shop</Link>
@@ -92,16 +107,16 @@ const Navbar: React.FC<NavbarProp> = ({ hoverEvent, mouseLeaveEvent }) => {
                             <div className="dropdown-menu" style={{ minWidth: '650px' }}>
                                 <Shop />
                             </div>
-                        </li> */}
-                        {/* <li className="nav-item dropdown hovered" onMouseOver={hoverEvent} onMouseLeave={mouseLeaveEvent}>
+                        </li>
+                        <li className="nav-item dropdown hovered" onMouseOver={hoverEvent} onMouseLeave={mouseLeaveEvent}>
                             
                             <Link className="nav-link" data-toggle="dropdown" to="#" aria-expanded="true">Pages</Link>
                            
                             <div className="dropdown-menu">
                                 <Pages />
                             </div>
-                        </li> */}
-                        {/* <li className="nav-item dropdown hovered" onMouseOver={hoverEvent} onMouseLeave={mouseLeaveEvent}>
+                        </li>
+                        <li className="nav-item dropdown hovered" onMouseOver={hoverEvent} onMouseLeave={mouseLeaveEvent}>
                             
                             <Link className="nav-link" data-toggle="dropdown" to="#" aria-expanded="true">Blog</Link>
                             

@@ -95,7 +95,7 @@ export const ProductCard: React.FC<{ product?: Product01, isActive?: boolean }> 
                         }
                     </div>
                     {/* Price */}
-                    <div className="font-weight-bold" style={{color: 'orange'}}>
+                    <div className="font-weight-bold text-muted">
                         {/* {price?.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })} */}
                         {/* <h6 style={{color: 'red'}}>Price ?</h6> */}
                         {

@@ -1,6 +1,27 @@
-import React from 'react'
+import Flickity from 'react-flickity-component'
+import React, { useEffect, useState } from 'react'
+import { Distributor, User } from '@types'
+import distributorService from 'services/distributorService'
+import authService from 'services/authService'
 
 const CatalogCard: React.FC = () => {
+    let [distributor, setDistributor] = useState<Distributor<User['data']>>()
+    useEffect(() => {
+        (async () => {
+            let cateDis = await distributorService.getDistributor({ IsActive: true })
+
+            if (cateDis) {
+                for (let i = 0; i < cateDis.data.length; i++) {
+                    let userId = '';
+                    userId = cateDis.data[i].user?.id || ''
+                    let user = await authService.getInfo(userId)
+                    // cateDisData.data[i].user = user
+                    cateDis.data[i].displayName = user.data.displayName
+                }
+            }
+            setDistributor(cateDis)
+        })()
+    }, [])
 
     function handleTab(event: any) {
         event.preventDefault()
@@ -13,8 +34,8 @@ const CatalogCard: React.FC = () => {
         })
         event.currentTarget.classList.add('active')
         let id = event.currentTarget.getAttribute('href')
-        
-        document.querySelector(`.card .card-body #${id}`)?.classList.add('active','show')
+
+        document.querySelector(`.card .card-body #${id}`)?.classList.add('active', 'show')
     }
 
 
@@ -28,7 +49,16 @@ const CatalogCard: React.FC = () => {
                         <div className="col-12">
                             {/* Nav */}
                             <nav className="nav nav-tabs nav-overflow font-size-xs border-bottom border-bottom-lg-0" >
-                                <a className="nav-link text-uppercase active" data-toggle="tab" href="navTab1" onClick={handleTab}>
+                                {
+                                    distributor && distributor.data && distributor.data.map(dis => {
+                                        return (
+                                            <a className="nav-link text-uppercase" data-toggle="tab" href={dis.userId} onClick={handleTab}>
+                                                {dis.user?.displayName}
+                                            </a>
+                                        )
+                                    })
+                                }
+                                <a className="nav-link text-uppercase" data-toggle="tab" href="navTab1" onClick={handleTab}>
                                     Women
                                 </a>
                                 <a className="nav-link text-uppercase" data-toggle="tab" href="navTab2" onClick={handleTab}>
@@ -37,6 +67,22 @@ const CatalogCard: React.FC = () => {
                                 <a className="nav-link text-uppercase" data-toggle="tab" href="navTab3" onClick={handleTab}>
                                     Kids
                                 </a>
+
+                                {/* <Flickity className="flickity-page-dots-inner "
+                                    options={{
+                                        pageDots: false,
+                                        autoPlay: false,
+                                        
+                                    }}>
+                                    {
+                                        [...Array(20)].map((e, i) =>
+                                            <a className="nav-link text-uppercase carousel-cell" style={{height: '100px', width: '100px'}} data-toggle="tab" href={`navTab${i + 1}`} onClick={handleTab}>
+                                                Women
+                                            </a>)
+                                    }
+                                </Flickity> */}
+
+
                             </nav>
                         </div>
                     </div>
@@ -50,6 +96,245 @@ const CatalogCard: React.FC = () => {
                         <div className="tab-pane fade show active" id="navTab1">
                             <div className="container">
                                 <div className="row">
+                                    {}
+                                    <div className="col-6 col-md">
+                                        {/* Heading */}
+                                        <div className="mb-5 font-weight-bold">Clothing1</div>
+                                        {/* Links */}
+                                        <ul className="list-styled mb-6 mb-md-0 font-size-sm">
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">All Clothing</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Blouses &amp; Shirts</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Coats &amp; Jackets</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Dresses</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Hoodies &amp; Sweats</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Denim</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Jeans</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Jumpers &amp; Cardigans</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Leggings</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div className="col-6 col-md">
+                                        {/* Heading */}
+                                        <div className="mb-5 font-weight-bold">Clothing1</div>
+                                        {/* Links */}
+                                        <ul className="list-styled mb-6 mb-md-0 font-size-sm">
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">All Clothing</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Blouses &amp; Shirts</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Coats &amp; Jackets</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Dresses</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Hoodies &amp; Sweats</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Denim</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Jeans</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Jumpers &amp; Cardigans</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Leggings</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div className="col-6 col-md">
+                                        {/* Heading */}
+                                        <div className="mb-5 font-weight-bold">Clothing1</div>
+                                        {/* Links */}
+                                        <ul className="list-styled mb-6 mb-md-0 font-size-sm">
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">All Clothing</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Blouses &amp; Shirts</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Coats &amp; Jackets</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Dresses</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Hoodies &amp; Sweats</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Denim</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Jeans</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Jumpers &amp; Cardigans</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Leggings</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div className="col-6 col-md">
+                                        {/* Heading */}
+                                        <div className="mb-5 font-weight-bold">Clothing1</div>
+                                        {/* Links */}
+                                        <ul className="list-styled mb-6 mb-md-0 font-size-sm">
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">All Clothing</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Blouses &amp; Shirts</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Coats &amp; Jackets</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Dresses</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Hoodies &amp; Sweats</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Denim</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Jeans</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Jumpers &amp; Cardigans</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Leggings</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div className="col-6 col-md">
+                                        {/* Heading */}
+                                        <div className="mb-5 font-weight-bold">Clothing1</div>
+                                        {/* Links */}
+                                        <ul className="list-styled mb-6 mb-md-0 font-size-sm">
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">All Clothing</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Blouses &amp; Shirts</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Coats &amp; Jackets</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Dresses</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Hoodies &amp; Sweats</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Denim</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Jeans</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Jumpers &amp; Cardigans</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Leggings</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div className="col-6 col-md">
+                                        {/* Heading */}
+                                        <div className="mb-5 font-weight-bold">Clothing1</div>
+                                        {/* Links */}
+                                        <ul className="list-styled mb-6 mb-md-0 font-size-sm">
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">All Clothing</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Blouses &amp; Shirts</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Coats &amp; Jackets</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Dresses</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Hoodies &amp; Sweats</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Denim</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Jeans</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Jumpers &amp; Cardigans</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Leggings</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div className="col-6 col-md">
+                                        {/* Heading */}
+                                        <div className="mb-5 font-weight-bold">Clothing1</div>
+                                        {/* Links */}
+                                        <ul className="list-styled mb-6 mb-md-0 font-size-sm">
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">All Clothing</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Blouses &amp; Shirts</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Coats &amp; Jackets</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Dresses</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Hoodies &amp; Sweats</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Denim</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Jeans</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Jumpers &amp; Cardigans</a>
+                                            </li>
+                                            <li className="list-styled-item">
+                                                <a className="list-styled-link" href="./shop.html">Leggings</a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                     <div className="col-6 col-md">
                                         {/* Heading */}
                                         <div className="mb-5 font-weight-bold">Clothing1</div>
