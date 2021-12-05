@@ -206,7 +206,7 @@ const CheckoutComponent: React.FC = () => {
                                     <TextField {...register('displayName', { required: true })} error={error.displayName} required label="Họ tên" placeholder="Last Name" disable />
                                     <TextField {...register('email', { required: true })} error={error.email} required label="Email" placeholder="Email" disable />
                                     <TextField {...register('phoneNumber', { required: true })} error={error.phoneNumber} required label="Số điện thoại" placeholder="Phone" disable />
-                                    <TextField {...register('address', { required: true })} error={error.address} required label="Địa chỉ" placeholder="Address" disable />
+                                    <TextField {...register('address', { required: true })} error={error.address} required label="Địa chỉ" placeholder="Address"  />
                                 </div>
                                 <h6 className="mb-7">Phương thức thanh toán</h6>
                                 <div className="table-responsive mb-6">

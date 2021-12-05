@@ -86,7 +86,7 @@ export const ProductCard: React.FC<{ product?: Product01, isActive?: boolean }> 
                     <div className="font-weight-bold">
                         {
                             product ? (
-                                <Link className="text-body" to={`/${product?.name}`}>
+                                <Link className="text-body" to={`/product/${product?.id}`}>
                                     {product?.name}
                                     {/* ({product && product.listPrice.length > 0 ? product.listPrice[0].volume + ' items' : '0 item'}) */}
                                 </Link>
@@ -101,7 +101,7 @@ export const ProductCard: React.FC<{ product?: Product01, isActive?: boolean }> 
                         {
                             product && product.listPrice && ((product.listPrice.length > 0) ?
                                 `${product.listPrice.length > 1 ? (product.listPrice[product.listPrice.length - 1].value.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) + ' - ') : ''}${product.listPrice[0].value.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}  `
-                                : <h6 style={{ color: 'red' }}>No price</h6>)
+                                : <h6 style={{ color: 'red' }}>Chưa có giá</h6>)
 
                         }
                     </div>

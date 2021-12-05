@@ -1,9 +1,10 @@
-import { Categories, CategoryTree, Distributor, PaginateData, Product, Product01, User } from '@types'
+import { Categories, CategoryTree, Distributor, Membership, PaginateData, Product, Product01, User } from '@types'
 import { Pagination } from 'components/Pagination'
 import { Paginate } from 'components/Paginate'
 import { ProductCard } from 'components/ProductCard'
 import React, { useEffect, useState } from 'react'
 import { productService } from 'services/productService'
+import { memberService } from 'services/memberService'
 import { changeQueryURL, convertQueryURLToObject } from 'utils'
 import { Filter } from './components'
 // import { useDispatch, useSelector } from 'react-redux'
@@ -37,33 +38,22 @@ export type FilterQuery = {
 
 const ProductPage: React.FC = () => {
     // console.log('LIST: ', list )
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
+
 
     let [data, setData] = useState<PaginateData<Product01>>()
-
     let [cateData, setCateData] = useState<CategoryTree[]>()
-
     // let [cateDisData, setCateDisData] = useState<Distributor<User>>()
-
     let queryUrl = convertQueryURLToObject<FilterQuery>()
     // console.log("queryUrl: ", queryUrl)
-
     let { url } = useRouteMatch()
-
     let [category, setCategory] = useState<CategoryTree>()
-
     let [subCate, setSubCate] = useState<CategoryTree>()
-
     let [status, setStatus] = useState(-2)
-
     let [queryUrlCate, setQueryUrlCate] = useState('')
-
     let [distributor, setDistributor] = useState<User>()
-
     let { user } = useSelector((store: StateStore) => store.auth)
-
     let [isActive, setIsActive] = useState(true)
+    let [memberShipRank, setMemberShipRank] = useState<Membership>()
     useEffect(() => {
         (async () => {
             if (status > -2) {
@@ -81,6 +71,7 @@ const ProductPage: React.FC = () => {
                     // console.log('DISTRIBUTOR USER: ', user)
                     setDistributor(user)
                     setQueryUrlCate(dis.id)
+
                 }
             } else {
                 setDistributor(undefined)
@@ -102,8 +93,11 @@ const ProductPage: React.FC = () => {
                 setCategory(undefined)
                 setSubCate(undefined)
             }
-            if (queryUrl.DistributorId) {
-
+            if (user) {
+                if (queryUrl.DistributorId && queryUrl.DistributorId.length > 0) {
+                    let mbs = await memberService.getMembership(user?.actorId, queryUrl.DistributorId)
+                    setMemberShipRank(mbs)
+                }
             }
         })()
         // dispatch(fetchProductsAction(queryUrl))
@@ -116,8 +110,21 @@ const ProductPage: React.FC = () => {
             if (retailer && retailer.data) {
                 setIsActive(retailer.data.isActive)
             }
+
         })()
     }, [])
+
+    // useEffect(() => {
+    //     (async () => {
+    //         if (user) {
+    //             if (queryUrl.DistributorId && queryUrl.DistributorId.length > 0) {
+    //                 let mbs = await memberService.getMembership(user?.actorId, queryUrl.DistributorId)
+    //                 setMemberShipRank(mbs)
+    //             }
+    //         }
+
+    //     })()
+    // }, [queryUrl.DistributorId])
 
     // console.log("data: ", data)
 
@@ -133,7 +140,19 @@ const ProductPage: React.FC = () => {
     return (
         <section className="py-5">
             <div className="container">
-                <Slider />
+                {
+                    queryUrl.DistributorId && <div className='dis-header'>
+                        <div className='header-header'>
+                            <h3 className="mb-1">{distributor?.data.displayName || 'Sản phẩm'}</h3>
+                        </div>
+                        <div className='header-info'>
+                            {distributor?.data.phoneNumber ? <p>Số điện thoại: {distributor.data.phoneNumber}</p> : ''}
+                            {distributor?.data.email ? <p>Email: {distributor.data.email}</p> : ''}
+                            {distributor?.data.address ? <p>Địa chỉ: {distributor.data.address}</p> : ''}
+                        </div>
+                    </div>
+                }
+                {/* <Slider /> */}
                 <div className="row">
                     {/* <Filter /> */}
                     <Filter cateData={cateData} />
@@ -145,13 +164,22 @@ const ProductPage: React.FC = () => {
                             </div>
                         }
                         {/* Slider */}
-                        {/* <Slider /> */}
+                        <Slider />
                         {/* { queryUrl.DistributorId ? <SliderDis/> : <Slider/>} */}
                         {/* Header */}
                         <div className="row align-items-center mb-7">
                             <div className="col-12 col-md">
                                 {/* Heading */}
-                                <h3 className="mb-1">{distributor?.data.displayName || 'Sản phẩm'}</h3>
+                                {/* <div className='dis-header'>
+                                    <div className='header-header'> */}
+                                { !queryUrl.DistributorId && <h3 className="mb-1">{distributor?.data.displayName || 'Sản phẩm'}</h3>}
+                                {/* </div>
+                                    <div className='header-info'>
+                                        {distributor?.data.phoneNumber ? <p>Số điện thoại: {distributor.data.phoneNumber}</p> : ''}
+                                        {distributor?.data.email ? <p>Email: {distributor.data.email}</p> : ''}
+                                        {distributor?.data.address ? <p>Địa chỉ: {distributor.data.address}</p> : ''}
+                                    </div>
+                                </div> */}
                                 {/* Breadcrumb */}
                                 <Breadcrumbs list={[
                                     {

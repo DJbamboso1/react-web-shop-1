@@ -23,7 +23,7 @@ function Footer() {
                         </div>
                     </div>
                     <div className="row">
-                        <div className="col-12 col-md-3">
+                        <div className="col-3 col-sm">
                             
                             {/* <h4 className="mb-6 text-white">Shopper.</h4>
                             
@@ -55,7 +55,7 @@ function Footer() {
                                 </li>
                             </ul> */}
                         </div>
-                        <div className="col-6 col-sm">
+                        <div className="col-3 col-sm">
                            
                             {/* <h6 className="heading-xxs mb-4 text-white">
                                 Support
@@ -76,7 +76,7 @@ function Footer() {
                                 </li>
                             </ul> */}
                         </div>
-                        <div className="col-6 col-sm">
+                        <div className="col-3 col-sm">
                             
                             {/* <h6 className="heading-xxs mb-4 text-white">
                                 Shop
@@ -97,45 +97,7 @@ function Footer() {
                                 </li>
                             </ul> */}
                         </div>
-                        <div className="col-6 col-sm">
-                            
-                            {/* <h6 className="heading-xxs mb-4 text-white">
-                                Company
-                            </h6>
-                            
-                            <ul className="list-unstyled mb-0">
-                                <li>
-                                    <a className="text-gray-300" href="./about.html">Our Story</a>
-                                </li>
-                                <li>
-                                    <a className="text-gray-300" href="#!">Careers</a>
-                                </li>
-                                <li>
-                                    <a className="text-gray-300" href="#!">Terms &amp; Conditions</a>
-                                </li>
-                                <li>
-                                    <a className="text-gray-300" href="#!">Privacy &amp; Cookie policy</a>
-                                </li>
-                            </ul> */}
-                        </div>
-                        <div className="col-6 col-sm">
-                           
-                            {/* <h6 className="heading-xxs mb-4 text-white">
-                                Contact
-                            </h6>
-                            
-                            <ul className="list-unstyled mb-0">
-                                <li>
-                                    <a className="text-gray-300" href="#!">1-202-555-0105</a>
-                                </li>
-                                <li>
-                                    <a className="text-gray-300" href="#!">1-202-555-0106</a>
-                                </li>
-                                <li>
-                                    <a className="text-gray-300" href="#!">help@shopper.com</a>
-                                </li>
-                            </ul> */}
-                        </div>
+                        
                     </div>
                 </div>
             </div>

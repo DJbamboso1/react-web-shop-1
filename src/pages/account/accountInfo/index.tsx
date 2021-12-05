@@ -59,6 +59,9 @@ const AccountInfo: React.FC = () => {
     let [typeLicense, setTypeLicense] = useState('')
     let [status, setStatus] = useState(true)
 
+    let[avatar1, setAvatar] = useState('')
+    let[license1, setLicense1] = useState('')
+
     let { user } = useSelector((store: StateStore) => store.auth)
     useEffect(() => {
         (async () => {
@@ -132,6 +135,7 @@ const AccountInfo: React.FC = () => {
 
             }
         }
+        // changeLicense(form.businessLicenseFile)
     }, [urlImgLicense])
 
 
@@ -176,10 +180,15 @@ const AccountInfo: React.FC = () => {
         // }
         if (form.avatarFile) {
             changeAvatar(form.avatarFile)
+            // form.avatar = avatar
+            console.log('AHUHU')
         }
         if (form.businessLicenseFile) {
             changeLicense(form.businessLicenseFile)
+            // form.businessLicense = license
+            console.log('AHUHU')
         }
+        console.log('FORM PHASE 2: ', form)
         let profile = await authService.updateProfile(form)
         setLoading(false)
         if (profile.succeeded) {
@@ -189,17 +198,14 @@ const AccountInfo: React.FC = () => {
             setMessage('Cập nhật không thành công')
         }
         setOpen(true)
-
-        console.log('old', form.oldPassword)
-        console.log('new', form.newPassword)
-        console.log('FORM PHASE 2: ', form)
+        // console.log('FORM PHASE 2: ', form)
     }
     // if (state) {
     //     return <LoadingPage />
     // }
 
     const changeAvatar = (file?: File) => {
-        // setLoading(true)
+        setLoading(true)
         let avatar = file
         if (avatar) {
             const storageRef = ref(storage, `/avatars/${user?.id}`);
@@ -212,13 +218,18 @@ const AccountInfo: React.FC = () => {
                 () => {
                     getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
                         // console.log('File available at', downloadURL);
-                        setForm({ ...form, avatar: downloadURL })
-
-                        let user = await authService.getInfo(form.id)
-                        // console.log("HELLO WORLD: ", user)
-                        if (user.data.avatar) {
-                            // setOpen(true)
+                        // setForm({ ...form, avatar: downloadURL })
+                        // setAvatar(downloadURL)
+                        form.avatar = downloadURL
+                        let profile = await authService.updateProfile(form)
+                        if(profile) {
+                            // setLoading(false)
                         }
+                        // let user = await authService.getInfo(form.id)
+                        // console.log("HELLO WORLD: ", user)
+                        // if (user.data.avatar) {
+                        //     setOpen(true)
+                        // }
                         // setLoading(false)
                     })
                 }
@@ -227,7 +238,7 @@ const AccountInfo: React.FC = () => {
     }
 
     const changeLicense = (file?: File) => {
-        // setLoading(true)
+        setLoading(true)
         let license = file
         console.log('LICENSE: ', license)
         if (license) {
@@ -243,13 +254,23 @@ const AccountInfo: React.FC = () => {
                     getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
                         console.log('File available at', downloadURL);
                         // setForm({ ...form, businessLicense: downloadURL })
-                        setForm({ ...form, businessLicense: downloadURL })
-                        // setLoading(false)
-                        let user = await authService.getInfo(form.id)
-
-                        if (user.data.businessLicense) {
-                            // setOpen(true)
+                        // setForm({ ...form, businessLicense: downloadURL })
+                        // console.log('LICENSE: ', form.businessLicense)
+                        // setLicense1(downloadURL)
+                        // console.log('DOWNLOAD: ', license1)
+                        form.businessLicense = downloadURL
+                        let profile = await authService.updateProfile(form)
+                        if(profile) {
+                            setLoading(false)
                         }
+                        // if(profile) {
+                        //     console.log('abcdef')
+                        // }
+                        // setLoading(false)
+                        // let user = await authService.getInfo(form.id)
+                        // if (user.data.businessLicense) {
+                            
+                        // }
 
                     })
                 }
@@ -288,7 +309,7 @@ const AccountInfo: React.FC = () => {
             </Modal>
         )
     }
-
+    console.log(form)
     return (
         <>
             <Breadcrumbs list={[

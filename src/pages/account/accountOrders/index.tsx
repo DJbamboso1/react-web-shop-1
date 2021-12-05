@@ -1,4 +1,4 @@
-import { Order, Product01 } from '@types'
+import { Order, OrderDetail, Product01 } from '@types'
 import { Breadcrumbs } from 'components/Breadcrumbs'
 import LoadingPage from 'components/LoadingPage'
 import React, { useEffect, useState } from 'react'
@@ -11,6 +11,7 @@ import { useCart } from 'store/selector'
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
 import { StateStore } from 'store'
 import { Paginate } from 'components/Paginate'
+import { productService } from 'services/productService'
 
 type FilterQuery = {
   // page: string,
@@ -39,6 +40,10 @@ const AccountOrders: React.FC = () => {
   let [status, setStatus] = useState('')
   // const { list } = useCart()
   const [open, setOpen] = React.useState(false);
+
+  const [open1, setOpen1] = React.useState(false);
+  // let [orderDetail, setOrderDetail] = useState<OrderDetail['data']>()
+
   let [index, setIndex] = useState(0)
   useEffect(() => {
     (async () => {
@@ -47,7 +52,7 @@ const AccountOrders: React.FC = () => {
       queryUrl.PageSize = '3'
       queryUrl.Status = status
       let ord = await orderService.getAllOrder(queryUrl)
-      console.log('ORDER PLS', ord) 
+      console.log('ORDER PLS', ord)
       setOrder(ord)
       setState({
         loading: false,
@@ -70,6 +75,23 @@ const AccountOrders: React.FC = () => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  // const checkPrice = async (ev: any, id: string) => {
+  //   console.log("ID: ", id)
+  //   let obj = {
+  //     OrderId: id
+  //   }
+  //   let ordDetail = await orderService.getOrderDetail(obj)
+  //   if (ordDetail) {
+  //     for(let i in ordDetail.data) {
+  //       let product = await productService.getProductById(ordDetail.data[i].product.id)
+  //       if (product.data.listPrice) {
+
+  //       }
+  //     }
+  //   }
+    
+  // }
 
   const reOrderHandle = async (ev: any, id: string) => {
     // ev.preventDefault()
@@ -131,10 +153,10 @@ const AccountOrders: React.FC = () => {
           {/* Select */}
           <select className="custom-select custom-select-sm" id="status" style={{ width: 200, }} onChange={(ev) => { setStatus(ev.currentTarget.value) }} >
             <option value="">Trạng thái</option>
-            <option value="-3">Có hàng bị trả</option>
+            {/* <option value="-3">Có hàng bị trả</option> */}
             <option value="-2">Chưa được giao</option>
-            {/* <option value="-1">Đang thành tiền</option> */}
-            <option value="0">Đã hủy</option>
+            <option value="-1">Đang thành tiền</option>
+            {/* <option value="0">Đã hủy</option> */}
             <option value="1">Đã thành tiền</option>
             <option value="2">Chưa tính tiền</option>
             <option value="3">Đã được giao</option>
@@ -159,7 +181,7 @@ const AccountOrders: React.FC = () => {
                             {index++}
                           </p>
                         </div>
-                        
+
                         <div className="col-6 col-lg-3">
                           {/* Heading */}
                           <h6 className="heading-xxxs text-muted">Nhà phân phối:</h6>
@@ -215,10 +237,35 @@ const AccountOrders: React.FC = () => {
                       <div className="form-row  mb-4 mb-lg-0">
                         <div className='col-5'>
                           {
-                            ord.status === 1 && (<>
-                              <Link className="btn btn-sm btn-block btn-outline-dark" style={{ minWidth: '120px' }} to='' onClick={(ev) => {handleClickOpen(ev)}}  >
+                            ord.status === 3 && (<>
+                              <Link className="btn btn-sm btn-block btn-outline-dark" style={{ minWidth: '120px' }} to='' onClick={(ev) => {
+                                handleClickOpen(ev);
+                                // checkPrice(ev, ord.id)
+                              }
+                              } >
                                 Đặt lại đơn
                               </Link>
+                              <Dialog
+                                open={open}
+                                onClose={handleClose}
+                                aria-labelledby="alert-dialog-title"
+                                aria-describedby="alert-dialog-description"
+                              >
+                                <DialogTitle id="alert-dialog-title">
+                                  Đặt lại đơn
+                                </DialogTitle>
+                                <DialogContent>
+                                  <DialogContentText id="alert-dialog-description">
+                                    Bạn có muốn đặt lại đơn này ? <br /> Giỏ hàng hiện tại của bạn sẽ bị xóa để đặt lại đơn
+                                  </DialogContentText>
+                                </DialogContent>
+                                <DialogActions>
+                                  <Button onClick={handleClose} >Không</Button>
+                                  <Button onClick={(ev) => { reOrderHandle(ev, ord.id) }} autoFocus>
+                                    Có
+                                  </Button>
+                                </DialogActions>
+                              </Dialog>
                               <Dialog
                                 open={open}
                                 onClose={handleClose}

@@ -12205,7 +12205,7 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 
 .page-link:hover {
     z-index: 2;
-    color: #ff6f61;
+    color: #3e3e3e;
     border-color: #e5e5e5
 }
 
@@ -12258,6 +12258,7 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
     white-space: nowrap;
     vertical-align: baseline
 }
+
 
 @media (prefers-reduced-motion:reduce) {
     .badge, .custom-control-label::before, .custom-file-label, .custom-select {
@@ -13767,7 +13768,7 @@ a.bg-dark:focus, a.bg-dark:hover, button.bg-dark:focus, button.bg-dark:hover {
 }
 
 .border-bottom {
-    border-bottom: 1px solid #e5e5e5!important
+    border-bottom: 1px solid #525252!important;
 }
 
 .border-left {

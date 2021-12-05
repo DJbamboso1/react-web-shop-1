@@ -8,16 +8,25 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 export function categoryConfig(categories: CategoryTree[]) {
-
+    // let queryUrl = convertQueryURLToObject()
     console.log('categories: ', categories)
     let objectURL = convertQueryURLToObject()
     let isDropdown: boolean
     // console.log('category: ', objectURL)
     function _onClickHandle(e: React.MouseEvent, id: string) {
         isDropdown = !isDropdown
+        document.querySelectorAll(".nav-link.category-link").forEach(e => {
+            e.classList.remove('active')
+        })
         e.currentTarget.classList.toggle('collapsed')
+        e.currentTarget.classList.toggle('active')
         console.log('id: ', id)
         document.getElementById(`${id}`)?.classList.toggle('show')
+        // if (objectURL.DistributorId) {
+        //     document.querySelectorAll(".nav-link.category-link .colapse").forEach(e => {
+        //         e.classList.remove('active')
+        //     })
+        // }
     }
     // return categories.map(cate => {
     //     return (
@@ -36,7 +45,7 @@ export function categoryConfig(categories: CategoryTree[]) {
                 list.push(
                     <li className="nav-item">
                         {/* Toggle */}
-                        <Link className="nav-link font-size-lg text-reset border-bottom " style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}} data-toggle="collapse" to={changeQueryURL({ ...objectURL, CategoryId: cate.id, SubCategoryId: '', PageNumber: 1 })} onClick={(e) => _onClickHandle(e, cate.name)}>
+                        <Link className="nav-link font-size-lg text-reset border-bottom category-link" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}} data-toggle="collapse" to={changeQueryURL({ ...objectURL, CategoryId: cate.id, SubCategoryId: '', PageNumber: 1 })} onClick={(e) => _onClickHandle(e, cate.name)}>
                             {cate.name}
                             <KeyboardArrowDownIcon/>
                         </Link>
