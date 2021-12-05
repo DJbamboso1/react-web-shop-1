@@ -5,6 +5,10 @@ import { Link } from 'react-router-dom'
 function Header(props: any) {     
     // console.log(dropdown)
     
+    function _handleMenuToggle(ev: React.MouseEvent) {
+        ev.preventDefault()
+        document.querySelector('.container #topbarCollapse')?.classList.toggle('show')
+    }
 
     return (
         <div className="navbar navbar-topbar navbar-expand-xl navbar-light bg-light">
@@ -14,7 +18,7 @@ function Header(props: any) {
                     {/* <i className="fe fe-truck mr-2" /> <span className="heading-xxxs">Free shipping worldwide</span> */}
                 </div>
                 {/* Toggler */}
-                <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#topbarCollapse" aria-controls="topbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#topbarCollapse" aria-controls="topbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onClick={_handleMenuToggle}>
                     <span className="navbar-toggler-icon" />
                 </button>
                 {/* Collapse */}
