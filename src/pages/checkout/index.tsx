@@ -200,7 +200,7 @@ const CheckoutComponent: React.FC = () => {
                                 {/* Heading */}
                                 <h6 className="mb-7" style={{ fontWeight: 'bold' }}>Hóa đơn chi tiết</h6>
                                 {/* Billing details */}
-                                <div className="row mb-9">
+                                <div className="row">
                                     {/* <TextField className="col-md-6" {...register('firstName', { required: true })} error={error.firstName} required label="First Name" placeholder="First Name" />
                                 <TextField className="col-md-6" {...register('lastName', { required: true })} error={error.lastName} required label="Last Name" placeholder="Last Name" /> */}
                                     <TextField {...register('displayName', { required: true })} error={error.displayName} required label="Họ tên" placeholder="Last Name" disable />
@@ -208,7 +208,7 @@ const CheckoutComponent: React.FC = () => {
                                     <TextField {...register('phoneNumber', { required: true })} error={error.phoneNumber} required label="Số điện thoại" placeholder="Phone" disable />
                                     <TextField {...register('address', { required: true })} error={error.address} required label="Địa chỉ" placeholder="Address"  />
                                 </div>
-                                <h6 className="mb-7">Phương thức thanh toán</h6>
+                                <h6 className="">Phương thức thanh toán</h6>
                                 <div className="table-responsive mb-6">
                                     <table className="table table-bordered table-sm table-hover mb-0">
                                         <tbody>
@@ -343,7 +343,7 @@ const CheckoutComponent: React.FC = () => {
                                 </ul>
                                 {/* Card */}
                                 <div className="card mb-9 bg-light" >
-                                    <div className="card-body" style={{ backgroundColor: 'white' }}>
+                                    <div className="card-body" >
                                         <ul className="list-group list-group-sm list-group-flush-y list-group-flush-x">
                                             {/* <li className="list-group-item d-flex">
                                             <span>Subtotal</span> <span className="ml-auto font-size-sm">{currency(subTotal)}</span>

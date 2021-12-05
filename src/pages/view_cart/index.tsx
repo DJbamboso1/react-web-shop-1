@@ -91,7 +91,7 @@ const ViewCart: React.FC = () => {
                     <div className="col-12 col-md-5 col-lg-4 offset-lg-1">
                         {/* Total */}
                         <div className="card mb-7 bg-light">
-                            <div className="card-body" style={{backgroundColor: 'white'}}>
+                            <div className="card-body" >
                                 <ul className="list-group list-group-sm list-group-flush-y list-group-flush-x">
                                     {/* <li className="list-group-item d-flex">
                                         <span>Subtotal</span> <span className="ml-auto font-size-sm">{currency(subTotal)}</span>
