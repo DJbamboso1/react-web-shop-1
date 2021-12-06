@@ -1,4 +1,4 @@
-import { Categories, CategoryTree, Distributor, Membership, PaginateData, Product, Product01, User } from '@types'
+import { CategoryTree, Membership, PaginateData, Product01, User } from '@types'
 import { Pagination } from 'components/Pagination'
 import { Paginate } from 'components/Paginate'
 import { ProductCard } from 'components/ProductCard'
@@ -11,12 +11,10 @@ import { Filter } from './components'
 // import { fetchProducts } from 'store/sagas.ts/product'
 // import { fetchProductsAction } from 'store/actions/productAction'
 // import { StateStore } from 'store'
-import Flickity from 'flickity'
 import { Slider, SliderDis } from './components'
 import { Breadcrumbs } from 'components/Breadcrumbs'
-import { title } from 'process'
 import cateService from 'services/cateService'
-import { categoryConfig } from './categoryConfig'
+// import { categoryConfig } from './categoryConfig'
 import { useRouteMatch } from 'react-router'
 import { useCart } from 'store/selector'
 import { Link } from 'react-router-dom'
@@ -24,6 +22,7 @@ import distributorService from 'services/distributorService'
 import authService from 'services/authService'
 import { useSelector } from 'react-redux'
 import { StateStore } from 'store'
+import { useTranslate } from 'core'
 
 export type FilterQuery = {
     // page: string,
@@ -38,7 +37,7 @@ export type FilterQuery = {
 
 const ProductPage: React.FC = () => {
     // console.log('LIST: ', list )
-
+    let {t} = useTranslate()
 
     let [data, setData] = useState<PaginateData<Product01>>()
     let [cateData, setCateData] = useState<CategoryTree[]>()
@@ -54,6 +53,7 @@ const ProductPage: React.FC = () => {
     let { user } = useSelector((store: StateStore) => store.auth)
     let [isActive, setIsActive] = useState(true)
     let [memberShipRank, setMemberShipRank] = useState<Membership>()
+    // let [rank, setRank] = useState<>
     useEffect(() => {
         (async () => {
             if (status > -2) {
@@ -93,12 +93,7 @@ const ProductPage: React.FC = () => {
                 setCategory(undefined)
                 setSubCate(undefined)
             }
-            if (user) {
-                if (queryUrl.DistributorId && queryUrl.DistributorId.length > 0) {
-                    let mbs = await memberService.getMembership(user?.actorId, queryUrl.DistributorId)
-                    setMemberShipRank(mbs)
-                }
-            }
+
         })()
         // dispatch(fetchProductsAction(queryUrl))
         // setData(product.products)
@@ -114,19 +109,48 @@ const ProductPage: React.FC = () => {
         })()
     }, [])
 
-    // useEffect(() => {
-    //     (async () => {
-    //         if (user) {
-    //             if (queryUrl.DistributorId && queryUrl.DistributorId.length > 0) {
-    //                 let mbs = await memberService.getMembership(user?.actorId, queryUrl.DistributorId)
-    //                 setMemberShipRank(mbs)
-    //             }
-    //         }
+    useEffect(() => {
+        (async () => {
 
-    //     })()
-    // }, [queryUrl.DistributorId])
+            if (user) {
+                if (queryUrl.DistributorId && queryUrl.DistributorId.length > 0) {
+                    try {
+                        let mbs = await memberService.getMembership(user?.actorId, queryUrl.DistributorId)
+                        if (mbs) {
+                            let rank = await memberService.getMembershipRank(mbs.data.membershipRankId)
+                            mbs.data.membershipRank = rank.data
+                            setMemberShipRank(mbs)
+                        } else {
 
-    // console.log("data: ", data)
+                        }
+                    } catch (err) {
+                        setMemberShipRank({
+                            succeeded: true,
+                            errors: null,
+                            message: '',
+                            data: {
+                                id: '',
+                                retailerId: '',
+                                distributorId: '',
+                                membershipRankId: '',
+                                point: 0,
+                                membershipRank: {
+                                    id: '',
+                                    rankName: 'Chưa xếp hạng'
+                                }
+                            }
+                        })
+                    }
+
+                }
+            }
+
+
+        })()
+    }, [queryUrl.DistributorId])
+
+    console.log("data: ", data)
+    console.log('MEMBERSHIP : ', memberShipRank)
 
     const total = data?.total as number
     const pageSize = data?.pageSize as number
@@ -160,7 +184,7 @@ const ProductPage: React.FC = () => {
                     <div className="col-12 col-md-8 col-lg-9">
                         {
                             isActive === false && <div className="alert">
-                                <strong>Tài khoản chưa được kích hoạt ! Xin hãy cập nhật đầy đủ thông tin</strong>
+                                <strong>{t('Account not activated yet! Please fully update the information')}</strong>
                             </div>
                         }
                         {/* Slider */}
@@ -170,20 +194,24 @@ const ProductPage: React.FC = () => {
                         <div className="row align-items-center mb-7">
                             <div className="col-12 col-md">
                                 {/* Heading */}
-                                {/* <div className='dis-header'>
-                                    <div className='header-header'> */}
-                                {<h3 className="mb-1">{distributor?.data.displayName || 'Sản phẩm'}</h3>}
-                                {/* </div>
-                                    <div className='header-info'>
-                                        {distributor?.data.phoneNumber ? <p>Số điện thoại: {distributor.data.phoneNumber}</p> : ''}
-                                        {distributor?.data.email ? <p>Email: {distributor.data.email}</p> : ''}
-                                        {distributor?.data.address ? <p>Địa chỉ: {distributor.data.address}</p> : ''}
+                                <div className='dis-header'>
+                                        <div className='header-header'>
+                                            {<h3 className="mb-1">{distributor?.data.displayName || 'Sản phẩm'}</h3>}
+                                            {queryUrl.DistributorId && memberShipRank?.data.membershipRank ? <p>{t('Rank')}: <span>{memberShipRank.data.membershipRank.rankName.toUpperCase()}</span></p> : ''}
+                                            {queryUrl.DistributorId && memberShipRank?.data ? <p>{t('Point')}: <span>{memberShipRank.data.point}</span></p> : ''}
+                                        </div>
+                                        <div className='header-info'>
+                                            {queryUrl.DistributorId && distributor?.data.phoneNumber ? <p>{t('Phone')}: {distributor.data.phoneNumber}</p> : ''}
+                                            {queryUrl.DistributorId && distributor?.data.email ? <p>Email: {distributor.data.email}</p> : ''}
+                                            {queryUrl.DistributorId && distributor?.data.address ? <p>{t('Address')}: {distributor.data.address}</p> : ''}
+                                        </div>
                                     </div>
-                                </div> */}
+                                
+
                                 {/* Breadcrumb */}
                                 <Breadcrumbs list={[
                                     {
-                                        title: 'Trang chủ',
+                                        title: t('Home'),
                                         link: '/'
                                     },
 
@@ -277,7 +305,7 @@ const ProductPage: React.FC = () => {
                         </div> */}
                         {/* Products */}
                         {
-                            data && (data.data.length < 1 && <h5 className='error-text'>Empty products</h5>)
+                            data && (data.data.length < 1 && <h5 className='error-text'>{t('Empty products')}</h5>)
                         }
                         <div className="row">
                             {

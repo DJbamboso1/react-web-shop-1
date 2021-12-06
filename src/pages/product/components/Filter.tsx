@@ -8,13 +8,14 @@ import { Categories, Distributor, PaginateData, Product, Product01, User } from 
 import { Link } from "react-router-dom"
 import authService from "services/authService"
 import distributorService from "services/distributorService"
+import { useTranslate } from "core"
 
 
 export const Filter: React.FC<{ cateData: any }> = ({ cateData }) => {
     // console.log('DISTRIBUTORRRRRRRRR: ', cateDisData)
     let objectURL = convertQueryURLToObject()
     let [cateDisData, setCateDisData] = useState<Distributor<User['data']>>()
-
+    let {t} = useTranslate()
 
     useEffect(() => {
         (async () => {
@@ -39,7 +40,7 @@ export const Filter: React.FC<{ cateData: any }> = ({ cateData }) => {
         <div className="col-12 col-md-4 col-lg-3">
             {/* Filters */}
             <div className='cateScroll'>
-                <h4 className='border-bottom' style={{ padding: 10, textAlign: 'center', fontWeight: 'bold', fontSize: '15pt' }}>Ngành hàng</h4>
+                <h4 className='border-bottom' style={{ padding: 25, textAlign: 'center', fontWeight: 'bold', fontSize: '15pt' }}>{t('Categories')}</h4>
                 <form className="mb-10 mb-md-0 ">
                     <ul className="nav nav-vertical" id="filterNav">
                         {cateData && categoryConfig(cateData)} {/* : <Skeleton variant="rectangular" height={600} /> */}
@@ -49,7 +50,7 @@ export const Filter: React.FC<{ cateData: any }> = ({ cateData }) => {
             {
                 !objectURL.DistributorId &&
                 <div className='cateScroll'>
-                    <h4 className='border-bottom' style={{ padding: '10px 10px 10px 10px', textAlign: 'center', fontWeight: 'bold', fontSize: '15pt' }}>Nhà phân phối</h4>
+                    <h4 className='border-bottom' style={{ padding: 25, textAlign: 'center', fontWeight: 'bold', fontSize: '15pt' }}>{t('Distributors')}</h4>
                     <form className="mb-10 mb-md-0 ">
                         <ul className="nav nav-vertical" id="filterNav">
                             {cateDisData?.data ? cateDisData.data.map(disData => {

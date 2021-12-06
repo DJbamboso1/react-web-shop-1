@@ -71,6 +71,8 @@ export const calculateTotal = ( product: Product01, num: number ) => {
     return total
 }
 
+
+
 export const getPricePerPro = ( product: Product01, num: number ) => {
     let total = 0
     if(product.listPrice && product.listPrice[0]) {

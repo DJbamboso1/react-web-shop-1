@@ -13,7 +13,7 @@ const MainLayout: React.FC = ({ children }) => {
             e.setAttribute("aria-expaned", 'true')
         })
         document.querySelectorAll(".dropdown-menu").forEach(e => {
-            e.classList.add('show') 
+            e.classList.add('show')
         })
 
     };
@@ -45,13 +45,28 @@ const MainLayout: React.FC = ({ children }) => {
 
     return (
         <>
-            <div id='header' style={{position: 'fixed' , width: '100%', zIndex: 1000 }}>
+            <div id='header' style={{ position: 'fixed', width: '100%', zIndex: 1000 }}>
                 <Header hoverEvent={hoverEvent} mouseLeaveEvent={mouseLeaveEvent} />
                 <Navbar hoverEvent={hoverEvent} mouseLeaveEvent={mouseLeaveEvent} />
+
                 {/* <Header  />
                 <Navbar /> */}
             </div>
-            <div style={{ paddingTop: '150px' }}>
+            <div style={{ paddingTop: '130px' }}>
+                <div className="py-3 bg-dark bg-pattern mb-4">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-12">
+                                {/* Text */}
+                                <div className="text-center text-white">
+                                    <span className="heading-xxs letter-spacing-xl" style={{visibility: 'hidden'}}>
+                                        ⚡️ Happy Shopping ⚡️
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 {children}
             </div>
 

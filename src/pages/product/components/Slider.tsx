@@ -44,6 +44,7 @@ export const Slider: React.FC<SliderProp> = ({ ...ref }) => {
                             pageDots: true,
                             autoPlay: true,
                             wrapAround: true,
+                            prevNextButtons: false,
                         }}
                     // elementType={'div'} // default 'div'
                     // disableImagesLoaded={false} // default false

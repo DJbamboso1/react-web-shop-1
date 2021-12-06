@@ -6,17 +6,19 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addToCart } from 'store/actions/cartAction'
 import { Skeleton } from '@mui/material'
 import { StateStore } from 'store'
+import { useTranslate } from 'core'
 
 // export const ProductCard: React.FC<Product> = ({ name, price, real_price, slug, thumbnail_url }) => {
 export const ProductCard: React.FC<{ product?: Product01, isActive?: boolean }> = ({ product, isActive }) => {
     const dispatch = useDispatch()
     let { login } = useSelector((store: StateStore) => store.auth)
+    let { t } = useTranslate() 
     // console.log(product.listPrice)
     // console.log('AAAAAAAAAAAAAAAAAAAAAA: ', isActive)
     return (
-        <div className="col-6 col-md-4">
+        <div className="col-6 col-md-4 product-item">
             {/* Card */}
-            <div className="card mb-7">
+            <div className="card">
                 {/* Badge */}
                 {/* <div className="badge badge-white card-badge card-badge-left text-uppercase">
                     {product?.status === 0 ? <span style={{ color: 'red' }}>Ngừng bán</span> : product?.status === 1 ? <span style={{ color: '#6fbfc2' }}>Còn hàng</span> : product?.status === 2 && <span style={{ color: 'orange' }}>Hết hàng</span>}
@@ -83,7 +85,7 @@ export const ProductCard: React.FC<{ product?: Product01, isActive?: boolean }> 
                         <a className="text-muted" href="shop.html">{ }</a>
                     </div> */}
                     {/* Title */}
-                    <div className="font-weight-bold">
+                    <div className="font-weight-bold text-muted">
                         {
                             product ? (
                                 <Link className="text-body" to={`/product/${product?.id}`}>
@@ -95,13 +97,13 @@ export const ProductCard: React.FC<{ product?: Product01, isActive?: boolean }> 
                         }
                     </div>
                     {/* Price */}
-                    <div className="font-weight-bold text-muted">
+                    <div className="font-weight-bold " style={{fontSize: '17px'}}>
                         {/* {price?.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })} */}
                         {/* <h6 style={{color: 'red'}}>Price ?</h6> */}
                         {
                             product && product.listPrice && ((product.listPrice.length > 0) ?
                                 `${product.listPrice.length > 1 ? (product.listPrice[product.listPrice.length - 1].value.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) + ' - ') : ''}${product.listPrice[0].value.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}  `
-                                : <h6 style={{ color: 'red' }}>Chưa có giá</h6>)
+                                : <h6 style={{ color: 'red' }}>{t('No price')}</h6>)
 
                         }
                     </div>

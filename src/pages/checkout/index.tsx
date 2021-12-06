@@ -1,10 +1,10 @@
-import { Checkin, Checkout, Payment, User } from "@types"
+import { Checkin, Checkout, Membership, Payment, User } from "@types"
 import { CartItem, ProductItem } from "components"
 import { history, useForm } from "core"
 import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Redirect } from "react-router-dom"
-import { getSubtotal, getTaxPrice, useCart, useCartNumber, useTotal } from "store/selector"
+import { calculateTotal, useCart, useCartNumber, useTotal } from "store/selector"
 import { currency } from "utils"
 import { TextField } from "./components"
 import { paymentService } from '../../services/paymentService'
@@ -16,39 +16,35 @@ import authService from "services/authService"
 import { Breadcrumbs } from "components/Breadcrumbs"
 import { Box } from "@mui/system"
 import LoadingPage from "components/LoadingPage"
+import { memberService } from "services/memberService"
+import distributorService from "services/distributorService"
+// import { calculateTotal, getPricePerPro } from 'store/selector/cartSelector'
 
 type Form = User['data']
 
 let url = process.env.REACT_APP_LINK_URL || ''
 
 const CheckoutComponent: React.FC = () => {
-
     let dispatch = useDispatch()
-
     let { user } = useSelector((store: StateStore) => store.auth)
     const { list } = useCart()
-
-    const total = useTotal()
-
+    let total = useTotal()
     const cartNumber = useCartNumber()
     // const [shippingPrice, setShippingPrice] = useState(35000)
-
     const { error, form, handleSubmit, register, setForm } = useForm<Form>(user)
-
     const [paymentMethod, setPaymentMethod] = useState<Payment>()
-
     const [payment, setPayment] = useState('')
-
     const [result, setResult] = useState<Checkout>()
-
     const [actor, setActor] = useState('')
     let [isActive, setIsActive] = useState(true)
     let [loading, setLoading] = useState(false)
     let [open, setOpen] = useState(false);
+    let list1: Membership[] = [];
+    let [complexList, setComplexList] = useState<Membership[]>()
     useEffect(() => {
-        
+
         (async () => {
-            
+
             if (user) {
                 setLoading(true)
                 let payment = await paymentService.getAllPayments()
@@ -72,6 +68,35 @@ const CheckoutComponent: React.FC = () => {
                 setIsActive(retailer.data.isActive)
             }
             setLoading(false)
+        })()
+    }, [])
+
+    useEffect(() => {
+        (async () => {
+            if (user) {
+                console.log('A')
+                for (let i in list) {
+                    let membership = await memberService.getMembership(user.actorId, list[i].product.distrubutorId || '')
+                    console.log('B: ', membership)
+                    if (membership.data) {
+                        let dis = await distributorService.getDistributorById(membership.data.distributorId)
+                        console.log('C: ', dis)
+                        if (dis) {
+                            let user = await authService.getInfo(dis.data.userId)
+                            console.log('D: ', user)
+                            if (user) {
+                                console.log('E')
+                                membership.data.distributor = user.data
+                            }
+                        }
+                        membership.data.product = list[i].product
+                        membership.data.num = list[i].num
+                    }
+                    list1.push(membership)
+                }
+                // console.log("WATCH THIS F LIST: ", list1)
+                setComplexList(list1)
+            }
         })()
     }, [])
 
@@ -163,6 +188,7 @@ const CheckoutComponent: React.FC = () => {
         return <Redirect to='/' />
     }
 
+    console.log('List: ', list)
     return (
         <section className="pt-7 pb-12">
             {
@@ -206,7 +232,7 @@ const CheckoutComponent: React.FC = () => {
                                     <TextField {...register('displayName', { required: true })} error={error.displayName} required label="Họ tên" placeholder="Last Name" disable />
                                     <TextField {...register('email', { required: true })} error={error.email} required label="Email" placeholder="Email" disable />
                                     <TextField {...register('phoneNumber', { required: true })} error={error.phoneNumber} required label="Số điện thoại" placeholder="Phone" disable />
-                                    <TextField {...register('address', { required: true })} error={error.address} required label="Địa chỉ" placeholder="Address"  />
+                                    <TextField {...register('address', { required: true })} error={error.address} required label="Địa chỉ" placeholder="Address" />
                                 </div>
                                 <h6 className="">Phương thức thanh toán</h6>
                                 <div className="table-responsive mb-6">
@@ -345,6 +371,18 @@ const CheckoutComponent: React.FC = () => {
                                 <div className="card mb-9 bg-light" >
                                     <div className="card-body" >
                                         <ul className="list-group list-group-sm list-group-flush-y list-group-flush-x">
+                                            {
+                                                complexList && complexList.map((i) => {
+                                                    if (i.data && i.data.distributor && i.data.product && i.data.num && i.data.discountRate) {
+                                                        return (
+                                                            <li className="list-group-item d-flex">
+                                                                <span>{i.data.distributor.displayName}</span> <span className="ml-auto font-size-sm">{currency(calculateTotal(i.data.product, i.data.num) - calculateTotal(i.data.product, i.data.num) * i.data.discountRate / 100 - calculateTotal(i.data.product, i.data.num))}</span>
+                                                            </li>
+                                                        )
+                                                    }
+
+                                                })
+                                            }
                                             {/* <li className="list-group-item d-flex">
                                             <span>Subtotal</span> <span className="ml-auto font-size-sm">{currency(subTotal)}</span>
                                         </li> */}
@@ -355,7 +393,19 @@ const CheckoutComponent: React.FC = () => {
                                             <span>Shipping</span> <span className="ml-auto font-size-sm">{currency(shippingPrice)}</span>
                                         </li> */}
                                             <li className="list-group-item d-flex font-size-lg font-weight-bold">
-                                                <span>Tổng:</span> <span className="ml-auto">{currency(total)}</span>
+                                                <span>Tổng:</span> <span className="ml-auto">
+                                                    {
+                                                        complexList && complexList.map((i) => {
+                                                            if (i.data && i.data.distributor && i.data.product && i.data.num && i.data.discountRate) {
+                                                                total += (calculateTotal(i.data.product, i.data.num) - calculateTotal(i.data.product, i.data.num) * i.data.discountRate / 100 - calculateTotal(i.data.product, i.data.num))
+                                                            }
+
+                                                        })
+
+                                                    }
+                                                    {
+                                                        currency(total)
+                                                    }</span>
                                             </li>
                                         </ul>
                                     </div>
@@ -373,7 +423,7 @@ const CheckoutComponent: React.FC = () => {
                             </div>
                         </div>
                     </form>
-                </div > : <LoadingPage/>
+                </div > : <LoadingPage />
             }
         </section >
     )

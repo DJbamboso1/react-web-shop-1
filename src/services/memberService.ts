@@ -1,4 +1,4 @@
-import { Membership } from "../@types"
+import { Membership, MembershipRank } from "../@types"
 import { http } from "../core"
 let API = process.env.REACT_APP_API_KEY_SHOP || ''
 
@@ -8,4 +8,8 @@ export const memberService = {
         return http.get<Membership>(url)
     },
 
+    async getMembershipRank(id: string) {
+        let url = API + `/membership-rank/${id}`
+        return http.get<MembershipRank>(url)
+    }
 }

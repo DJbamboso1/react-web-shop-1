@@ -1,23 +1,34 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { useCart, useTotal, getTaxPrice, getSubtotal } from '../../store/selector'
+import { useCart, useTotal, getSubtotal } from '../../store/selector'
 import { ProductItem } from '../../components'
 import { currency } from '../../utils/currency'
 import { Redirect } from 'react-router-dom'
 import { Breadcrumbs } from 'components/Breadcrumbs'
 import { StateStore } from 'store'
 import authService from 'services/authService'
+import { Membership } from '@types'
+import { memberService } from 'services/memberService'
+import distributorService from 'services/distributorService'
+import { calculateTotal } from 'store/selector/cartSelector'
+import { useTranslate } from 'core'
+
+type State = {
+    list: Membership[]
+}
 
 const ViewCart: React.FC = () => {
-
+    let {t} = useTranslate()
     let { list } = useCart()
     let total = useTotal()
     // let taxPrice = useSelector(getTaxPrice)
     const subTotal = useSelector(getSubtotal)
     let { user } = useSelector((store: StateStore) => store.auth)
-
+    let list1: Membership[] = []
     let [isActive, setIsActive] = useState(true)
+    let [complexList, setComplexList] = useState<Membership[]>()
+    let [memberShipRank, setMemberShipRank] = useState<Membership>()
     useEffect(() => {
         (async () => {
             let retailer = await authService.getRetailerById(user?.actorId || '')
@@ -26,10 +37,41 @@ const ViewCart: React.FC = () => {
             }
         })()
     }, [])
-    
+
+    useEffect(() => {
+        (async () => {
+            if (user) {
+                console.log('A')
+                for (let i in list) {
+                    let membership = await memberService.getMembership(user.actorId, list[i].product.distrubutorId || '')
+                    console.log('B: ', membership)
+                    if (membership.data) {
+                        let dis = await distributorService.getDistributorById(membership.data.distributorId)
+                        console.log('C: ', dis)
+                        if (dis) {
+                            let user = await authService.getInfo(dis.data.userId)
+                            console.log('D: ', user)
+                            if (user) {
+                                console.log('E')
+                                membership.data.distributor = user.data
+                            }
+                        }
+                        membership.data.product = list[i].product
+                        membership.data.num = list[i].num
+                    }
+                    list1.push(membership)
+                }
+                // console.log("WATCH THIS F LIST: ", list1)
+                setComplexList(list1)
+            }
+        })()
+    }, [])
+
     if (list.length === 0 || isActive === false) {
         return <Redirect to="/" />
     }
+
+    console.log("WATCH THIS F LIST: ", complexList)
 
     return (
         <section className="pt-7 pb-12">
@@ -93,6 +135,18 @@ const ViewCart: React.FC = () => {
                         <div className="card mb-7 bg-light">
                             <div className="card-body" >
                                 <ul className="list-group list-group-sm list-group-flush-y list-group-flush-x">
+                                    {
+                                        complexList && complexList.map((i) => {
+                                            if (i.data && i.data.distributor && i.data.product && i.data.num && i.data.discountRate) {
+                                                return (
+                                                    <li className="list-group-item d-flex">
+                                                        <span>{i.data.distributor.displayName} {i.data.discountRate > 0 && `(${t('Sale')} ${i.data.discountRate}%)`}</span> <span className="ml-auto font-size-sm">{currency(calculateTotal(i.data.product, i.data.num) - calculateTotal(i.data.product, i.data.num) * i.data.discountRate / 100 - calculateTotal(i.data.product, i.data.num))}</span>
+                                                    </li>
+                                                )
+                                            }
+
+                                        })
+                                    }
                                     {/* <li className="list-group-item d-flex">
                                         <span>Subtotal</span> <span className="ml-auto font-size-sm">{currency(subTotal)}</span>
                                     </li> */}
@@ -100,7 +154,20 @@ const ViewCart: React.FC = () => {
                                         <span>Tax</span> <span className="ml-auto font-size-sm">{currency(taxPrice)}</span>
                                     </li> */}
                                     <li className="list-group-item d-flex font-size-lg font-weight-bold">
-                                        <span>Tổng: </span> <span className="ml-auto font-size-sm">{currency(total)}</span>
+                                        <span>Tổng: </span> <span className="ml-auto font-size-sm">
+                                            {
+                                                complexList && complexList.map((i) => {
+                                                    if (i.data && i.data.distributor && i.data.product && i.data.num && i.data.discountRate) {
+                                                        total += (calculateTotal(i.data.product, i.data.num) - calculateTotal(i.data.product, i.data.num) * i.data.discountRate / 100 - calculateTotal(i.data.product, i.data.num))
+                                                    }
+
+                                                })
+
+                                            }
+                                            {
+                                                currency(total)
+                                            }
+                                        </span>
                                     </li>
                                     {/* <li className="list-group-item font-size-sm text-center text-gray-500">
                                         Shipping cost calculated at Checkout *

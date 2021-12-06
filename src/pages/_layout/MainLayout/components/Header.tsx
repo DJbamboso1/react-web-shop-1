@@ -1,13 +1,25 @@
 import React from 'react'
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslate, translate } from "../../../../core/translate"
+import FacebookIcon from '@mui/icons-material/Facebook';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import InstagramIcon from '@mui/icons-material/Instagram';
 
-function Header(props: any) {     
+function Header(props: any) {
     // console.log(dropdown)
-    
+
+    let { t, selectLang, language } = useTranslate()
+    let lang = localStorage.getItem('lang')
+    console.log(selectLang)
     function _handleMenuToggle(ev: React.MouseEvent) {
         ev.preventDefault()
         document.querySelector('.container #topbarCollapse')?.classList.toggle('show')
+    }
+
+    function chagneLang(ev: any) {
+        let value = ev.currentTarget.getAttribute('data-value')
+        selectLang(value)
     }
 
     return (
@@ -15,7 +27,7 @@ function Header(props: any) {
             <div className="container">
                 {/* Promo */}
                 <div className="mr-xl-8">
-                    {/* <i className="fe fe-truck mr-2" /> <span className="heading-xxxs">Free shipping worldwide</span> */}
+                    <i className="fe fe-truck mr-2" /> <span className="heading-xxxs">Shipping worldwide</span>
                 </div>
                 {/* Toggler */}
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#topbarCollapse" aria-controls="topbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onClick={_handleMenuToggle}>
@@ -26,12 +38,12 @@ function Header(props: any) {
                     {/* Nav */}
                     <ul className="nav nav-divided navbar-nav mr-auto">
                         <li className="nav-item dropdown" onMouseOver={props.hoverEvent} onMouseLeave={props.mouseLeaveEvent}>
-                            {/* Toggle */}
-                            <Link className="nav-link dropdown-toggle" data-toggle="dropdown" to="#">
-                                <img className="mb-1 mr-1" src="/img/flags/usa.svg" alt="..." /> United States
+                            
+                            <Link className="nav-link" data-toggle="dropdown" to="/">
+                                <img className="mb-1 mr-1" src="/img/icons/vietnam.png" alt="..." style={{width: '20px'}}/> Việt Nam
                             </Link>
-                            {/* Menu */}
-                            <div className="dropdown-menu minw-0" >
+                            
+                            {/* <div className="dropdown-menu minw-0" >
                                 <a className="dropdown-item" href="#">
                                     <img className="mb-1 mr-2" src="/img/flags/usa.svg" alt="USA" />United States
                                 </a>
@@ -41,63 +53,77 @@ function Header(props: any) {
                                 <a className="dropdown-item" href="#">
                                     <img className="mb-1 mr-2" src="/img/flags/germany.svg" alt="Germany" />Germany
                                 </a>
-                            </div>
+                            </div> */}
                         </li>
                         <li className="nav-item dropdown" onMouseOver={props.hoverEvent} onMouseLeave={props.mouseLeaveEvent}>
-                            {/* Toggle */}
-                            <a className="nav-link dropdown-toggle" data-toggle="dropdown" href="#">USD</a>
-                            {/* Menu */}
-                            <div className="dropdown-menu minw-0">
+                            
+                            <a className="nav-link " data-toggle="dropdown" href="#">VNĐ</a>
+                            
+                            {/* <div className="dropdown-menu minw-0">
                                 <a className="dropdown-item" href="#!">USD</a>
-                                <a className="dropdown-item" href="#!">EUR</a>
-                            </div>
+                                <a className="dropdown-item" href="#!">VNĐ</a>
+                            </div> */}
                         </li>
                         <li className="nav-item dropdown" onMouseOver={props.hoverEvent} onMouseLeave={props.mouseLeaveEvent}>
                             {/* Toggle */}
-                            <a className="nav-link dropdown-toggle" data-toggle="dropdown" href="#">English</a>
+                            <a className="nav-link dropdown-toggle" data-toggle="dropdown" href="#">{lang === 'en' ? 'English' : 'Tiếng Việt'}</a>
                             {/* Menu */}
                             <div className="dropdown-menu minw-0" >
-                                <a className="dropdown-item" href="#">English</a>
-                                <a className="dropdown-item" href="#">French</a>
-                                <a className="dropdown-item" href="#">German</a>
+                                <a className="dropdown-item" href="#" onClick={chagneLang} data-value='en'>English</a>
+                                <a className="dropdown-item" href="#"onClick={chagneLang} data-value='vn'>Tiếng Việt</a>
+                                {/* <a className="dropdown-item" href="#">German</a> */}
                             </div>
+                            
+                            {/* <div>{t('Hello')}</div> */}
+                        </li>
+                    </ul>
+                    {/* <select name="" id=""
+                        onChange={chagneLang}
+                        defaultValue={language}
+                    >
+                        <option value="en">English</option>
+                        <option value="vn">Tiếng Việt</option>
+                    </select>
+                    <div>{t('Hello')}</div> */}
+                    {/* Nav */}
+                    <ul className="nav navbar-nav mr-8">
+                        <li className="nav-item">
+                            <a className="nav-link" href="/" onClick={(ev) => {ev.preventDefault()}}>Shipping</a>
+                        </li>
+                        <li className="nav-item">
+                            <a className="nav-link" href="/" onClick={(ev) => {ev.preventDefault()}}>FAQ</a>
+                        </li>
+                        <li className="nav-item">
+                            <a className="nav-link" href="/" onClick={(ev) => {ev.preventDefault()}}>Contact</a>
                         </li>
                     </ul>
                     {/* Nav */}
-                    {/* <ul className="nav navbar-nav mr-8">
+                    <ul className="nav navbar-nav flex-row">
                         <li className="nav-item">
-                            <a className="nav-link" href="./shipping-and-returns.html">Shipping</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="./faq.html">FAQ</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="./contact-us.html">Contact</a>
-                        </li>
-                    </ul> */}
-                    {/* Nav */}
-                    {/* <ul className="nav navbar-nav flex-row">
-                        <li className="nav-item">
-                            <a className="nav-link text-gray-350" href="#!">
-                                <i className="fab fa-facebook-f" />
+                            <a className="nav-link text-gray-350" href="/" onClick={(ev) => {ev.preventDefault()}}>
+                                {/* <i className="fa fa-facebook" /> */}
+                                <FacebookIcon/>
                             </a>
                         </li>
                         <li className="nav-item ml-xl-n4">
-                            <a className="nav-link text-gray-350" href="#!">
-                                <i className="fab fa-twitter" />
+                            <a className="nav-link text-gray-350" href="/" onClick={(ev) => {ev.preventDefault()}}>
+                                {/* <i className="fab fa-twitter" /> */}
+                                <TwitterIcon/>
                             </a>
                         </li>
                         <li className="nav-item ml-xl-n4">
-                            <a className="nav-link text-gray-350" href="#!">
-                                <i className="fab fa-instagram" />
+                            <a className="nav-link text-gray-350" href="/" onClick={(ev) => {ev.preventDefault()}}>
+                                {/* <i className="fab fa-instagram" /> */}
+                                <InstagramIcon/>
                             </a>
                         </li>
-                        <li className="nav-item ml-xl-n4">
+                        {/* <li className="nav-item ml-xl-n4">
                             <a className="nav-link text-gray-350" href="#!">
                                 <i className="fab fa-medium" />
+                                
                             </a>
-                        </li>
-                    </ul> */}
+                        </li> */}
+                    </ul>
                 </div>
             </div>
         </div>

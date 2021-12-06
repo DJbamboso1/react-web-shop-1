@@ -16,12 +16,13 @@ import { StateStore } from 'store'
 import authService from 'services/authService'
 import { RelatedProducts } from './components/RelatedProducts'
 import Page404 from 'pages/404'
+import { useTranslate } from 'core'
 
 const ProductDetail: React.FC = () => {
 
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
-
+    let {t} = useTranslate()
     let history = useHistory()
 
     let num = useCartNumber()
@@ -166,7 +167,7 @@ const ProductDetail: React.FC = () => {
                                                 </div>
                                                 {/* Heading */}
                                                 <h3 className="mb-2">{data.data.name}</h3>
-                                                <h6 className="mb-2">Nhà phân phối: {data.data.distributor}</h6>
+                                                <h6 className="mb-2">{t('Distributor')}: {data.data.distributor}</h6>
                                                 {/* Price */}
                                                 <div className="mb-7">
                                                     {/* <span className="font-size-lg font-weight-bold text-gray-350 text-decoration-line-through">$115.00</span> */}
@@ -174,19 +175,19 @@ const ProductDetail: React.FC = () => {
                                                     {
                                                         data && data.data.listPrice && ((data.data.listPrice.length > 0) ?
                                                             `${data.data.listPrice.length > 1 ? currency(data.data.listPrice[data.data.listPrice.length - 1].value) + ' - ' : ''}${currency(data.data.listPrice[0].value)}  `
-                                                            : <h6 style={{ color: 'red' }}>No price</h6>)
+                                                            : <h6 style={{ color: 'red' }}>{t('No price')}</h6>)
                                                     }
                                                 </div>
 
                                                 <table style={{ overflowX: 'auto' }}>
                                                     <tr>
-                                                        <th>Số lượng</th>
-                                                        <th>Giá</th>
+                                                        <th>{t('Quantity')}</th>
+                                                        <th>{t('Price')}</th>
                                                     </tr>
                                                     {data.data.listPrice && data.data.listPrice.map(price => {
                                                         return (
                                                             <tr>
-                                                                <th>{`>= ${price.volume} món`}</th>
+                                                                <th>{`>= ${price.volume} ${t('items')}`}</th>
                                                                 <th> {currency(price.value)}</th>
                                                             </tr>
                                                         )
@@ -210,7 +211,7 @@ const ProductDetail: React.FC = () => {
                                                                 {/* Submit */}
                                                                 {
                                                                     <button disabled={isActive === true ? (data && data.data.status === 1 ? false : true) : true} type="submit" className="btn btn-block btn-dark mb-2" onClick={(ev) => { ev.preventDefault(); data && (data.data.listPrice && data.data.listPrice.length > 0) && dispatch(addToCart(data.data)) }}>
-                                                                        Thêm vào giỏ hàng <i className="fe fe-shopping-cart ml-2" />
+                                                                        {t('Add to cart')} <i className="fe fe-shopping-cart ml-2" />
                                                                     </button>
                                                                 }
                                                             </div>
@@ -231,7 +232,7 @@ const ProductDetail: React.FC = () => {
                                     {/* Nav */}
                                     <div className="nav nav-tabs nav-overflow justify-content-start justify-content-md-center border-bottom">
                                         <a className="nav-link active" data-toggle="tab" href="#descriptionTab">
-                                            Description
+                                            {t('Description')}
                                         </a>
                                         {/* <a className="nav-link" data-toggle="tab" href="#sizeTab">
                                     Size &amp; Fit

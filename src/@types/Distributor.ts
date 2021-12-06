@@ -13,3 +13,19 @@ export interface Distributor<T> {
         displayName: string
     }[]
 }
+
+export interface Distributor1<T> {
+    succeeded: true,
+    message: string,
+    errors: string,
+    pageNumber?: number,
+    pageSize?: number,
+    total?: number,
+    data: {
+        id: string,
+        userId: string,
+        isActive: boolean,
+        user?: T,
+        displayName: string
+    }
+}
