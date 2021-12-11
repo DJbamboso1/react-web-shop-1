@@ -7,16 +7,18 @@ import { addToCart } from 'store/actions/cartAction'
 import { Skeleton } from '@mui/material'
 import { StateStore } from 'store'
 import { useTranslate } from 'core'
+import { convertQueryURLToObject, currency, changeQueryURL } from 'utils'
 
 // export const ProductCard: React.FC<Product> = ({ name, price, real_price, slug, thumbnail_url }) => {
 export const ProductCard: React.FC<{ product?: Product01, isActive?: boolean }> = ({ product, isActive }) => {
+    let objectURL = convertQueryURLToObject()
     const dispatch = useDispatch()
     let { login } = useSelector((store: StateStore) => store.auth)
-    let { t } = useTranslate() 
+    let { t } = useTranslate()
     // console.log(product.listPrice)
     // console.log('AAAAAAAAAAAAAAAAAAAAAA: ', isActive)
     return (
-        <div className="col-6 col-md-4 product-item">
+        <div className="col-6 col-md-4 product-item" > {/*style={{ margin: '10px 15px', border: '1px solid rgba(17, 17, 17, .125)' }} */}
             {/* Card */}
             <div className="card">
                 {/* Badge */}
@@ -79,30 +81,31 @@ export const ProductCard: React.FC<{ product?: Product01, isActive?: boolean }> 
                     }
                 </div>
                 {/* Body */}
-                <div className="card-body px-0">
+                <div className="card-body px-0" >{/**style={{display: 'flex', flexDirection: 'column', flexWrap: 'wrap', justifyContent: 'space-between', height: '130px'}} */}
                     {/* Category */}
-                    {/* <div className="font-size-xs">
-                        <a className="text-muted" href="shop.html">{ }</a>
-                    </div> */}
+
                     {/* Title */}
                     <div className="font-weight-bold text-muted">
                         {
                             product ? (
-                                <Link className="text-body" to={`/product/${product?.id}`}>
-                                    {product?.name}
+                                <Link className="text-body text-muted" to={`/product/${product?.id}`} style={{ fontSize: '14px' }}>
+                                    { product?.name.slice(0, 30) + (product?.name.length > 30 ? ' ...' : '')}
                                     {/* ({product && product.listPrice.length > 0 ? product.listPrice[0].volume + ' items' : '0 item'}) */}
                                 </Link>
                             ) : <Skeleton width="100%" height={47} />
 
                         }
                     </div>
+                    <div className="font-size-xs">
+                        <Link className="" style={{ color: 'black', fontWeight:'bold',fontSize: '14px' }} to={changeQueryURL({ ...objectURL, SubCategoryId: '', PageNumber: 1, CategoryId: '', DistributorId: product?.distrubutorId })}>{product?.distributor}</Link>
+                    </div>
                     {/* Price */}
-                    <div className="font-weight-bold " style={{fontSize: '17px'}}>
+                    <div className="" style={{ fontSize: '18px', fontWeight: 'bold' }}>
                         {/* {price?.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })} */}
                         {/* <h6 style={{color: 'red'}}>Price ?</h6> */}
                         {
                             product && product.listPrice && ((product.listPrice.length > 0) ?
-                                `${product.listPrice.length > 1 ? (product.listPrice[product.listPrice.length - 1].value.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) + ' - ') : ''}${product.listPrice[0].value.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}  `
+                                `${product.listPrice.length > 1 ? (currency(product.listPrice[product.listPrice.length - 1].value) + ' - ') : ''}${currency(product.listPrice[0].value)}`
                                 : <h6 style={{ color: 'red' }}>{t('No price')}</h6>)
 
                         }

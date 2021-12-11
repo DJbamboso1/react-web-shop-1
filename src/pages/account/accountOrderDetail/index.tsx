@@ -1,11 +1,12 @@
 import { Order1, OrderDetail } from '@types'
 import { Breadcrumbs } from 'components/Breadcrumbs'
 import LoadingPage from 'components/LoadingPage'
+import { useTranslate } from 'core'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { Link } from 'react-router-dom'
 import { orderService } from 'services/orderService'
-import { getSubtotal, useCartNumber, useTotal } from 'store/selector'
+import { calculateTotal, getSubtotal, useCartNumber, useTotal } from 'store/selector'
 import { currency } from 'utils'
 
 type FilterQuery = {
@@ -22,6 +23,7 @@ type StateProps = {
 }
 
 const AccountOrderDetail: React.FC = () => {
+    let {t} = useTranslate()
     let { slug } = useParams<{ slug: string }>()
     // console.log(slug)
     let [orderDetail, setOrderDetail] = useState<OrderDetail>()
@@ -31,7 +33,7 @@ const AccountOrderDetail: React.FC = () => {
 
     })
     let [order, setOrder] = useState<Order1['data']>()
-
+    let [defaultTotalPrice, setDefaultTotalPrice] = useState(0)
     // let Subtotal = useTotal()
     useEffect(() => {
         (async () => {
@@ -41,7 +43,16 @@ const AccountOrderDetail: React.FC = () => {
             let ordDetail = await orderService.getOrderDetail(obj)
             // setOrderDetail(ordDetail)
             let ord = await orderService.getOrderById(slug)
+            for (let i in ordDetail.data) {
+                ordDetail.data[i].defaultPrice = calculateTotal(ordDetail.data[i].product, ordDetail.data[i].quantity)
+                // defaultTotalPrice += ordDetail.data[i].defaultPrice
+            }
             setOrder(ord.data)
+            let total = 0
+            for(let i in ordDetail.data) {
+                total += ordDetail.data[i].defaultPrice
+            }
+            setDefaultTotalPrice(total)
             setState({
                 loading: false,
                 orderDetail: ordDetail.data
@@ -49,10 +60,12 @@ const AccountOrderDetail: React.FC = () => {
             // console.log(state.orderDetail)
         })()
     }, [])
-
+    console.log('ORDER DETAIL: ', state.orderDetail)
+    console.log('total: ', defaultTotalPrice)
     if (state.loading) {
         return <LoadingPage />
     }
+
     return (
         <div>
             <Breadcrumbs list={[
@@ -151,8 +164,11 @@ const AccountOrderDetail: React.FC = () => {
                                         <div className="col">
                                             {/* Title */}
                                             <p className="mb-4 font-size-sm font-weight-bold">
-                                                <Link className="text-body" to={`/${ordDetail.product.id}`}>{ordDetail.product.name}</Link> <br />
-                                                <span className="text-muted">{currency(ordDetail.orderPrice)}</span>
+                                                <Link className="text-body " to={`/${ordDetail.product.id}`}>{ordDetail.product.name}</Link> <br />
+                                                {
+                                                    ordDetail.orderPrice !== ordDetail.defaultPrice && <span className="font-size-lg font-weight-bold text-gray-350 text-decoration-line-through" style={{fontWeight: 'bold', color: ''}}>{currency(ordDetail.defaultPrice)} </span>
+                                                }
+                                                <span className="font-size-lg" style={{fontWeight: 'bold', color:`${ordDetail.orderPrice !== ordDetail.defaultPrice ? 'red' : 'black'}`}}> {currency(ordDetail.orderPrice)}</span>
                                             </p>
                                             {/* Text */}
                                             <div className="font-size-sm text-muted">
@@ -172,7 +188,7 @@ const AccountOrderDetail: React.FC = () => {
                 order && <div className="card card-lg mb-5 border">
                     <div className="card-body">
                         {/* Heading */}
-                        <h6 className="mb-7">Tổng đơn</h6>
+                        <h6 className="mb-7">{t('Total order')}</h6>
                         {/* List group */}
                         <ul className="list-group list-group-sm list-group-flush-y list-group-flush-x">
                             {/* <li className="list-group-item d-flex">
@@ -188,8 +204,14 @@ const AccountOrderDetail: React.FC = () => {
                             <span className="ml-auto">$8.00</span>
                         </li> */}
                             <li className="list-group-item d-flex font-size-lg font-weight-bold">
-                                <span>Giá: </span>
-                                <span className="ml-auto">{currency(order.orderCost)}</span>
+                                <span>{t('Price')}: </span>
+                                <span className="ml-auto" style={{ fontWeight: 'bold' }}>{
+                                currency(defaultTotalPrice)
+                                }</span>
+                            </li>
+                            <li className="list-group-item d-flex font-size-lg font-weight-bold">
+                                <span>{t('Final Price')}: </span>
+                                <span className="ml-auto" style={{ fontWeight: 'bold' }}>{currency(order.orderCost)}</span>
                             </li>
                         </ul>
                     </div>

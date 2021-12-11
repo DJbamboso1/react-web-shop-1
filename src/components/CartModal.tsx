@@ -10,11 +10,12 @@ import { useHistory } from 'react-router-dom'
 import { currency } from 'utils'
 import { getPricePerPro } from 'store/selector'
 import { SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG } from 'constants'
+import { useTranslate } from 'core'
 
 
 export const CartModal: React.FC = () => {
     let { openCart, list } = useSelector((store: StateStore) => store.cart)
-
+    let {t} = useTranslate()
     let num = useCartNumber()
     const dispatch = useDispatch()
     const history = useHistory()
@@ -50,7 +51,7 @@ export const CartModal: React.FC = () => {
                         </button>
                         {/* Header*/}
                         <div className="modal-header line-height-fixed font-size-lg">
-                            <strong className="mx-auto">Giỏ hàng của bạn ({list.length})</strong>
+                            <strong className="mx-auto">{t('Your cart')} ({list.length})</strong>
                         </div>
                         {/* List group */}
                         <ul className="list-group list-group-lg list-group-flush" > {/*style={{overflow: 'auto', height: '55%' }} */}
@@ -64,8 +65,8 @@ export const CartModal: React.FC = () => {
                         </div>
                         {/* Buttons */}
                         <div className="modal-body">
-                            <Link className="btn btn-block btn-dark" to="/checkout" onClick={_preventViewCart}>Tiếp tục thanh toán</Link>
-                            <Link className="btn btn-block btn-outline-dark" to="/view-cart" onClick={_preventViewCart}>Xem chi tiết giỏ hàng</Link>
+                            <Link className="btn btn-block btn-dark" to="/checkout" onClick={_preventViewCart}>{t('Continue checkout')}</Link>
+                            <Link className="btn btn-block btn-outline-dark" to="/view-cart" onClick={_preventViewCart}>{t('View cart detail')}</Link>
                         </div>
                     </div> :
                         <div className="modal-content ">
@@ -75,15 +76,15 @@ export const CartModal: React.FC = () => {
                             </button>
                             {/* Header*/}
                             <div className="modal-header line-height-fixed font-size-lg">
-                                <strong className="mx-auto">Your Cart ({list.length})</strong>
+                                <strong className="mx-auto">{t('Your Cart')} ({list.length})</strong>
                             </div>
                             {/* Body */}
                             <div className="modal-body fldsaex-grow-0 my-auto">
                                 {/* Heading */}
-                                <h6 className="mb-7 text-center">Giỏ hàng đang trống 😞</h6>
+                                <h6 className="mb-7 text-center">{t('Cart is empty')} 😞</h6>
                                 {/* Button */}
                                 <a className="btn btn-block btn-outline-dark" href="/">
-                                    Tiếp tục mua sắm
+                                    {t('Continue shopping')}
                                 </a>
                             </div>
                         </div>
@@ -103,7 +104,7 @@ export const CartItem: React.FC<{
     product: Product01,
     num: number
 }> = ({ num, product }) => {
-
+    let {t} = useTranslate()
     const dispatch = useDispatch()
 
     const _changeNumber = (ev: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,7 +138,7 @@ export const CartItem: React.FC<{
                     {/* Title */}
                     <p className="font-size-sm font-weight-bold mb-6">
                         <Link className="text-body" to={`product/${id}`}>{name} </Link> <br />  {/* window.location.href = result.data.paymentResponse.payUrl */}              
-                        <span className="text-muted">
+                        <span className="text-muted" style={{fontWeight: 'bold'}}>
                             {`${currency(getPricePerPro(product, num))} / vật phẩm`}
                             {/* {product && ((product.listPrice.length > 0) ?
                                 <>
@@ -167,7 +168,7 @@ export const CartItem: React.FC<{
                             ev.preventDefault()
                             dispatch(cartRemove(id))
                         }} className="font-size-xs text-gray-400 ml-auto" href="">
-                            <i className="fe fe-x" /> Xóa
+                            <i className="fe fe-x" /> {t('Remove')}
                         </a>
                     </div>
                 </div>

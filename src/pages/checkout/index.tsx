@@ -1,6 +1,6 @@
 import { Checkin, Checkout, Membership, Payment, User } from "@types"
 import { CartItem, ProductItem } from "components"
-import { history, useForm } from "core"
+import { history, useForm, useTranslate } from "core"
 import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Redirect } from "react-router-dom"
@@ -25,6 +25,7 @@ type Form = User['data']
 let url = process.env.REACT_APP_LINK_URL || ''
 
 const CheckoutComponent: React.FC = () => {
+    // let {t} = useTranslate()
     let dispatch = useDispatch()
     let { user } = useSelector((store: StateStore) => store.auth)
     const { list } = useCart()
@@ -41,10 +42,10 @@ const CheckoutComponent: React.FC = () => {
     let [open, setOpen] = useState(false);
     let list1: Membership[] = [];
     let [complexList, setComplexList] = useState<Membership[]>()
+    let { t } = useTranslate()
+
     useEffect(() => {
-
         (async () => {
-
             if (user) {
                 setLoading(true)
                 let payment = await paymentService.getAllPayments()
@@ -98,7 +99,7 @@ const CheckoutComponent: React.FC = () => {
                 setComplexList(list1)
             }
         })()
-    }, [])
+    }, [list])
 
     // console.log('LIST: ', list)
 
@@ -118,18 +119,23 @@ const CheckoutComponent: React.FC = () => {
             shippingAddress: form.address,
             redirectUrl: `${url + '/order-complete'}`
         };
-
+        console.log('Checkout Obj: ', checkoutObj)
         try {
+            console.log('FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF')
             let obj = await paymentService.checkout(checkoutObj)
+            console.log("Checkout result: ", obj)
             if (obj) {
                 dispatch(cartRemoveAll())
                 localStorage.removeItem('cart')
                 setLoading(false)
-                if (obj.data.paymentResponse !== null) {
-                    window.location.href = obj.data.paymentResponse.payUrl
-                } else {
-                    history.push(`/order-complete/${obj.data.sessionId}`)
-                }
+                if (obj.data.vnPayPaymentUrl) {
+                    window.location.href = obj.data.vnPayPaymentUrl
+                } else
+                    if (obj.data.paymentResponse !== null) {
+                        window.location.href = obj.data.paymentResponse.payUrl
+                    } else {
+                        history.push(`/order-complete/${obj.data.sessionId}`)
+                    }
             }
         } catch (err) {
             console.log('ERROR GOES HERE    ')
@@ -159,10 +165,11 @@ const CheckoutComponent: React.FC = () => {
                     p: 4,
                 }} >
                     <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Thanh toán thất bại
+                        {t('Thanh toán thất bại')}
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Xin hãy kiểm tra lại đon hàng của mình<br />Đơn hàng nên có giá trị lớn hơn 1.000 VNĐ
+                        {t('Please double check your order')}<br />
+                        {t('Order should be more than 1,000 VND')}
                     </Typography>
                 </Box>
             </Modal>
@@ -196,7 +203,7 @@ const CheckoutComponent: React.FC = () => {
                     <div className="row">
                         <div className="col-12 text-center">
                             {/* Heading */}
-                            <h3 className="mb-4">Thanh toán</h3>
+                            <h3 className="mb-4">{t('Thanh toán')}</h3>
                             {/* Subheading */}
                             {/* <p className="mb-10">
                             Already have an account? <a className="font-weight-bold text-reset" href="#!">Click here to login</a>
@@ -204,15 +211,15 @@ const CheckoutComponent: React.FC = () => {
                         </div>
                         <Breadcrumbs list={[
                             {
-                                title: 'Trang chủ',
+                                title: `${t('Home')}`,
                                 link: '/'
                             },
                             {
-                                title: 'Xem chi tiết giỏ hàng',
+                                title: `${t('View cart detail')}`,
                                 link: '/view-cart'
                             },
                             {
-                                title: 'Thanh toán',
+                                title: `${t('Payment')}`,
                                 link: '/checkout'
                             },
                         ]} />
@@ -224,7 +231,7 @@ const CheckoutComponent: React.FC = () => {
                                 {/* Form */}
 
                                 {/* Heading */}
-                                <h6 className="mb-7" style={{ fontWeight: 'bold' }}>Hóa đơn chi tiết</h6>
+                                <h6 className="mb-7" style={{ fontWeight: 'bold' }}>{t('Order detail')}</h6>
                                 {/* Billing details */}
                                 <div className="row">
                                     {/* <TextField className="col-md-6" {...register('firstName', { required: true })} error={error.firstName} required label="First Name" placeholder="First Name" />
@@ -234,7 +241,7 @@ const CheckoutComponent: React.FC = () => {
                                     <TextField {...register('phoneNumber', { required: true })} error={error.phoneNumber} required label="Số điện thoại" placeholder="Phone" disable />
                                     <TextField {...register('address', { required: true })} error={error.address} required label="Địa chỉ" placeholder="Address" />
                                 </div>
-                                <h6 className="">Phương thức thanh toán</h6>
+                                <h6 className="">{t('Payment method')}</h6>
                                 <div className="table-responsive mb-6">
                                     <table className="table table-bordered table-sm table-hover mb-0">
                                         <tbody>
@@ -250,7 +257,7 @@ const CheckoutComponent: React.FC = () => {
 
                                                                     <label className="custom-control-label text-body text-nowrap" htmlFor={pm.id}>
                                                                         {/* {console.log(pm.id)} */}
-                                                                        {pm.description === 'Cash on Delivery' ? 'Thanh toán tiên mặt' : 'Thanh toán ví Momo'}
+                                                                        {pm.description === 'Cash on Delivery' ? `${t('Cash on delivery')}` : (pm.description === 'Ví điện tử Momo' ? `${t('Pay with Momo wallet')}` : `${t('Pay with VNPay')}`)}
                                                                     </label>
                                                                 </div>
                                                             </td>
@@ -376,16 +383,22 @@ const CheckoutComponent: React.FC = () => {
                                                     if (i.data && i.data.distributor && i.data.product && i.data.num && i.data.discountRate) {
                                                         return (
                                                             <li className="list-group-item d-flex">
-                                                                <span>{i.data.distributor.displayName}</span> <span className="ml-auto font-size-sm">{currency(calculateTotal(i.data.product, i.data.num) - calculateTotal(i.data.product, i.data.num) * i.data.discountRate / 100 - calculateTotal(i.data.product, i.data.num))}</span>
+                                                                <span style={{ width: '60%' }}>
+                                                                    <span style={{ width: '10%' }}>{i.data.product.name}</span><br />
+                                                                    <span className='text-muted' style={{ fontSize: '10pt' }}>{t('Distributor')}: {i.data.distributor.displayName}</span>
+                                                                </span>
+                                                                <span className="ml-auto font-size-sm" style={{ fontWeight: 'bold' }}>
+                                                                    {currency(-1 * calculateTotal(i.data.product, i.data.num) * i.data.discountRate / 100)}
+                                                                </span>
                                                             </li>
                                                         )
                                                     }
 
                                                 })
                                             }
-                                            {/* <li className="list-group-item d-flex">
-                                            <span>Subtotal</span> <span className="ml-auto font-size-sm">{currency(subTotal)}</span>
-                                        </li> */}
+                                            <li className="list-group-item d-flex">
+                                                <span>Subtotal</span> <span className="ml-auto font-size-sm" style={{ fontWeight: 'bold' }}>{currency(total)}</span>
+                                            </li>
                                             {/* <li className="list-group-item d-flex">
                                             <span>id: </span> <span className="ml-auto font-size-sm">{payment}</span>
                                         </li> */}
@@ -393,11 +406,11 @@ const CheckoutComponent: React.FC = () => {
                                             <span>Shipping</span> <span className="ml-auto font-size-sm">{currency(shippingPrice)}</span>
                                         </li> */}
                                             <li className="list-group-item d-flex font-size-lg font-weight-bold">
-                                                <span>Tổng:</span> <span className="ml-auto">
+                                                <span>Tổng:</span> <span className="ml-auto" style={{ fontWeight: 'bold' }}>
                                                     {
                                                         complexList && complexList.map((i) => {
                                                             if (i.data && i.data.distributor && i.data.product && i.data.num && i.data.discountRate) {
-                                                                total += (calculateTotal(i.data.product, i.data.num) - calculateTotal(i.data.product, i.data.num) * i.data.discountRate / 100 - calculateTotal(i.data.product, i.data.num))
+                                                                total += (-1 * calculateTotal(i.data.product, i.data.num) * i.data.discountRate / 100)
                                                             }
 
                                                         })

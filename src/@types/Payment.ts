@@ -57,6 +57,7 @@ export interface Checkout {
                 status: number
             }
         ],
-        dateCreated: string
+        dateCreated: string,
+        vnPayPaymentUrl: string
     }
 }

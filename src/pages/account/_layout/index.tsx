@@ -7,6 +7,7 @@ import { authLogoutAction } from 'store/actions/authAction'
 import { LogoutModal } from 'components/LogoutModal'
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Modal, Typography } from '@mui/material'
 import Box from '@mui/material/Box';
+import { useTranslate } from 'core'
 const style = {
     position: 'absolute',
     top: '50%',
@@ -20,6 +21,7 @@ const style = {
 };
 
 const AccountLayout: React.FC = ({ children }) => {
+    let {t} = useTranslate()
     let { login } = useSelector((store: StateStore) => store.auth)
     const [open, setOpen] = React.useState(false);
     function navbarHandle(event: any) {
@@ -77,7 +79,7 @@ const AccountLayout: React.FC = ({ children }) => {
                     <div className="row">
                         <div className="col-12 text-center">
                             {/* Heading */}
-                            <h3 className="mb-10">Tài khoản của tôi</h3>
+                            <h3 className="mb-10">{t('My account')}</h3>
                             {/* <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: 50 }}>
                                 
                             </div> */}
@@ -89,10 +91,10 @@ const AccountLayout: React.FC = ({ children }) => {
                             <nav className="mb-10 mb-md-0">
                                 <div className="list-group list-group-sm list-group-strong list-group-flush-x">
                                     <NavLink className="list-group-item list-group-item-action dropright-toggle " to="/account/info">
-                                        Thông tin cá nhân
+                                        {t('Personal information')}
                                     </NavLink>
                                     <NavLink className="list-group-item list-group-item-action dropright-toggle " to="/account/orders"> {/*active*/}
-                                        Đơn hàng
+                                        {t('Orders')}
                                     </NavLink>
                                     {/* <NavLink className="list-group-item list-group-item-action dropright-toggle " to="/account/wishlist">
                                         Wishlist
@@ -105,7 +107,7 @@ const AccountLayout: React.FC = ({ children }) => {
                                         Payment Methods
                                     </NavLink> */}
                                     <Link className="list-group-item list-group-item-action dropright-toggle" to="#" onClick={handleClickOpen}>
-                                        Đăng xuất
+                                        {t('Logout')}
                                     </Link>
                                     <Dialog
                                         open={open}

@@ -11,7 +11,7 @@ function Header(props: any) {
 
     let { t, selectLang, language } = useTranslate()
     let lang = localStorage.getItem('lang')
-    console.log(selectLang)
+    // console.log(selectLang)
     function _handleMenuToggle(ev: React.MouseEvent) {
         ev.preventDefault()
         document.querySelector('.container #topbarCollapse')?.classList.toggle('show')
@@ -27,7 +27,7 @@ function Header(props: any) {
             <div className="container">
                 {/* Promo */}
                 <div className="mr-xl-8">
-                    <i className="fe fe-truck mr-2" /> <span className="heading-xxxs">Shipping worldwide</span>
+                    <i className="fe fe-truck mr-2" /> <span className="heading-xxxs">{t('SHIPPING NATIONWIDE')}</span>
                 </div>
                 {/* Toggler */}
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#topbarCollapse" aria-controls="topbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onClick={_handleMenuToggle}>
@@ -66,11 +66,11 @@ function Header(props: any) {
                         </li>
                         <li className="nav-item dropdown" onMouseOver={props.hoverEvent} onMouseLeave={props.mouseLeaveEvent}>
                             {/* Toggle */}
-                            <a className="nav-link dropdown-toggle" data-toggle="dropdown" href="#">{lang === 'en' ? 'English' : 'Tiếng Việt'}</a>
+                            <a className="nav-link dropdown-toggle" data-toggle="dropdown" onClick={(ev) => {ev.preventDefault()}} href="#">{lang === 'en' ? 'English' : 'Tiếng Việt'}</a>
                             {/* Menu */}
                             <div className="dropdown-menu minw-0" >
-                                <a className="dropdown-item" href="#" onClick={chagneLang} data-value='en'>English</a>
-                                <a className="dropdown-item" href="#"onClick={chagneLang} data-value='vn'>Tiếng Việt</a>
+                                <a className="dropdown-item" href="#" onClick={(ev: any) => {chagneLang(ev); ev.preventDefault()}} data-value='en'>English</a>
+                                <a className="dropdown-item" href="#" onClick={(ev: any) => {chagneLang(ev); ev.preventDefault()}} data-value='vn'>Tiếng Việt</a>
                                 {/* <a className="dropdown-item" href="#">German</a> */}
                             </div>
                             
@@ -87,14 +87,14 @@ function Header(props: any) {
                     <div>{t('Hello')}</div> */}
                     {/* Nav */}
                     <ul className="nav navbar-nav mr-8">
+                        {/* <li className="nav-item">
+                            <a className="nav-link" href="/shipping" >{t('Shipping')}</a>
+                        </li> */}
                         <li className="nav-item">
-                            <a className="nav-link" href="/" onClick={(ev) => {ev.preventDefault()}}>Shipping</a>
+                            <a className="nav-link" href="/faq">FAQ</a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="/" onClick={(ev) => {ev.preventDefault()}}>FAQ</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="/" onClick={(ev) => {ev.preventDefault()}}>Contact</a>
+                            <a className="nav-link" href="/contact-us" >{t('Contact')}</a>
                         </li>
                     </ul>
                     {/* Nav */}

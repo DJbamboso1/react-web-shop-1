@@ -1,5 +1,5 @@
 import { CategoryTree, Distributor, PaginateData, Product01, User } from '@types'
-import { history, useForm } from 'core'
+import { history, useForm, useTranslate } from 'core'
 import { NONAME } from 'dns'
 import { FilterQuery } from 'pages/product'
 import React, { useEffect, useState } from 'react'
@@ -20,6 +20,7 @@ type Form = {
 }
 
 export const SearchModal: React.FC = () => {
+    let {t} = useTranslate()
     let { openSearch } = useSelector((store: StateStore) => store.search)
     let [data, setData] = useState<PaginateData<Product01>>()
     let queryUrl = convertQueryURLToObject<FilterQuery>()
@@ -111,16 +112,16 @@ export const SearchModal: React.FC = () => {
                         </Link> */}
                     {/* Header*/}
                     <div className="modal-header line-height-fixed font-size-lg">
-                        <strong className="mx-auto">Tìm kiếm sản phẩm</strong>
+                        <strong className="mx-auto">{t('Search product')}</strong>
                     </div>
                     {/* Body: Form */}
                     <form onChange={handleSubmit(submit)}>
                         <div className="modal-body">
 
                             <div className="form-group">
-                                <label className="sr-only" htmlFor="modalSearchCategories">Nhà phân phối:</label>
+                                <label className="sr-only" htmlFor="modalSearchCategories">{t("Distributor")}</label>
                                 <select className="custom-select" id="modalSearchCategories" {...register('DistributorId')}>
-                                    <option selected value=''>Tất cả</option>
+                                    <option selected value=''>{t('All distributor')}</option>
                                     {
                                         listDis && listDis.data && listDis.data.map(i => {
                                             return (
@@ -143,7 +144,7 @@ export const SearchModal: React.FC = () => {
                         {/* Body: Results (add `.d-none` to disable it) */}
                         <div className="modal-body border-top font-size-sm" >
                             {/* Heading */}
-                            <p>Kết quả tìm kiếm:</p>
+                            <p>{t('Search result')}</p>
                             {/* Items */}
 
                             {
@@ -160,12 +161,12 @@ export const SearchModal: React.FC = () => {
                                             <div className="col position-static">
                                                 {/* Text */}
                                                 <p className="mb-0 font-weight-bold">
-                                                    <Link className="stretched-link text-body" to={`/product/${pro.id}`} onClick={(ev) => { dispatch(toggleSearch(false)) }}>{pro.name} ({pro.listPrice && pro.listPrice[0].volume} vật phẩm)</Link> <br />
-                                                    <span className="text-muted">
+                                                    <Link className="stretched-link text-body text-muted" style={{ fontSize: 'unset' }} to={`/product/${pro.id}`} onClick={(ev) => { dispatch(toggleSearch(false)) }}>{pro.name} ({pro.listPrice && pro.listPrice[0].volume} vật phẩm)</Link> <br />
+                                                    <span className="" style={{ fontWeight: 'bold' }}>
                                                         {
                                                             pro && pro.listPrice && ((pro.listPrice.length > 0) ?
                                                                 `${pro.listPrice.length > 1 ? (pro.listPrice[pro.listPrice.length - 1].value.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) + ' - ') : ''}${pro.listPrice[0].value.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}  `
-                                                                : <h6 style={{ color: 'red' }}>Không giá</h6>)
+                                                                : <h6 style={{ color: 'red' }}>{t('No price')}</h6>)
 
                                                         }
                                                     </span>
@@ -176,7 +177,7 @@ export const SearchModal: React.FC = () => {
                                 }) : <div className=" modal-body">
                                     {/* Text */}
                                     <p className="mb-3 font-size-sm text-center">
-                                        Không tìm thấy từ khóa
+                                        {t('Keyword could not be found')}
                                     </p>
                                     <p className="mb-0 font-size-sm text-center">
                                         😞
@@ -187,7 +188,7 @@ export const SearchModal: React.FC = () => {
 
                             {/* Button */}
                             <Link className="btn btn-link px-0 text-reset" type="submit" to={`/?DistributorId=${form.DistributorId || ''}&SearchValue=${form.SearchValue || ''}`} onClick={(ev) => { dispatch(toggleSearch(false)) }}>
-                                Xem tất cả <i className="fe fe-arrow-right ml-2" />
+                                {t('View all')} <i className="fe fe-arrow-right ml-2" />
                             </Link>
                         </div>
                     </form>

@@ -45,7 +45,7 @@ export function categoryConfig(categories: CategoryTree[]) {
                 list.push(
                     <li className="nav-item">
                         {/* Toggle */}
-                        <Link className="nav-link font-size-lg text-reset border-bottom category-link" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}} data-toggle="collapse" to={changeQueryURL({ ...objectURL, CategoryId: cate.id, SubCategoryId: '', PageNumber: 1 })} onClick={(e) => _onClickHandle(e, cate.name)}>
+                        <Link className="nav-link border-bottom category-link" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}} data-toggle="collapse" to={changeQueryURL({ ...objectURL, CategoryId: cate.id, SubCategoryId: '', PageNumber: 1 })} onClick={(e) => _onClickHandle(e, cate.name)}>
                             {cate.name}
                             <KeyboardArrowDownIcon/>
                         </Link>

@@ -37,7 +37,7 @@ export type FilterQuery = {
 
 const ProductPage: React.FC = () => {
     // console.log('LIST: ', list )
-    let {t} = useTranslate()
+    let { t } = useTranslate()
 
     let [data, setData] = useState<PaginateData<Product01>>()
     let [cateData, setCateData] = useState<CategoryTree[]>()
@@ -64,7 +64,7 @@ const ProductPage: React.FC = () => {
             if (queryUrl.DistributorId) {
                 let cateDis = await distributorService.getDistributor()
                 let dis = cateDis.data.find(e => e.id === queryUrl.DistributorId)
-                console.log('DIS: ', dis)
+                // console.log('DIS: ', dis)
                 // setQueryUrlCate({ DistributorId: queryUrl.DistributorId })
                 if (dis && dis.user) {
                     let user = await authService.getInfo(dis.user.id)
@@ -80,8 +80,14 @@ const ProductPage: React.FC = () => {
             queryUrl.PageSize = '12'
             let list = await productService.paginate(queryUrl)
             setData(list)
+            // if((queryUrl.CategoryId && queryUrl.CategoryId?.length > 0) || (queryUrl.CategoryId && queryUrl.CategoryId?.length > 0)) {
+            //     queryUrl.DistributorId=""
+            // }
+            // if ((queryUrl.CategoryId && queryUrl.CategoryId?.length > 0) || (queryUrl.CategoryId && queryUrl.CategoryId?.length > 0)) {
+
+            // }
             let cateList = await cateService.getCategory(queryUrl)
-            console.log('CATE LIST: ', cateList)
+            // console.log('CATE LIST: ', cateList)
             setCateData(cateList.data)
             if (queryUrl.CategoryId) {
                 let category = cateList.data.find(e => e.id === queryUrl.CategoryId)
@@ -149,8 +155,8 @@ const ProductPage: React.FC = () => {
         })()
     }, [queryUrl.DistributorId])
 
-    console.log("data: ", data)
-    console.log('MEMBERSHIP : ', memberShipRank)
+    // console.log("data: ", data)
+    // console.log('MEMBERSHIP : ', memberShipRank)
 
     const total = data?.total as number
     const pageSize = data?.pageSize as number
@@ -160,7 +166,7 @@ const ProductPage: React.FC = () => {
     }
     // console.log(queryUrl)
     // console.log('sjfbvuysgdviuwguvfwjevgiuwehgvw: ', cateDisData)
-    console.log('IS ACTIVE ?: ', isActive)
+    // console.log('IS ACTIVE ?: ', isActive)
     return (
         <section className="py-5">
             <div className="container">
@@ -192,32 +198,42 @@ const ProductPage: React.FC = () => {
                         {/* { queryUrl.DistributorId ? <SliderDis/> : <Slider/>} */}
                         {/* Header */}
                         <div className="row align-items-center mb-7">
-                            <div className="col-12 col-md">
+                            <div className="col-12">
                                 {/* Heading */}
                                 <div className='dis-header'>
-                                        <div className='header-header'>
-                                            {<h3 className="mb-1">{distributor?.data.displayName || 'Sản phẩm'}</h3>}
-                                            {queryUrl.DistributorId && memberShipRank?.data.membershipRank ? <p>{t('Rank')}: <span>{memberShipRank.data.membershipRank.rankName.toUpperCase()}</span></p> : ''}
-                                            {queryUrl.DistributorId && memberShipRank?.data ? <p>{t('Point')}: <span>{memberShipRank.data.point}</span></p> : ''}
-                                        </div>
-                                        <div className='header-info'>
-                                            {queryUrl.DistributorId && distributor?.data.phoneNumber ? <p>{t('Phone')}: {distributor.data.phoneNumber}</p> : ''}
-                                            {queryUrl.DistributorId && distributor?.data.email ? <p>Email: {distributor.data.email}</p> : ''}
-                                            {queryUrl.DistributorId && distributor?.data.address ? <p>{t('Address')}: {distributor.data.address}</p> : ''}
-                                        </div>
+                                    <div className='header-header'>
+                                        {<h3 className="mb-1">{distributor?.data.displayName || t('Products')}</h3>}
+                                        {queryUrl.DistributorId && memberShipRank?.data.membershipRank ? <p>{t('Rank')}: <span style={{ fontWeight: 'bold' }}>{memberShipRank.data.membershipRank.rankName.toUpperCase()}</span></p> : ''}
+                                        {queryUrl.DistributorId && memberShipRank?.data ? <p>{t('Point')}: <span style={{ fontWeight: 'bold' }}>{memberShipRank.data.point}</span></p> : ''}
                                     </div>
-                                
+                                    <div className='header-info'>
+                                        {queryUrl.DistributorId && distributor?.data.phoneNumber ? <p>{t('Phone')}: {distributor.data.phoneNumber}</p> : ''}
+                                        {queryUrl.DistributorId && distributor?.data.email ? <p>Email: {distributor.data.email}</p> : ''}
+                                        {queryUrl.DistributorId && distributor?.data.address ? <p>{t('Address')}: {distributor.data.address}</p> : ''}
+                                    </div>
+                                </div>
+
 
                                 {/* Breadcrumb */}
                                 <Breadcrumbs list={[
                                     {
                                         title: t('Home'),
-                                        link: '/'
+                                        link: '/',
+                                        onClick: () => {
+                                            document.querySelectorAll('.cateScroll #filterNav1 .nav-item .nav-link').forEach(e => {
+                                                e.classList.remove('active')
+                                            })
+                                        }
                                     },
 
                                     ...(distributor ? [{
                                         title: distributor.data.displayName,
-                                        link: `${url}?DistributorId=${queryUrlCate}`
+                                        link: `${url}?DistributorId=${queryUrlCate}`,
+                                        onClick: () => {
+                                            document.querySelectorAll('.cateScroll #filterNav .nav-item .nav-link').forEach(e => {
+                                                e.classList.remove('active')
+                                            })
+                                        }
                                     }] : []),
 
                                     ...(category ? [{
@@ -318,10 +334,11 @@ const ProductPage: React.FC = () => {
                             } */}
                         </div>
                         {/* Pagination */}
-                        {
-                            data && <Paginate currentPage={data.pageNumber} totalPage={pageNumber.length} />
-                        }
-
+                        <div style={{paddingTop: '20px'}}>
+                            {
+                                data && <Paginate currentPage={data.pageNumber} totalPage={pageNumber.length} />
+                            }
+                        </div>
                     </div>
                 </div>
             </div>

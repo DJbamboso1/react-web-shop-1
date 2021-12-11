@@ -17,7 +17,8 @@ export interface Order {
       }
     },
     orderCost: number,
-    status: number
+    status: number,
+    listImg: string[]
   }[]
 }
 
@@ -37,6 +38,7 @@ export interface OrderDetail {
       // category: T,
       name: string,
       image: string,
+      // listImg?: [],
       description: string,
       minQuantity: number,
       status?: number,
@@ -54,6 +56,7 @@ export interface OrderDetail {
         volume: number,
       }[]
     },
+    defaultPrice: number,
     orderId: string,
     orderPrice: number,
     quantity: number

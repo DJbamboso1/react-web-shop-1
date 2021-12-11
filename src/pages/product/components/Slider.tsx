@@ -17,7 +17,7 @@ export const Slider: React.FC<SliderProp> = ({ ...ref }) => {
     let queryUrl = convertQueryURLToObject()
     let [loading, setLoading] = useState(true)
     let [banner, setBanner] = useState<Banner['data']>()
-    console.log('SLIDER HERE: WHERE IS QUERY URL ? : ', queryUrl.DistributorId)
+    // console.log('SLIDER HERE: WHERE IS QUERY URL ? : ', queryUrl.DistributorId)
     useEffect(() => {
         (async () => {
             // if (queryUrl.DistributorId?.length) {
@@ -33,7 +33,7 @@ export const Slider: React.FC<SliderProp> = ({ ...ref }) => {
         })()
     }, [queryUrl.DistributorId])
 
-    console.log('BANNER: ', banner)
+    // console.log('BANNER: ', banner)
     return (
         <>
             {

@@ -22,7 +22,7 @@ const ProductDetail: React.FC = () => {
 
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
-    let {t} = useTranslate()
+    let { t } = useTranslate()
     let history = useHistory()
 
     let num = useCartNumber()
@@ -137,10 +137,10 @@ const ProductDetail: React.FC = () => {
                                             <div className="col-12 col-md-6 pl-lg-10">
                                                 {/* Header */}
                                                 <div className="row mb-1">
-                                                    <div className="col">
-                                                        {/* Preheading */}
+                                                    {/* <div className="col">
+                                                        
                                                         <Link className="text-muted" to={`product/${data.data.id}`}>{data.data.parentCategoryName}</Link>
-                                                    </div>
+                                                    </div> */}
                                                     <div className="col-auto">
                                                         {/* Rating */}
                                                         {/* <div className="rating font-size-xs text-dark" data-value={4}>
@@ -167,9 +167,10 @@ const ProductDetail: React.FC = () => {
                                                 </div>
                                                 {/* Heading */}
                                                 <h3 className="mb-2">{data.data.name}</h3>
-                                                <h6 className="mb-2">{t('Distributor')}: {data.data.distributor}</h6>
+                                                <h6 className="mb-2"><span className="text-muted">{t('Distributor')}:</span> <Link style={{ fontSize: '15pt' }} to={`/?DistributorId=${data.data.distrubutorId}`}>{data.data.distributor}</Link></h6>
+                                                <h6 className="mb-2"><span className="text-muted">{t('Categories')}:</span>  <Link style={{ fontSize: '15pt' }} to={`/?CategoryId=${data.data.parentCategoryId}`}>{data.data.parentCategoryName}</Link></h6>
                                                 {/* Price */}
-                                                <div className="mb-7">
+                                                <div className="mb-7" style={{ fontWeight: 'bold', fontSize: '20pt' }}>
                                                     {/* <span className="font-size-lg font-weight-bold text-gray-350 text-decoration-line-through">$115.00</span> */}
 
                                                     {
@@ -234,6 +235,9 @@ const ProductDetail: React.FC = () => {
                                         <a className="nav-link active" data-toggle="tab" href="#descriptionTab">
                                             {t('Description')}
                                         </a>
+                                        <a className="nav-link" data-toggle="tab" href="#shippingTab">
+                                            {data.data.distributor}
+                                        </a>
                                         {/* <a className="nav-link" data-toggle="tab" href="#sizeTab">
                                     Size &amp; Fit
                                 </a>
@@ -258,6 +262,53 @@ const ProductDetail: React.FC = () => {
                                             </div>
                                         </div>
                                     </div>
+                                    {/* <div className="tab-pane fade" id="shippingTab">
+                                        <div className="row justify-content-center py-9">
+                                            <div className="col-12 col-lg-10 col-xl-8">
+                                                
+                                                <div className="table-responsive">
+                                                    <table className="table table-bordered table-sm table-hover">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Shipping Options</th>
+                                                                <th>Delivery Time</th>
+                                                                <th>Price</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Standard Shipping</td>
+                                                                <td>Delivery in 5 - 7 working days</td>
+                                                                <td>$8.00</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Express Shipping</td>
+                                                                <td>Delivery in 3 - 5 working days</td>
+                                                                <td>$12.00</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>1 - 2 day Shipping</td>
+                                                                <td>Delivery in 1 - 2 working days</td>
+                                                                <td>$12.00</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Free Shipping</td>
+                                                                <td>
+                                                                    Living won't the He one every subdue meat replenish
+                                                                    face was you morning firmament darkness.
+                                                                </td>
+                                                                <td>$0.00</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                
+                                                <p className="mb-0 text-gray-500">
+                                                    May, life blessed night so creature likeness their, for. <a className="text-body text-decoration-underline" href="#!">Find out more</a>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div> */}
                                 </div>
                             </div>
                         </div>

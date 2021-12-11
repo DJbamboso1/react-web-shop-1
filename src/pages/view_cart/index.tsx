@@ -19,7 +19,7 @@ type State = {
 }
 
 const ViewCart: React.FC = () => {
-    let {t} = useTranslate()
+    let { t } = useTranslate()
     let { list } = useCart()
     let total = useTotal()
     // let taxPrice = useSelector(getTaxPrice)
@@ -65,7 +65,7 @@ const ViewCart: React.FC = () => {
                 setComplexList(list1)
             }
         })()
-    }, [])
+    }, [list])
 
     if (list.length === 0 || isActive === false) {
         return <Redirect to="/" />
@@ -140,21 +140,27 @@ const ViewCart: React.FC = () => {
                                             if (i.data && i.data.distributor && i.data.product && i.data.num && i.data.discountRate) {
                                                 return (
                                                     <li className="list-group-item d-flex">
-                                                        <span>{i.data.distributor.displayName} {i.data.discountRate > 0 && `(${t('Sale')} ${i.data.discountRate}%)`}</span> <span className="ml-auto font-size-sm">{currency(calculateTotal(i.data.product, i.data.num) - calculateTotal(i.data.product, i.data.num) * i.data.discountRate / 100 - calculateTotal(i.data.product, i.data.num))}</span>
+                                                        <span style={{ width: '60%' }}>
+                                                            <span style={{  width: '10%'}}>{i.data.product.name}</span><br/>
+                                                            <span className='text-muted' style={{ fontSize: '10pt' }}>{t('Distributor')}: {i.data.distributor.displayName}</span>
+                                                        </span>
+                                                        <span className="ml-auto font-size-sm" style={{ fontWeight: 'bold' }}>
+                                                            {currency(-1 * calculateTotal(i.data.product, i.data.num) * i.data.discountRate / 100)}
+                                                        </span>
                                                     </li>
                                                 )
                                             }
 
                                         })
                                     }
-                                    {/* <li className="list-group-item d-flex">
-                                        <span>Subtotal</span> <span className="ml-auto font-size-sm">{currency(subTotal)}</span>
-                                    </li> */}
+                                    <li className="list-group-item d-flex">
+                                        <span>Subtotal</span> <span className="ml-auto font-size-sm" style={{ fontWeight: 'bold' }}>{currency(total)}</span>
+                                    </li>
                                     {/* <li className="list-group-item d-flex">
                                         <span>Tax</span> <span className="ml-auto font-size-sm">{currency(taxPrice)}</span>
                                     </li> */}
                                     <li className="list-group-item d-flex font-size-lg font-weight-bold">
-                                        <span>Tổng: </span> <span className="ml-auto font-size-sm">
+                                        <span>Total: </span> <span className="ml-auto font-size-sm" style={{ fontWeight: 'bold' }}>
                                             {
                                                 complexList && complexList.map((i) => {
                                                     if (i.data && i.data.distributor && i.data.product && i.data.num && i.data.discountRate) {

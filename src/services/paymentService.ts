@@ -14,5 +14,10 @@ export const paymentService = {
         let url = API + '/checkout'
         
         return http.post<Checkout>(url, obj)
+    },
+
+    vnPay(vnPayUrl: string) {
+        let url = API + '/vnp/ipn?url=' + vnPayUrl
+        return http.get(url)
     }
 }

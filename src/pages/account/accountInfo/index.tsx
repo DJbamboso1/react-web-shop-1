@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { StateStore } from 'store'
-import { useForm } from 'core'
+import { useForm, useTranslate } from 'core'
 import ErrorInput from 'components/ErrorInput'
 import { User } from '@types'
 import authService from 'services/authService'
@@ -26,6 +26,7 @@ export const style = {
 const AccountInfo: React.FC = () => {
     // document.body.scrollTop = 0;
     // document.documentElement.scrollTop = 0;
+    let {t} = useTranslate()
     let dispatch = useDispatch()
     let [countDay, setCountDay] = useState<number>(0)
     let { register, setForm, handleSubmit, error, form } = useForm<Form>({}, {
@@ -98,13 +99,13 @@ const AccountInfo: React.FC = () => {
     }, [form.month, form.year])
 
     useEffect(() => {
-        console.log(form.avatarFile)
+        // console.log(form.avatarFile)
         if (form.avatarFile) {
             var reader = new FileReader();
             reader.readAsDataURL(form.avatarFile);
             reader.onloadend = function () {
                 var base64String = reader.result;
-                console.log('Base64 String - ', base64String);
+                // console.log('Base64 String - ', base64String);
                 if (base64String) {
                     form.avatar = base64String.toString()
                     setUrlImg(base64String.toString())
@@ -117,7 +118,7 @@ const AccountInfo: React.FC = () => {
     }, [urlImg])
 
     useEffect(() => {
-        console.log(form.businessLicenseFile)
+        // console.log(form.businessLicenseFile)
         if (form.businessLicenseFile) {
             var reader = new FileReader();
             reader.readAsDataURL(form.businessLicenseFile);
@@ -190,14 +191,14 @@ const AccountInfo: React.FC = () => {
         }
         console.log('FORM PHASE 2: ', form)
         let profile = await authService.updateProfile(form)
-        setLoading(false)
+        // setLoading(false)
         if (profile.succeeded) {
             dispatch(updateInfo(form))
-            setMessage('Cập nhật thành công')
+            setMessage(t('Update successfully'))
         } else {
-            setMessage('Cập nhật không thành công')
+            setMessage(t('Fail to update'))
         }
-        setOpen(true)
+        
         // console.log('FORM PHASE 2: ', form)
     }
     // if (state) {
@@ -220,11 +221,16 @@ const AccountInfo: React.FC = () => {
                         // console.log('File available at', downloadURL);
                         // setForm({ ...form, avatar: downloadURL })
                         // setAvatar(downloadURL)
+                        setLoading(true)
                         form.avatar = downloadURL
                         let profile = await authService.updateProfile(form)
+                        console.log('UPLOAD AVATAR:  AAAAAAAAAAAA')
+                        console.log('UPLOAD LICENSE:', profile)
                         if(profile) {
-                            // setLoading(false)
+                            setLoading(false)
+                            setOpen(true)
                         }
+                        // setLoading(true)
                         // let user = await authService.getInfo(form.id)
                         // console.log("HELLO WORLD: ", user)
                         // if (user.data.avatar) {
@@ -253,6 +259,7 @@ const AccountInfo: React.FC = () => {
                 () => {
                     getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
                         console.log('File available at', downloadURL);
+                        setLoading(true)
                         // setForm({ ...form, businessLicense: downloadURL })
                         // setForm({ ...form, businessLicense: downloadURL })
                         // console.log('LICENSE: ', form.businessLicense)
@@ -260,8 +267,11 @@ const AccountInfo: React.FC = () => {
                         // console.log('DOWNLOAD: ', license1)
                         form.businessLicense = downloadURL
                         let profile = await authService.updateProfile(form)
+                        console.log('UPLOAD LICENSE:  BBBBBBBBBBBB')
+                        console.log('UPLOAD LICENSE:', profile)
                         if(profile) {
                             setLoading(false)
+                            setOpen(true)
                         }
                         // if(profile) {
                         //     console.log('abcdef')
@@ -280,6 +290,7 @@ const AccountInfo: React.FC = () => {
 
     // console.log('USER: ', user)
     // console.log('STATUS: ', status)
+    console.log('FORM: ', form)
     if (open === true) {
         return (
             <Modal
@@ -303,7 +314,7 @@ const AccountInfo: React.FC = () => {
                         {message.length > 0 ? message : 'Cập nhật ảnh thành công'}
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Ấn bên ngoài cửa số thông báo để tắt
+                        {t('Click outside the notification window to turn it off')}
                     </Typography>
                 </Box>
             </Modal>
@@ -314,11 +325,11 @@ const AccountInfo: React.FC = () => {
         <>
             <Breadcrumbs list={[
                 {
-                    title: 'Trang chủ',
+                    title: `${t('Home')}`,
                     link: '/'
                 },
                 {
-                    title: 'Thông tin',
+                    title: `${t('Information')}`,
                     link: '/account/info'
                 },
 
@@ -341,7 +352,7 @@ const AccountInfo: React.FC = () => {
                                 {/* Email */}
                                 <div className="form-group">
                                     {form.displayName ? <label htmlFor="accountFirstName">
-                                        Họ tên *
+                                        {t('Full name')} *
                                     </label> : <Skeleton width='30%' height={35} />}
                                     {form.displayName ? <input className="form-control form-control-sm" id="accountFirstName" type="text"  {...register('displayName', { required: true })} /> : <Skeleton width='100%' height={75} />}
                                 </div>
@@ -361,7 +372,7 @@ const AccountInfo: React.FC = () => {
                                 {/* Email */}
                                 <div className="form-group">
                                     {form.address ? <label htmlFor="accountEmail">
-                                        Địa chỉ *
+                                        {t('Address')} *
                                     </label> : <Skeleton width='30%' height={35} />}
                                     {form.address ? <input className="form-control form-control-sm" id="accountEmail" type="text"    {...register('address', { required: true, min: 5 })} /> : <Skeleton width='100%' height={75} />}
                                 </div>
@@ -372,7 +383,7 @@ const AccountInfo: React.FC = () => {
                                 <div className="form-group">
                                     {
                                         form.id ? <label htmlFor="accountPassword">
-                                            Mật khẩu cũ
+                                            {t('Old password')}
                                         </label> : <Skeleton width='30%' height={35} />
                                     }
                                     {
@@ -387,7 +398,7 @@ const AccountInfo: React.FC = () => {
                                 <div className="form-group">
                                     {
                                         form.roleId ? <label htmlFor="AccountNewPassword">
-                                            Mật khẩu mới
+                                            {t('New password')}
                                         </label> : <Skeleton width='30%' height={35} />
                                     }
                                     {
@@ -400,13 +411,13 @@ const AccountInfo: React.FC = () => {
                                 {/* Birthday */}
                                 <div className="form-group">
                                     {/* Label */}
-                                    {form.doB ? <label>Ngày sinh</label> : <Skeleton width="60%" height={24} />}
+                                    {form.doB ? <label>{t('Date of birth')}</label> : <Skeleton width="60%" height={24} />}
                                     {/* Inputs */}
                                     {form.doB ? (<div className="form-row">
                                         <div className="col-auto">
                                             {/* Date */}
                                             <label className='sr-only' htmlFor="accountDate">
-                                                Day
+                                                {t('Day')}
                                             </label>
                                             {
                                                 countDay && <select className="custom-select custom-select-sm" id="accountDate" {...register('day')}  >
@@ -419,7 +430,7 @@ const AccountInfo: React.FC = () => {
                                         <div className="col">
                                             {/* Date */}
                                             <label className='sr-only' htmlFor="accountMonth">
-                                                Month
+                                                {t('Month')}
                                             </label>
                                             <select className="custom-select custom-select-sm" id="accountMonth"  {...register('month')}  >
                                                 {
@@ -430,7 +441,7 @@ const AccountInfo: React.FC = () => {
                                         <div className="col-auto">
                                             {/* Date */}
                                             <label className='sr-only' htmlFor="accountYear">
-                                                Year
+                                            {t('Year')}          
                                             </label>
                                             <select className="custom-select custom-select-sm" id="accountYear"  {...register('year')} >
                                                 {
@@ -447,20 +458,20 @@ const AccountInfo: React.FC = () => {
                             <div className="col-12 col-lg-5">
                                 {/* Gender */}
                                 <div className="form-group mb-8">
-                                    {form.sex ? <label>Giới tính</label> : <Skeleton width="60%" height={24} />}
+                                    {form.sex ? <label>{t('Gender')}</label> : <Skeleton width="60%" height={24} />}
                                     {form.sex ? (<div className="btn-group-toggle" data-toggle="buttons">
                                         <label className={`btn btn-sm btn-outline-border ${form.sex === TYPE_MALE ? 'active' : ''}`} onClick={e => setForm({ ...form, sex: TYPE_MALE })}>
-                                            <input type="radio" name="gender" /> Nam
+                                            <input type="radio" name="gender" /> {t('Male')}
                                         </label>
                                         <label className={`btn btn-sm btn-outline-border ${form.sex === TYPE_FEMALE ? 'active' : ''}`} onClick={e => setForm({ ...form, sex: TYPE_FEMALE })}>
-                                            <input type="radio" name="gender" /> Nữ
+                                            <input type="radio" name="gender" /> {t('Female')}
                                         </label>
                                     </div>) : <Skeleton className='btn-group-toggle' height={51} />}
                                 </div>
                             </div>
                             <div className="col-12">
                                 {form.id ? <label htmlFor="accountEmail">
-                                    Giấy phép
+                                    {t('License')}
                                 </label> : <Skeleton width='30%' height={35} />}
                                 <div className="form-group" >
                                     {/* <input className="form-control form-control-sm" id="accountFirstName" type="text" placeholder="First Name *" {...register('displayName')} />  */}
@@ -481,7 +492,7 @@ const AccountInfo: React.FC = () => {
                                 {/* Email */}
                                 <div className="form-group">
                                     {form.email ? <label htmlFor="accountEmail">
-                                        Mã số thuế
+                                        {t('Tax')}
                                     </label> : <Skeleton width='30%' height={35} />}
                                     {form.id ? <input className="form-control form-control-sm" type="text" disabled={status === true ? true : false} {...register('taxId', { required: true, min: 10, max: 10 }, { required: 'Cần nhập mã sô thuế', min: 'Mã số thuế cần 10 ký tự', max: 'Mã số thuế cần 10 ký tự' })} /> : <Skeleton width='100%' height={75} />}
                                 </div>
@@ -489,7 +500,7 @@ const AccountInfo: React.FC = () => {
                             </div>
                             <div className="col-12">
                                 {/* Button */}
-                                <button className="btn btn-dark" type="submit" disabled={form.id ? false : true}>Lưu</button>
+                                <button className="btn btn-dark" type="submit" disabled={form.id ? false : true}>{t('Save')}</button>
                             </div>
                         </>) :
                         <div className='col-12' style={{ textAlign: 'center' }}>

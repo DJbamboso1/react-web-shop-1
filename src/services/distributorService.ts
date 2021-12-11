@@ -13,7 +13,12 @@ const distributorService = {
     getDistributorById(id: string) {
         let url = productAPI + '/distributor/' + id
         return http.get<Distributor1<User['data']>>(url)
-    }
+    },
+
+    getDistributorByCate(filter?: Object) {
+        let url = productAPI + '/distributor/category' + (filter ? '?' + convertObjectToQueryURL(filter) : '')
+        return http.get<Distributor<User['data']>>(url)
+    },
 }
 
 export default distributorService

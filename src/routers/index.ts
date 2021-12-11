@@ -112,6 +112,18 @@ export const routers: RouterParam[] = [
                 exact: true
             },
             {
+                path: '/contact-us',
+                component: lazy(() => import('../pages/contact')),
+            },
+            {
+                path: '/faq',
+                component: lazy(() => import('../pages/faq')),
+            },
+            {
+                path: '/shipping',
+                component: lazy(() => import('../pages/shipping')),
+            },
+            {
                 component: Page404
             }
         ]

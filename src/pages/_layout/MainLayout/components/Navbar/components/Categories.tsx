@@ -22,7 +22,7 @@ const Categories: React.FC = () => {
                         category && category.data && category.data.map(cate => {
                             return (
                                 <li className="list-styled-item">
-                                    <Link className="list-styled-link" to={`/?CategoryId=${cate.id}`}>{cate.name}</Link>
+                                    <Link className="list-styled-link" to={`/?CategoryId=${cate.id}&SubCategoryId=&PageNumber=1&DistributorId=`}>{cate.name}</Link>
                                 </li>
                             )
                         })

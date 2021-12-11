@@ -8,9 +8,10 @@ import { cartDecrement, cartIncrement, cartRemove, toggleCart } from '../store/a
 import { useCartNumber } from '../store/selector'
 import { currency } from 'utils'
 import { calculateTotal, getPricePerPro } from 'store/selector/cartSelector'
+import { useTranslate } from 'core'
 
 export const ProductItem: React.FC<{ product: Product01, num: number }> = ({ product, num }) => {
-
+    let {t} = useTranslate()
     const dispatch = useDispatch()
     const _changeNumber = (ev: React.ChangeEvent<HTMLInputElement>) => {
         // console.log(ev.currentTarget.value)
@@ -35,14 +36,14 @@ export const ProductItem: React.FC<{ product: Product01, num: number }> = ({ pro
             <div className="row align-items-center">
                 <div className="col-3">
                     {/* Image */}
-                    <Link className="card-img-hover" to={`/product/${product.name}`}>
+                    <Link className="card-img-hover" to={`/product/${product.id}`}>
                         <img className="img-fluid" src={product.image} alt="..." />
                     </Link>
                 </div>
                 <div className="col">
                     {/* Title */}
                     <div className="d-flex mb-2 font-weight-bold">
-                        <Link className="text-body" to={`/${product.name}`}>{product.name}</Link> <span className="ml-auto" style={{ fontWeight: 'bold' }}>{`${currency(getPricePerPro(product, num))}`}</span>
+                        <Link className="text-body" to={`/product/${product.id}`}>{product.name}</Link> <span className="ml-auto" style={{ fontWeight: 'bold', fontSize: '14pt' }}>{`${currency(getPricePerPro(product, num))}`}</span>
                         {/* <span className="text-muted">
                             Nhà phân phối: {product.distributor}
                             <br/>
@@ -62,7 +63,7 @@ export const ProductItem: React.FC<{ product: Product01, num: number }> = ({ pro
                             <>
                                 <div className="d-flex align-items-center">
                                     {/* Select */}
-                                    <input autoComplete="false" onBlur={_changeNumber} onClick={_changeNumber as any} type="number" className="cart-input-num" defaultValue={num} min={product.minQuantity} style={{ width: '30%' }} />
+                                    {`${t('Quantity')}:`} <input autoComplete="false" onBlur={_changeNumber} onClick={_changeNumber as any} type="number" className="cart-input-num" defaultValue={num} min={product.minQuantity} style={{ width: '15%', marginLeft: '13px' }} />
                                     {/* Remove */}
                                     <a onClick={(ev) => { ev.preventDefault(); dispatch(cartRemove(product.id)) }} className="font-size-xs text-gray-400 ml-auto" href="#!">
                                         <i className="fe fe-x" /> Xóa

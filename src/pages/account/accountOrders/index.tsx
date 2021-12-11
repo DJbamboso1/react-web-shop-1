@@ -12,6 +12,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 import { StateStore } from 'store'
 import { Paginate } from 'components/Paginate'
 import { productService } from 'services/productService'
+import { useTranslate } from 'core'
 
 type FilterQuery = {
   // page: string,
@@ -26,9 +27,8 @@ type StateProps = {
   orders: Order['data'],
 }
 
-
-
 const AccountOrders: React.FC = () => {
+  let { t } = useTranslate()
   let queryUrl = convertQueryURLToObject<FilterQuery>()
   let dispatch = useDispatch()
   let { user } = useSelector((store: StateStore) => store.auth)
@@ -43,7 +43,7 @@ const AccountOrders: React.FC = () => {
 
   const [open1, setOpen1] = React.useState(false);
   // let [orderDetail, setOrderDetail] = useState<OrderDetail['data']>()
-
+  // let [productPro] = useState<Array<any>>([])
   let [index, setIndex] = useState(0)
   useEffect(() => {
     (async () => {
@@ -53,6 +53,21 @@ const AccountOrders: React.FC = () => {
       queryUrl.Status = status
       let ord = await orderService.getAllOrder(queryUrl)
       console.log('ORDER PLS', ord)
+      for (let i in ord.data) {
+        let productPro = []
+        let ordDetail = await orderService.getOrderDetail({ OrderId: ord.data[i].id })
+        if (ordDetail) {
+          for (let e in ordDetail.data) {
+            // dispatch(addToCart(ordDetail.data[i].product))
+            const detaileData = ordDetail.data[e].product.image
+            // console.log("detaileData: ", detaileData)
+            // ord.data[i].listImg.push(detaileData)
+            productPro.push(detaileData)
+          }
+          ord.data[i].listImg = productPro
+        }
+
+      }
       setOrder(ord)
       setState({
         loading: false,
@@ -61,6 +76,7 @@ const AccountOrders: React.FC = () => {
       let i = (parseInt(queryUrl.PageNumber || '1') - 1) * parseInt(queryUrl.PageSize || '3') + 1
       setIndex(i)
       console.log('ORDER STATE PLS', state.orders)
+      console.log("Order: ", order)
     })()
   }, [queryUrl.PageNumber, status])
 
@@ -90,7 +106,7 @@ const AccountOrders: React.FC = () => {
   //       }
   //     }
   //   }
-    
+
   // }
 
   const reOrderHandle = async (ev: any, id: string) => {
@@ -116,7 +132,12 @@ const AccountOrders: React.FC = () => {
           listPrice: detaileData.listPrice,
           quantity: ordDetail.data[i].quantity
         }
-        dispatch(addToCart(product))
+        if (product.status === 1) {
+          dispatch(addToCart(product))
+        } else {
+          
+        }
+        
         // console.log(p)
         // if (p) p.num = ordDetail.data[i].quantity
       }
@@ -131,15 +152,19 @@ const AccountOrders: React.FC = () => {
     pageNumber.push(i)
   }
 
+  console.log('ORDER STATE PLS', state.orders)
+  // console.log('LIST IMG: ', state.orders)
+  // console.log('PRODUCT PRO: ', productPro)
+
   return (
     <div>
       <Breadcrumbs list={[
         {
-          title: 'Trang chủ',
+          title: `${t('Home')}`,
           link: '/'
         },
         {
-          title: 'Đơn hàng',
+          title: `${t('Orders')}`,
           link: '/account/orders'
         },
         // {
@@ -152,14 +177,14 @@ const AccountOrders: React.FC = () => {
         <form >
           {/* Select */}
           <select className="custom-select custom-select-sm" id="status" style={{ width: 200, }} onChange={(ev) => { setStatus(ev.currentTarget.value) }} >
-            <option value="">Trạng thái</option>
+            <option value="">{t('Status')}</option>
             {/* <option value="-3">Có hàng bị trả</option> */}
-            <option value="-2">Chưa được giao</option>
-            <option value="-1">Đang thành tiền</option>
+            <option value="-2">{t('Not yet delivered')}</option>
+            <option value="-1">{t('Billing')}</option>
             {/* <option value="0">Đã hủy</option> */}
-            <option value="1">Đã thành tiền</option>
-            <option value="2">Chưa tính tiền</option>
-            <option value="3">Đã được giao</option>
+            <option value="1">{t('Charged')}</option>
+            <option value="2">{t('Not yet charged')}</option>
+            <option value="3">{t('Was delivered')}</option>
           </select>
         </form>
       </div>
@@ -175,7 +200,7 @@ const AccountOrders: React.FC = () => {
                       <div className="row">
                         <div className="col-6 col-lg-3">
                           {/* Heading */}
-                          <h6 className="heading-xxxs text-muted">Số thứ tự:</h6>
+                          <h6 className="heading-xxxs text-muted">{t('No:')}</h6>
                           {/* Text */}
                           <p className="mb-lg-0 font-size-sm font-weight-bold">
                             {index++}
@@ -184,7 +209,7 @@ const AccountOrders: React.FC = () => {
 
                         <div className="col-6 col-lg-3">
                           {/* Heading */}
-                          <h6 className="heading-xxxs text-muted">Nhà phân phối:</h6>
+                          <h6 className="heading-xxxs text-muted">{t('Distributor')}:</h6>
                           {/* Text */}
                           <p className="mb-lg-0 font-size-sm font-weight-bold">
                             <time dateTime="2019-09-25">
@@ -194,7 +219,7 @@ const AccountOrders: React.FC = () => {
                         </div>
                         <div className="col-6 col-lg-3">
                           {/* Heading */}
-                          <h6 className="heading-xxxs text-muted">Trạng thái:</h6>
+                          <h6 className="heading-xxxs text-muted">{t('Status')}:</h6>
                           {/* Text */}
                           <p className="mb-0 font-size-sm font-weight-bold" style={{
                             color: `${ord.status === -3 ? 'red' :
@@ -203,19 +228,19 @@ const AccountOrders: React.FC = () => {
                                   'green')}`
                           }}>
                             {ord.status === -3 ? 'Có hàng bị trả' :
-                              (ord.status === -2 ? 'Chưa được giao' :
-                                ord.status === -1 ? 'Đang thành tiền' : (
+                              (ord.status === -2 ? t('Not yet delivered') :
+                                ord.status === -1 ? t('Billing') : (
                                   ord.status === 0 ? 'Hủy' :
-                                    (ord.status === 1 ? 'Đã thành tiền' :
-                                      (ord.status === 2 ? 'Chưa thành tiền' :
-                                        (ord.status === 3 && 'Đã được giao')))))}
+                                    (ord.status === 1 ? t('Charged') :
+                                      (ord.status === 2 ? t('Not yet charged') :
+                                        (ord.status === 3 && t('Was delivered'))))))}
                           </p>
                         </div>
                         <div className="col-6 col-lg-3">
                           {/* Heading */}
-                          <h6 className="heading-xxxs text-muted">Giá:</h6>
+                          <h6 className="heading-xxxs text-muted">{t('Price')}:</h6>
                           {/* Text */}
-                          <p className="mb-0 font-size-sm font-weight-bold">
+                          <p className="mb-0 font-size-sm" style={{fontWeight: 'bold', color: 'unset'}}>
                             {ord.orderCost && currency(ord.orderCost)}
                           </p>
                         </div>
@@ -227,11 +252,45 @@ const AccountOrders: React.FC = () => {
                   <div className="row align-items-center">
                     <div className="col-12 col-lg-6">
                       {/* <div className="form-row mb-4 mb-lg-0">
-                <div className="col-3">
-        
-                  <div className="embed-responsive embed-responsive-1by1 bg-cover" style={{ backgroundImage: 'url(/img/products/product-11.jpg)' }} />
-                </div>
-              </div> */}
+                        {
+                          ord.listImg.map(i => {
+                            return (
+                              <div className="col-3">
+                                <div className="embed-responsive embed-responsive-1by1 bg-cover" style={{ backgroundImage: `url(${i})` }} />
+                              </div>
+                            )
+                          })
+                        }
+                      </div> */}
+                      <div className="form-row mb-4 mb-lg-0">
+
+                            {
+                                ord.listImg.slice(0, 3).map((e, i) => <div key={i} className="col-3">
+                                    <div className="embed-responsive embed-responsive-1by1 bg-cover" style={{ backgroundImage: `url(${e})` }} />
+                                </div>)
+                            }
+                            {
+                                ord.listImg.length === 4 && (
+                                    <div className="col-3">
+                                        <div className="embed-responsive embed-responsive-1by1 bg-cover" style={{ backgroundImage: `url(${ord.listImg[3]})` }} />
+                                    </div>
+                                )
+                            }
+                            {
+                                ord.listImg.length >= 5 && (
+                                    <div className="col-3">
+                                        <div className="embed-responsive embed-responsive-1by1 bg-light">
+                                            <Link className="embed-responsive-item embed-responsive-item-text text-reset" to={`/account/orderDetail/${ord.id}`}>
+                                                <div className="font-size-xxs font-weight-bold">
+                                                    +{ord.listImg.length - 3} <br /> {t('more')}
+                                                </div>
+                                            </Link>
+                                        </div>
+                                    </div>
+                                )
+                            }
+
+                        </div>
                     </div>
                     <div className="col-12 col-lg-6">
                       <div className="form-row  mb-4 mb-lg-0">
@@ -243,7 +302,7 @@ const AccountOrders: React.FC = () => {
                                 // checkPrice(ev, ord.id)
                               }
                               } >
-                                Đặt lại đơn
+                                {t('Re-order')}
                               </Link>
                               <Dialog
                                 open={open}
@@ -252,21 +311,21 @@ const AccountOrders: React.FC = () => {
                                 aria-describedby="alert-dialog-description"
                               >
                                 <DialogTitle id="alert-dialog-title">
-                                  Đặt lại đơn
+                                  {t('Re-order')}
                                 </DialogTitle>
                                 <DialogContent>
                                   <DialogContentText id="alert-dialog-description">
-                                    Bạn có muốn đặt lại đơn này ? <br /> Giỏ hàng hiện tại của bạn sẽ bị xóa để đặt lại đơn
+                                    {t('Would you like to re-order this ?')} <br /> {t('Your current shopping cart will be cleared to re-order')}
                                   </DialogContentText>
                                 </DialogContent>
                                 <DialogActions>
-                                  <Button onClick={handleClose} >Không</Button>
+                                  <Button onClick={handleClose} >{t('No')}</Button>
                                   <Button onClick={(ev) => { reOrderHandle(ev, ord.id) }} autoFocus>
-                                    Có
+                                    {t('Yes')}
                                   </Button>
                                 </DialogActions>
                               </Dialog>
-                              <Dialog
+                              {/* <Dialog
                                 open={open}
                                 onClose={handleClose}
                                 aria-labelledby="alert-dialog-title"
@@ -286,14 +345,14 @@ const AccountOrders: React.FC = () => {
                                     Có
                                   </Button>
                                 </DialogActions>
-                              </Dialog>
+                              </Dialog> */}
                             </>)
                           }
                         </div>
                         <div className="col-7">
                           {/* Button */}
                           <Link className="btn btn-sm btn-block btn-outline-dark" to={`/account/orderDetail/${ord.id}`}>
-                            Chi tiết đơn
+                            {t('Order detail')}
                           </Link>
                         </div>
                         {/* <div className="col-6">
@@ -310,7 +369,7 @@ const AccountOrders: React.FC = () => {
 
             </>
           )
-        }) : <p style={{ color: 'red' }}>Lịch sử rỗng, bạn có muốn mua hàng ? <Link to='/'>Ấn vào đây</Link></p>
+        }) : <p style={{ color: 'red' }}>{t('History is empty, do you want to purchase?')} <Link to='/'>{t('Click here')}</Link></p>
       }
       {
         order && <Paginate currentPage={order.pageNumber} totalPage={pageNumber.length} />

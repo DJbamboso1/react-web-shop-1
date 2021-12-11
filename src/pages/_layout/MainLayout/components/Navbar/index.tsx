@@ -75,17 +75,17 @@ const Navbar: React.FC<NavbarProp> = ({ hoverEvent, mouseLeaveEvent }) => {
                 <div className="collapse navbar-collapse" id="navbarCollapse1">
                     {/* Nav */}
                     <ul className="navbar-nav mx-auto">
-                        <li className="nav-item dropdown hovered" onMouseOver={hoverEvent} onMouseLeave={mouseLeaveEvent}>
+                        <li className="nav-item dropdown" onMouseOver={hoverEvent} onMouseLeave={mouseLeaveEvent}>
 
-                            <Link className="nav-link" data-toggle="dropdown" to="/" aria-expanded="true" onMouseOver={(ev) => {ev.preventDefault()}}>{t('Categories')}</Link>
+                            <Link className="nav-link" data-toggle="dropdown" to="#" aria-expanded="true" onClick={(ev) => {ev.preventDefault()}}>{t('Categories')}</Link>
 
                             <div className="dropdown-menu">
                                 <Categories />
                             </div>
                         </li>
-                        <li className="nav-item dropdown hovered" onMouseOver={hoverEvent} onMouseLeave={mouseLeaveEvent}>
+                        <li className="nav-item dropdown" onMouseOver={hoverEvent} onMouseLeave={mouseLeaveEvent}>
 
-                            <Link className="nav-link" data-toggle="dropdown" to="/" aria-expanded="true" onMouseOver={(ev) => {ev.preventDefault()}}>{t('Distributor')}</Link>
+                            <Link className="nav-link" data-toggle="dropdown" to="#" aria-expanded="true" onClick={(ev) => {ev.preventDefault()}}>{t('Distributor')}</Link>
 
                             <div className="dropdown-menu">
                                 <DistributorComponent />
@@ -99,30 +99,26 @@ const Navbar: React.FC<NavbarProp> = ({ hoverEvent, mouseLeaveEvent }) => {
                                 <CatalogCard />
                             </div>
                         </li> */}
-                        <li className="nav-item dropdown" onMouseOver={hoverEvent} onMouseLeave={mouseLeaveEvent}>
+                        {/* <li className="nav-item dropdown" onMouseOver={hoverEvent} onMouseLeave={mouseLeaveEvent}>
                             
-                            <Link className="nav-link" data-toggle="dropdown" to="#">{t('Contact')}</Link>
+                            <Link className="nav-link" data-toggle="dropdown" to="/contact-us">{t('Contact')}</Link>
                             
-                            {/* <div className="dropdown-menu" style={{ minWidth: '650px' }}>
-                                <Shop />
-                            </div> */}
+                            
                         </li>
                         <li className="nav-item dropdown hovered" onMouseOver={hoverEvent} onMouseLeave={mouseLeaveEvent}>
                             
-                            <Link className="nav-link" data-toggle="dropdown" to="#" aria-expanded="true">{t('FAQ')}</Link>
+                            <Link className="nav-link" data-toggle="dropdown" to="/faq" aria-expanded="true">{t('FAQ')}</Link>
                            
-                            {/* <div className="dropdown-menu">
-                                <Pages />
-                            </div> */}
-                        </li>
-                        <li className="nav-item dropdown hovered" onMouseOver={hoverEvent} onMouseLeave={mouseLeaveEvent}>
+                            
+                        </li> */}
+                        {/* <li className="nav-item dropdown hovered" onMouseOver={hoverEvent} onMouseLeave={mouseLeaveEvent}>
                             
                             <Link className="nav-link" data-toggle="dropdown" to="#" aria-expanded="true">{t('About Us')}</Link>
                             
-                            {/* <div className="dropdown-menu">
+                            <div className="dropdown-menu">
                                 <Blog />
-                            </div> */}
-                        </li>
+                            </div>
+                        </li> */}
                         {/* <li className="nav-item">
                             <a className="nav-link" href="docs/getting-started.html">Docs</a>
                         </li> */}
@@ -131,7 +127,7 @@ const Navbar: React.FC<NavbarProp> = ({ hoverEvent, mouseLeaveEvent }) => {
                     <ul className="navbar-nav flex-row">
                         <li className="nav-item">
                             <a className="nav-link" data-toggle="modal" href="#" onClick={_openSearchModal}>
-                                <i className="fe fe-search" />
+                                <i className="fe fe-search" /> {t('Search')}
                             </a>
                         </li>
                         <li className="nav-item ml-lg-n4">
@@ -139,7 +135,7 @@ const Navbar: React.FC<NavbarProp> = ({ hoverEvent, mouseLeaveEvent }) => {
                                 <i className="fe fe-user" />
                             </Link> */}
                             <Link className="nav-link" to={login ? '/account/info' : '/auth/login'}>
-                                <i className="fe fe-user" />
+                                <i className="fe fe-user" /> {login ? t('Profile') : t("Login")}
                             </Link>
                         </li>
                         {/* <li className="nav-item ml-lg-n4">
@@ -150,7 +146,7 @@ const Navbar: React.FC<NavbarProp> = ({ hoverEvent, mouseLeaveEvent }) => {
                         <li className="nav-item ml-lg-n4">
                             <a className="nav-link" data-toggle="modal" href="#" onClick={_openCartModal}>
                                 <span data-cart-items={list.length || undefined}>
-                                    <i className="fe fe-shopping-cart" />
+                                    <i className="fe fe-shopping-cart" /> {t('Cart')}
                                 </span>
                             </a>
                         </li>

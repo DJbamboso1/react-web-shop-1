@@ -1,3 +1,4 @@
+import { useTranslate } from 'core'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Redirect } from 'react-router-dom'
@@ -7,6 +8,7 @@ import Header from './components/Header'
 import Navbar from './components/Navbar'
 
 const MainLayout: React.FC = ({ children }) => {
+    let {t} = useTranslate()
     function hoverEvent(event: any) {
         event.currentTarget.classList.add('hovered', 'show')
         document.querySelectorAll(".dropdown-toggle, dropdown-menu").forEach(e => {
@@ -52,15 +54,15 @@ const MainLayout: React.FC = ({ children }) => {
                 {/* <Header  />
                 <Navbar /> */}
             </div>
-            <div style={{ paddingTop: '130px' }}>
+            <div style={{ paddingTop: '133px' }}>
                 <div className="py-3 bg-dark bg-pattern mb-4">
                     <div className="container">
                         <div className="row">
                             <div className="col-12">
                                 {/* Text */}
                                 <div className="text-center text-white">
-                                    <span className="heading-xxs letter-spacing-xl" style={{visibility: 'hidden'}}>
-                                        ⚡️ Happy Shopping ⚡️
+                                    <span className="heading-xxs letter-spacing-xl" > {/*style={{visibility: 'hidden'}}*/}
+                                        ⚡️  {t('HAPPY HOLIDAY DEALS ON EVERYTHING')} ⚡️
                                     </span>
                                 </div>
                             </div>

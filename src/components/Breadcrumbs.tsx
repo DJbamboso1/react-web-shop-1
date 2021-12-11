@@ -12,6 +12,7 @@ interface BreadcrumbsProps {
 export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ list }) => {
 
     let lastItem = list[list.length - 1]
+    
     // console.log('LIST HERE: ', list)
     return (
         <nav className="py-5">
