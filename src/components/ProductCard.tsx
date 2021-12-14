@@ -11,6 +11,7 @@ import { convertQueryURLToObject, currency, changeQueryURL } from 'utils'
 
 // export const ProductCard: React.FC<Product> = ({ name, price, real_price, slug, thumbnail_url }) => {
 export const ProductCard: React.FC<{ product?: Product01, isActive?: boolean }> = ({ product, isActive }) => {
+    console.log('Product: ', product)
     let objectURL = convertQueryURLToObject()
     const dispatch = useDispatch()
     let { login } = useSelector((store: StateStore) => store.auth)

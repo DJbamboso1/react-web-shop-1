@@ -14,10 +14,9 @@ const MainLayout: React.FC = ({ children }) => {
         document.querySelectorAll(".dropdown-toggle, dropdown-menu").forEach(e => {
             e.setAttribute("aria-expaned", 'true')
         })
-        document.querySelectorAll(".dropdown-menu").forEach(e => {
+        document.querySelectorAll(".nav-item.dropdown.show .dropdown-menu").forEach(e => {
             e.classList.add('show')
         })
-
     };
     function mouseLeaveEvent(event: any) {
         event.currentTarget.classList.remove('show')

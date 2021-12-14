@@ -63,12 +63,12 @@
     "Cart detail": "Xem chi tiết giỏ hàng",
     "HAPPY HOLIDAY DEALS ON EVERYTHING": "Mùa lễ hội sale gấp bội",
     "Frequently Asked Questions": "Câu hỏi thường gặp",
-    "How to change password in Gecko ?": "1. Làm cách nào để thay đổi thay đổi mật khẩu tại Gecko ?",
+    "How to change password in Gecko ?": "Làm cách nào để thay đổi thay đổi mật khẩu tại Gecko ?",
     "You can change the password for your account by logging in to the account management page and following these steps:": "Quý khách có thể thay đổi mật khẩu cho tài khoản bằng cách đăng nhập vào trang quản lý tài khoản và thực hiện theo các bước sau:",
     "Go to the account information section": "Vào phần thông tin tài khoản",
     "Enter the current password and the password you want to change": "2. Nhập mật khẩu hiện tại và mật khẩu muốn thay đổi",
     "Click \"Save\"": "Bấm \"Lưu\"",
-    "How do I retrieve my Gecko account password?": "2. Làm thế nào để tôi lấy lại mật khẩu tài khoản Gecko ?",
+    "How do I retrieve my Gecko account password?": "Làm thế nào để tôi lấy lại mật khẩu tài khoản Gecko ?",
     "You can recover your password by actively contacting the websites admin via email Gecko@hotmail.com": "Quý khách có thể lấy lại mật khẩu bằng cách chủ động liên hệ với admin của website qua email Gecko@hotmail.com",
     "Please provide full information including: account name (username) and account registration email. After verifying your identity, you will receive an email containing your new password via Geckos email.": "Quý khách vui lòng cung cấp đầy đủ thông tin bao gồm: tên tài khoản (username) và email đăng ký tài khoản. Sau khi xác thực danh tính, quý khách sẽ nhận được email chứa mật khẩu mới thông qua email của Gecko.",
     "How do I activate my account?": "Làm thế nào để kích hoạt tài khoản của tôi?",
@@ -106,12 +106,12 @@
     "Total order": "Tổng đơn",
     "Want more information about us ?": "Muốn biết thêm thông tin về chúng tôi ?",
     "Subscribe": "Đăng ký",
-    
+
     "1. How to change password in Gecko ?": "1. Làm cách nào để thay đổi thay đổi mật khẩu tại Gecko ?",
-    
+
     "1. Go to the account information section": "1. Vào phần thông tin tài khoản",
     "2. Enter the current password and the password you want to change": "2. Nhập mật khẩu hiện tại và mật khẩu muốn thay đổi",
-    
+
     "2. How do I retrieve my Gecko account password?": "2. Làm thế nào để tôi lấy lại mật khẩu tài khoản Gecko ?",
     "You can recover your password by actively contacting the websites admin via email Gecko@hotmail.com": "Quý khách có thể lấy lại mật khẩu bằng cách chủ động liên hệ với admin của website qua email Gecko@hotmail.com",
     "Please provide full information including: account name (username) and account registration email. After verifying your identity, you will receive an email containing your new password via Geckos email.": "Quý khách vui lòng cung cấp đầy đủ thông tin bao gồm: tên tài khoản (username) và email đăng ký tài khoản. Sau khi xác thực danh tính, quý khách sẽ nhận được email chứa mật khẩu mới thông qua email của Gecko.",
@@ -140,10 +140,10 @@
     "Title": "Tiêu đề",
     "Message": "Tin nhắn",
     "All": "Tất cả",
-    
+
     "How do I order through the Gecko website ?": "Làm thế nào để tôi đặt hàng qua website Gecko ?",
     "Charged": "Đã tính tiền",
-    
+
     "BUY GENUINE PRODUCTS FROM HUGE BRANDS WITH GECKO": "MUA HÀNG CHÍNH HÃNG TỪ CÁC THƯƠNG HIỆU LỚN VỚI GECKO",
     "If you are looking for a B2B website to shop and sell online with genuine, reputable product lines, then Gecko is a great choice for you. The essence of Gecko is an E-commerce platform. This allows buyers and sellers to easily interact with a distributor's products and promotions.": "Nếu bạn đang tìm kiếm một trang web B2B để mua sắm và bán hàng trực tuyến với những dòng sản phẩm chính hãng, uy tín thì Gecko là một sự lựa chọn tuyệt vời dành cho bạn. Bản chất của Gecko là 1 E-commerce platform - nền tảng trang web thương mại điện tử. Điều này cho phép người mua và người bán hàng dễ dàng tương tác với sản phẩm và chương trình khuyến mãi của nhà phân phối.",
     "Coming to Gecko, the opportunity to become a seller is easier than ever. With just a few taps on the app, you can immediately post your products for sale. Not only that, distributors can easily manage and categorize products, create their loyalty system and promote products at attractive prices to attract retailers.": "Đến với Gecko, cơ hội để trở thành một nhà bán hàng dễ dàng hơn bao giờ hết. Chỉ với vài thao tác trên ứng dụng, bạn đã có thể đăng bán ngay những sản phẩm của mình. Không những thế, các nhà phân phối có thể dễ dàng quản lý, phân loại sản phẩm, tự tạo hệ thống khách hàng thân thiết và quảng bá sản phẩm với những mức giá hấp dẫn để thu hút các nhà bán lẻ.",
@@ -237,5 +237,8 @@
     "Back to home page": "Quay về trang chủ",
     "Success": "Thành công",
     "Fail": "Thất bại",
-    "Order ": "Đặt hàng "
+    "Order ": "Đặt hàng ",
+    "Delivery": "Đang giao hàng",
+    "Default price": "Giá mặc định",
+    "Checkout": "Thanh toán"
 }

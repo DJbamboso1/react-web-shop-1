@@ -37,7 +37,10 @@ const AccountInfo: React.FC = () => {
                 delete initRule.oldPassword
                 delete initRule.newPassword
             }
-            if (!form.businessLicense) delete initRule.businessLicense
+            if (!form.businessLicense) {
+                delete initRule.businessLicense 
+                // delete initRule.taxId
+            }
             if (!form.taxId) delete initRule.taxId
             // console.log('NOT DELETE')
         }
@@ -99,197 +102,118 @@ const AccountInfo: React.FC = () => {
     }, [form.month, form.year])
 
     useEffect(() => {
-        // console.log(form.avatarFile)
         if (form.avatarFile) {
             var reader = new FileReader();
             reader.readAsDataURL(form.avatarFile);
             reader.onloadend = function () {
                 var base64String = reader.result;
-                // console.log('Base64 String - ', base64String);
                 if (base64String) {
                     form.avatar = base64String.toString()
                     setUrlImg(base64String.toString())
-                    // console.log('Base64 String without Tags- ',
-                    //     base64String.toString().substr(base64String.toString().indexOf(', ') + 1));
+
                 }
             }
         }
-
-    }, [urlImg])
+    }, [urlImg, form.avatarFile])
 
     useEffect(() => {
-        // console.log(form.businessLicenseFile)
         if (form.businessLicenseFile) {
             var reader = new FileReader();
             reader.readAsDataURL(form.businessLicenseFile);
             reader.onloadend = function () {
                 var base64String = reader.result;
-                console.log('Base64 String - ', base64String);
                 if (base64String) {
                     form.businessLicense = base64String.toString()
                     setUrlImgLicense(base64String.toString())
-                    // setTypeLicense( base64String.slice(start, end).toString())
-
-                    // console.log("abciaudvbyvuwevbk: ", base64String.slice(start, end).toString())
                 }
-
-
             }
         }
-        // changeLicense(form.businessLicenseFile)
     }, [urlImgLicense])
 
 
-    // useEffect(() => {
-    //     // setLoading(true)
-    //     let license = form.businessLicenseFile
-    //     console.log('LICENSE: ', license)
-    //     if (license) {
-    //         // setLicen(license.name)
-    //         setLoading(true)
-    //         const storageRef = ref(storage, `/licenses/${user?.id}`);
-    //         const uploadTask = uploadBytesResumable(storageRef, license);
-    //         uploadTask.on('state_changed',
-    //             (snapshot) => {
-    //             },
-    //             (error) => {
-    //             },
-    //             () => {
-    //                 getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-    //                     console.log('File available at', downloadURL);
-    //                     // setForm({ ...form, businessLicense: downloadURL })
-    //                     setForm({ ...form, businessLicense: downloadURL })
-    //                     setLoading(false)
-    //                     let user = await authService.getInfo(form.id)
-    //                     if (user.data.businessLicense) {
-    //                         // setMessage('')
-    //                         // setOpen(true)
-    //                     }
-
-    //                 })
-    //             }
-    //         )
-    //     }
-    // }, [form.businessLicenseFile])
+    
 
 
     const submit = async (form: Form) => {
         setLoading(true)
         form.doB = `${form.year}/${form.month > 9 ? '' : '0'}${form.month}/${form.day > 9 ? '' : '0'}${form.day}`;
-        // if (form.businessLicense) {
-        //     changeLicense(form.businessLicense)
-        // }
+        
         if (form.avatarFile) {
-            changeAvatar(form.avatarFile)
-            // form.avatar = avatar
-            console.log('AHUHU')
+            form.avatar = await changeAvatar(form.avatarFile)
         }
         if (form.businessLicenseFile) {
-            changeLicense(form.businessLicenseFile)
-            // form.businessLicense = license
-            console.log('AHUHU')
+            form.businessLicense = await changeLicense(form.businessLicenseFile)
         }
         console.log('FORM PHASE 2: ', form)
+
         let profile = await authService.updateProfile(form)
-        // setLoading(false)
+        
         if (profile.succeeded) {
+            setLoading(false)
             dispatch(updateInfo(form))
             setMessage(t('Update successfully'))
         } else {
             setMessage(t('Fail to update'))
         }
-        
-        // console.log('FORM PHASE 2: ', form)
+        setOpen(true)
     }
-    // if (state) {
-    //     return <LoadingPage />
-    // }
+    
 
-    const changeAvatar = (file?: File) => {
-        setLoading(true)
-        let avatar = file
-        if (avatar) {
-            const storageRef = ref(storage, `/avatars/${user?.id}`);
-            const uploadTask = uploadBytesResumable(storageRef, avatar);
-            uploadTask.on('state_changed',
-                (snapshot) => {
-                },
-                (error) => {
-                },
-                () => {
-                    getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-                        // console.log('File available at', downloadURL);
-                        // setForm({ ...form, avatar: downloadURL })
-                        // setAvatar(downloadURL)
-                        setLoading(true)
-                        form.avatar = downloadURL
-                        let profile = await authService.updateProfile(form)
-                        console.log('UPLOAD AVATAR:  AAAAAAAAAAAA')
-                        console.log('UPLOAD LICENSE:', profile)
-                        if(profile) {
-                            setLoading(false)
-                            setOpen(true)
-                        }
-                        // setLoading(true)
-                        // let user = await authService.getInfo(form.id)
-                        // console.log("HELLO WORLD: ", user)
-                        // if (user.data.avatar) {
-                        //     setOpen(true)
-                        // }
-                        // setLoading(false)
-                    })
-                }
-            )
+    const changeAvatar = async (file: File) : Promise<any> => {
+        // // setLoading(true)
+        // let avatar = file.avatarFile  as any
+        if (file) {
+            return new Promise((res, rej) => {
+                const storageRef = ref(storage, `/avatars/${user?.id}`);
+                const uploadTask = uploadBytesResumable(storageRef, file);
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+                    },
+                    (error) => {
+                        rej()
+                    },
+                    () => {
+                        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL: string) => {
+                            setForm({...form, avatar: downloadURL})
+                            res(downloadURL)
+                        })
+                    }
+                )
+            })
+            
         }
+        return ''
     }
 
-    const changeLicense = (file?: File) => {
-        setLoading(true)
-        let license = file
-        console.log('LICENSE: ', license)
-        if (license) {
+    const changeLicense = async (file: File) : Promise<any> => {
+        // setLoading(true)
+        // let license = file.businessLicenseFile as any
+        // console.log('LICENSE: ', license)
+        if (file) {
             // setLicen(license.name)
-            const storageRef = ref(storage, `/licenses/${user?.id}`);
-            const uploadTask = uploadBytesResumable(storageRef, license);
-            uploadTask.on('state_changed',
-                (snapshot) => {
-                },
-                (error) => {
-                },
-                () => {
-                    getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-                        console.log('File available at', downloadURL);
-                        setLoading(true)
-                        // setForm({ ...form, businessLicense: downloadURL })
-                        // setForm({ ...form, businessLicense: downloadURL })
-                        // console.log('LICENSE: ', form.businessLicense)
-                        // setLicense1(downloadURL)
-                        // console.log('DOWNLOAD: ', license1)
-                        form.businessLicense = downloadURL
-                        let profile = await authService.updateProfile(form)
-                        console.log('UPLOAD LICENSE:  BBBBBBBBBBBB')
-                        console.log('UPLOAD LICENSE:', profile)
-                        if(profile) {
-                            setLoading(false)
-                            setOpen(true)
-                        }
-                        // if(profile) {
-                        //     console.log('abcdef')
-                        // }
-                        // setLoading(false)
-                        // let user = await authService.getInfo(form.id)
-                        // if (user.data.businessLicense) {
-                            
-                        // }
-
-                    })
-                }
-            )
+            return new Promise((res, rej) => {
+                const storageRef = ref(storage, `/licenses/${user?.id}`);
+                const uploadTask = uploadBytesResumable(storageRef, file);
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+                    },
+                    (error) => {
+                        rej()
+                    },
+                    () => {
+                        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL: string) => {
+                            console.log('File available at', downloadURL);                       
+                            setForm({...form, businessLicense: downloadURL})
+                            res(downloadURL)
+                        })
+                    }
+                )
+            })
         }
+        return ''
+
     }
 
-    // console.log('USER: ', user)
-    // console.log('STATUS: ', status)
     console.log('FORM: ', form)
     if (open === true) {
         return (
@@ -351,30 +275,30 @@ const AccountInfo: React.FC = () => {
                             <div className="col-12">
                                 {/* Email */}
                                 <div className="form-group">
-                                    {form.displayName ? <label htmlFor="accountFirstName">
+                                    <label htmlFor="accountFirstName">
                                         {t('Full name')} *
-                                    </label> : <Skeleton width='30%' height={35} />}
-                                    {form.displayName ? <input className="form-control form-control-sm" id="accountFirstName" type="text"  {...register('displayName', { required: true })} /> : <Skeleton width='100%' height={75} />}
+                                    </label> 
+                                    <input className="form-control form-control-sm" id="accountFirstName" type="text"  {...register('displayName', { required: true }, { required: 'Họ tên không được để trống' })} /> 
                                 </div>
                             </div>
                             <ErrorInput error={error.displayName} />
                             <div className="col-12">
                                 {/* Email */}
                                 <div className="form-group">
-                                    {form.email ? <label htmlFor="accountEmail">
+                                    <label htmlFor="accountEmail">
                                         Email *
-                                    </label> : <Skeleton width='30%' height={35} />}
-                                    {form.email ? <input className="form-control form-control-sm" id="accountEmail" type="email"    {...register('email', { pattern: 'email', required: true })} /> : <Skeleton width='100%' height={75} />}
+                                    </label> 
+                                    <input className="form-control form-control-sm" id="accountEmail" type="email"    {...register('email', { pattern: 'email', required: true }, { required: 'Email không được để trống' })} /> 
                                 </div>
                                 <ErrorInput error={error.email} />
                             </div>
                             <div className="col-12">
                                 {/* Email */}
                                 <div className="form-group">
-                                    {form.address ? <label htmlFor="accountEmail">
+                                    <label htmlFor="accountEmail">
                                         {t('Address')} *
-                                    </label> : <Skeleton width='30%' height={35} />}
-                                    {form.address ? <input className="form-control form-control-sm" id="accountEmail" type="text"    {...register('address', { required: true, min: 5 })} /> : <Skeleton width='100%' height={75} />}
+                                    </label> 
+                                    <input className="form-control form-control-sm" id="accountEmail" type="text"    {...register('address', { required: true }, { required: 'Địa chỉ không được để trống' })} />
                                 </div>
                                 <ErrorInput error={error.address} />
                             </div>
@@ -382,12 +306,12 @@ const AccountInfo: React.FC = () => {
 
                                 <div className="form-group">
                                     {
-                                        form.id ? <label htmlFor="accountPassword">
+                                        <label htmlFor="accountPassword">
                                             {t('Old password')}
-                                        </label> : <Skeleton width='30%' height={35} />
+                                        </label> 
                                     }
                                     {
-                                        form.id ? <input className="form-control form-control-sm" id="accountPassword" type="password"  {...register('oldPassword', { min: 6, max: 30, required: true })} /> : <Skeleton width='100%' height={75} />
+                                        <input className="form-control form-control-sm" id="accountPassword" type="password"  {...register('oldPassword', { min: 6, max: 30, required: true }, { min: "Mật khẩu cũ ít nhất 6 ký tự", max: "Mật khẩu cũ nhiều nhất 30 ký tự", required: "Mật khẩu cũ không được để trống" })} /> 
                                     }
 
                                 </div>
@@ -396,14 +320,10 @@ const AccountInfo: React.FC = () => {
                             <div className="col-12 col-md-6">
 
                                 <div className="form-group">
-                                    {
-                                        form.roleId ? <label htmlFor="AccountNewPassword">
+                                    <label htmlFor="AccountNewPassword">
                                             {t('New password')}
-                                        </label> : <Skeleton width='30%' height={35} />
-                                    }
-                                    {
-                                        form.roleId ? <input className="form-control form-control-sm" id="AccountNewPassword" type="password"  {...register('newPassword', { min: 6, max: 30, required: true })} /> : <Skeleton width='100%' height={75} />
-                                    }
+                                        </label> 
+                                        <input className="form-control form-control-sm" id="AccountNewPassword" type="password"  {...register('newPassword', { min: 6, max: 30, required: true }, { min: "Mật khẩu mới ít nhất 6 ký tự", max: "Mật khẩu mới nhiều nhất 30 ký tự", required: "Mật khẩu mới không được để trống" })} /> 
                                 </div>
                                 <ErrorInput error={error.newPassword} />
                             </div>
@@ -411,9 +331,9 @@ const AccountInfo: React.FC = () => {
                                 {/* Birthday */}
                                 <div className="form-group">
                                     {/* Label */}
-                                    {form.doB ? <label>{t('Date of birth')}</label> : <Skeleton width="60%" height={24} />}
+                                   <label>{t('Date of birth')}</label>
                                     {/* Inputs */}
-                                    {form.doB ? (<div className="form-row">
+                                    <div className="form-row">
                                         <div className="col-auto">
                                             {/* Date */}
                                             <label className='sr-only' htmlFor="accountDate">
@@ -452,49 +372,47 @@ const AccountInfo: React.FC = () => {
                                     <option>1992</option> */}
                                             </select>
                                         </div>
-                                    </div>) : <Skeleton className='form-row' height={51} />}
+                                    </div>
                                 </div>
                             </div>
                             <div className="col-12 col-lg-5">
                                 {/* Gender */}
                                 <div className="form-group mb-8">
-                                    {form.sex ? <label>{t('Gender')}</label> : <Skeleton width="60%" height={24} />}
-                                    {form.sex ? (<div className="btn-group-toggle" data-toggle="buttons">
+                                    <label>{t('Gender')}</label>
+                                   <div className="btn-group-toggle" data-toggle="buttons">
                                         <label className={`btn btn-sm btn-outline-border ${form.sex === TYPE_MALE ? 'active' : ''}`} onClick={e => setForm({ ...form, sex: TYPE_MALE })}>
                                             <input type="radio" name="gender" /> {t('Male')}
                                         </label>
                                         <label className={`btn btn-sm btn-outline-border ${form.sex === TYPE_FEMALE ? 'active' : ''}`} onClick={e => setForm({ ...form, sex: TYPE_FEMALE })}>
                                             <input type="radio" name="gender" /> {t('Female')}
                                         </label>
-                                    </div>) : <Skeleton className='btn-group-toggle' height={51} />}
+                                    </div>
                                 </div>
                             </div>
                             <div className="col-12">
-                                {form.id ? <label htmlFor="accountEmail">
+                                <label htmlFor="accountEmail">
                                     {t('License')}
-                                </label> : <Skeleton width='30%' height={35} />}
+                                </label> 
                                 <div className="form-group" >
                                     {/* <input className="form-control form-control-sm" id="accountFirstName" type="text" placeholder="First Name *" {...register('displayName')} />  */}
                                     {/* {
                                         form.businessLicense ? (isFile === true ? <a href={form.businessLicense}>{form.businessLicense}</a> : <img style={{ width: '50%', padding: '10px 0px' }} src={form.businessLicense || '/img/file.png'} alt="" onClick={() => { licenseRef.current?.dispatchEvent(new MouseEvent('click')) }} />) : ''
                                     } */}
-                                    {
-                                        form.businessLicense && <>
+                                    
                                             {/* <img style={{ width: '50%', padding: '10px 0px' }} src={form.businessLicense || '/img/file.png'} alt="" onClick={() => { licenseRef.current?.dispatchEvent(new MouseEvent('click')) }} /> */}
                                             <a href={form.businessLicense} style={{ width: '100%' }} >{form.businessLicense}</a><br />
-                                        </>
-                                    }
+                                       
                                     {/* {!loading ? (isFile === true ? <a href={form.businessLicense}>{form.businessLicense}</a> : <img style={{ width: '50%', padding: '10px 0px' }} src={form.businessLicense } alt="" onClick={() => { licenseRef.current?.dispatchEvent(new MouseEvent('click')) }} />) : <LoadingAvatar />} */}
-                                    {form.id ? <input type="file" className='form-control form-control-sm' ref={licenseRef} accept="image/*, application/pdf" disabled={status === true ? true : false} hidden={status === true ? true : false} {...register('businessLicenseFile')} /> : <Skeleton width='100%' height={75} />}
+                                    <input type="file" className='form-control form-control-sm' ref={licenseRef} accept="image/*, application/pdf" disabled={status === true ? true : false} hidden={status === true ? true : false} {...register('businessLicenseFile')} /> 
                                 </div>
                             </div>
                             <div className="col-12">
                                 {/* Email */}
                                 <div className="form-group">
-                                    {form.email ? <label htmlFor="accountEmail">
+                                    <label htmlFor="accountEmail">
                                         {t('Tax')}
-                                    </label> : <Skeleton width='30%' height={35} />}
-                                    {form.id ? <input className="form-control form-control-sm" type="text" disabled={status === true ? true : false} {...register('taxId', { required: true, min: 10, max: 10 }, { required: 'Cần nhập mã sô thuế', min: 'Mã số thuế cần 10 ký tự', max: 'Mã số thuế cần 10 ký tự' })} /> : <Skeleton width='100%' height={75} />}
+                                    </label> 
+                                    <input className="form-control form-control-sm tax-number" type="number" disabled={status === true ? true : false} {...register('taxId', { required: true, min: 10, max: 10, pattern: 'tax' }, { required: 'Cần nhập mã sô thuế', min: 'Mã số thuế cần 10 ký tự', max: 'Mã số thuế cần 10 ký tự', pattern: 'Mã số thuế chỉ chấp nhận số' })} /> 
                                 </div>
                                 <ErrorInput error={error.taxId} />
                             </div>

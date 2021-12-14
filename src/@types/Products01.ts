@@ -2,7 +2,6 @@ export interface Product01 {
     id: string,
     distributor: string,
     distrubutorId?: string,
-    // category: T,
     name: string,
     image: string,
     description: string,

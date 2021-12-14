@@ -35,6 +35,7 @@ export interface OrderDetail {
     product: {
       id: string,
       distributor: string,
+      distributorId: string,
       // category: T,
       name: string,
       image: string,

@@ -77,6 +77,8 @@ const CheckoutComponent: React.FC = () => {
             if (user) {
                 console.log('A')
                 for (let i in list) {
+                    console.log('retailerId: ', user.actorId)
+                    console.log('distributorId: ', list[i].product.distrubutorId)
                     let membership = await memberService.getMembership(user.actorId, list[i].product.distrubutorId || '')
                     console.log('B: ', membership)
                     if (membership.data) {
@@ -125,17 +127,16 @@ const CheckoutComponent: React.FC = () => {
             let obj = await paymentService.checkout(checkoutObj)
             console.log("Checkout result: ", obj)
             if (obj) {
-                dispatch(cartRemoveAll())
-                localStorage.removeItem('cart')
-                setLoading(false)
+                
+                
                 if (obj.data.vnPayPaymentUrl) {
                     window.location.href = obj.data.vnPayPaymentUrl
-                } else
-                    if (obj.data.paymentResponse !== null) {
+                } else if (obj.data.paymentResponse !== null) {
                         window.location.href = obj.data.paymentResponse.payUrl
                     } else {
                         history.push(`/order-complete/${obj.data.sessionId}`)
                     }
+                    setLoading(false)
             }
         } catch (err) {
             console.log('ERROR GOES HERE    ')
@@ -397,7 +398,7 @@ const CheckoutComponent: React.FC = () => {
                                                 })
                                             }
                                             <li className="list-group-item d-flex">
-                                                <span>Subtotal</span> <span className="ml-auto font-size-sm" style={{ fontWeight: 'bold' }}>{currency(total)}</span>
+                                                <span>{t('Default price')}:</span> <span className="ml-auto font-size-sm" style={{ fontWeight: 'bold' }}>{currency(total)}</span>
                                             </li>
                                             {/* <li className="list-group-item d-flex">
                                             <span>id: </span> <span className="ml-auto font-size-sm">{payment}</span>
@@ -406,7 +407,7 @@ const CheckoutComponent: React.FC = () => {
                                             <span>Shipping</span> <span className="ml-auto font-size-sm">{currency(shippingPrice)}</span>
                                         </li> */}
                                             <li className="list-group-item d-flex font-size-lg font-weight-bold">
-                                                <span>Tổng:</span> <span className="ml-auto" style={{ fontWeight: 'bold' }}>
+                                                <span>{t('Total')}:</span> <span className="ml-auto" style={{ fontWeight: 'bold' }}>
                                                     {
                                                         complexList && complexList.map((i) => {
                                                             if (i.data && i.data.distributor && i.data.product && i.data.num && i.data.discountRate) {
@@ -431,7 +432,7 @@ const CheckoutComponent: React.FC = () => {
                             </p> */}
                                 {/* Button */}
                                 <button type="submit" className="btn btn-block btn-dark">
-                                    Thanh toán
+                                    {t('Checkout')}
                                 </button>
                             </div>
                         </div>

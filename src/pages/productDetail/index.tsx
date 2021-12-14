@@ -235,9 +235,9 @@ const ProductDetail: React.FC = () => {
                                         <a className="nav-link active" data-toggle="tab" href="#descriptionTab">
                                             {t('Description')}
                                         </a>
-                                        <a className="nav-link" data-toggle="tab" href="#shippingTab">
+                                        {/* <a className="nav-link" data-toggle="tab" href="#shippingTab">
                                             {data.data.distributor}
-                                        </a>
+                                        </a> */}
                                         {/* <a className="nav-link" data-toggle="tab" href="#sizeTab">
                                     Size &amp; Fit
                                 </a>

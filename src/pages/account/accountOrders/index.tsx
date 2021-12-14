@@ -4,7 +4,7 @@ import LoadingPage from 'components/LoadingPage'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
-import { convertQueryURLToObject, currency } from 'utils'
+import { changeQueryURL, convertQueryURLToObject, currency } from 'utils'
 import { orderService } from '../../../services/orderService'
 import { addToCart, cartRemoveAll } from 'store/actions/cartAction'
 import { useCart } from 'store/selector'
@@ -42,6 +42,7 @@ const AccountOrders: React.FC = () => {
   const [open, setOpen] = React.useState(false);
 
   const [open1, setOpen1] = React.useState(false);
+  let [orderId, setOrderId] = useState('')
   // let [orderDetail, setOrderDetail] = useState<OrderDetail['data']>()
   // let [productPro] = useState<Array<any>>([])
   let [index, setIndex] = useState(0)
@@ -51,6 +52,13 @@ const AccountOrders: React.FC = () => {
       queryUrl.RetailerId = user?.actorId
       queryUrl.PageSize = '3'
       queryUrl.Status = status
+      console.log('QUERYURL: ', queryUrl)
+
+      // if (queryUrl.Status.length > 0) {
+      //   changeQueryURL({...queryUrl, PageNumber: "0"})
+      //   queryUrl.PageNumber = ""
+      // }
+      console.log('QUERYURL: ', queryUrl)
       let ord = await orderService.getAllOrder(queryUrl)
       console.log('ORDER PLS', ord)
       for (let i in ord.data) {
@@ -78,14 +86,15 @@ const AccountOrders: React.FC = () => {
       console.log('ORDER STATE PLS', state.orders)
       console.log("Order: ", order)
     })()
-  }, [queryUrl.PageNumber, status])
+  }, [queryUrl.PageNumber, status, queryUrl.Status])
 
   if (state.loading) {
     return <LoadingPage />
   }
 
-  const handleClickOpen = (ev: any) => {
+  const handleClickOpen = (ev: any, id: string) => {
     ev.preventDefault()
+    setOrderId(id)
     setOpen(true);
   };
   const handleClose = () => {
@@ -111,6 +120,7 @@ const AccountOrders: React.FC = () => {
 
   const reOrderHandle = async (ev: any, id: string) => {
     // ev.preventDefault()
+    console.log('F**K ID: ', {OrderId: id})
     dispatch(cartRemoveAll())
     handleClose()
     let ordDetail = await orderService.getOrderDetail({ OrderId: id })
@@ -121,6 +131,7 @@ const AccountOrders: React.FC = () => {
         let product = {
           id: detaileData.id,
           distributor: detaileData.distributor,
+          distrubutorId: detaileData.distributorId,
           name: detaileData.name,
           image: detaileData.image,
           description: detaileData.description,
@@ -132,6 +143,7 @@ const AccountOrders: React.FC = () => {
           listPrice: detaileData.listPrice,
           quantity: ordDetail.data[i].quantity
         }
+        console.log('F**K product: ', product)
         if (product.status === 1) {
           dispatch(addToCart(product))
         } else {
@@ -176,12 +188,12 @@ const AccountOrders: React.FC = () => {
       <div className="col-12" style={{ display: 'flex', justifyContent: 'flex-end', padding: '10px 0px' }}>
         <form >
           {/* Select */}
-          <select className="custom-select custom-select-sm" id="status" style={{ width: 200, }} onChange={(ev) => { setStatus(ev.currentTarget.value) }} >
+          <select className="custom-select custom-select-sm" id="status" style={{ width: 200, }} onChange={(ev) => { setStatus(ev.currentTarget.value);  }} >
             <option value="">{t('Status')}</option>
             {/* <option value="-3">Có hàng bị trả</option> */}
-            <option value="-2">{t('Not yet delivered')}</option>
+            <option value="-2">{t('Delivery')}</option>
             <option value="-1">{t('Billing')}</option>
-            {/* <option value="0">Đã hủy</option> */}
+            {/* <option value="0">{t('Cancel')}</option> */}
             <option value="1">{t('Charged')}</option>
             <option value="2">{t('Not yet charged')}</option>
             <option value="3">{t('Was delivered')}</option>
@@ -228,9 +240,9 @@ const AccountOrders: React.FC = () => {
                                   'green')}`
                           }}>
                             {ord.status === -3 ? 'Có hàng bị trả' :
-                              (ord.status === -2 ? t('Not yet delivered') :
+                              (ord.status === -2 ? t('Delivery') :
                                 ord.status === -1 ? t('Billing') : (
-                                  ord.status === 0 ? 'Hủy' :
+                                  ord.status === 0 ? t('Cancel') :
                                     (ord.status === 1 ? t('Charged') :
                                       (ord.status === 2 ? t('Not yet charged') :
                                         (ord.status === 3 && t('Was delivered'))))))}
@@ -298,7 +310,7 @@ const AccountOrders: React.FC = () => {
                           {
                             ord.status === 3 && (<>
                               <Link className="btn btn-sm btn-block btn-outline-dark" style={{ minWidth: '120px' }} to='' onClick={(ev) => {
-                                handleClickOpen(ev);
+                                handleClickOpen(ev, ord.id);
                                 // checkPrice(ev, ord.id)
                               }
                               } >
@@ -320,32 +332,11 @@ const AccountOrders: React.FC = () => {
                                 </DialogContent>
                                 <DialogActions>
                                   <Button onClick={handleClose} >{t('No')}</Button>
-                                  <Button onClick={(ev) => { reOrderHandle(ev, ord.id) }} autoFocus>
+                                  <Button onClick={(ev) => { reOrderHandle(ev, orderId) }} autoFocus>
                                     {t('Yes')}
                                   </Button>
                                 </DialogActions>
                               </Dialog>
-                              {/* <Dialog
-                                open={open}
-                                onClose={handleClose}
-                                aria-labelledby="alert-dialog-title"
-                                aria-describedby="alert-dialog-description"
-                              >
-                                <DialogTitle id="alert-dialog-title">
-                                  Đặt lại đơn
-                                </DialogTitle>
-                                <DialogContent>
-                                  <DialogContentText id="alert-dialog-description">
-                                    Bạn có muốn đặt lại đơn này ? <br /> Giỏ hàng hiện tại của bạn sẽ bị xóa để đặt lại đơn
-                                  </DialogContentText>
-                                </DialogContent>
-                                <DialogActions>
-                                  <Button onClick={handleClose} >Không</Button>
-                                  <Button onClick={(ev) => { reOrderHandle(ev, ord.id) }} autoFocus>
-                                    Có
-                                  </Button>
-                                </DialogActions>
-                              </Dialog> */}
                             </>)
                           }
                         </div>

@@ -7,13 +7,14 @@ let patternModel: { [key: string]: RegExp } = {
     phone: /(84|0[3|5|7|8|9])+([0-9]{8})/,
     url: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/,
     username: /^[A-Za-z0-9]{6,20}$/,
-    password: /^[A-Za-z0-9]{6,20}$/
+    password: /^[A-Za-z0-9]{6,20}$/,
+    tax: /^[0-9]*$/,
 }
 type RuleItem = {
     min?: number,
     max?: number,
     required?: true,
-    pattern?: RegExp | 'email' | 'phone' | 'url' | 'username' | 'password',
+    pattern?: RegExp | 'email' | 'phone' | 'url' | 'username' | 'password' | 'tax',
     confirm?: string,
     check?: boolean
 }
