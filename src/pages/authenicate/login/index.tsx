@@ -88,35 +88,35 @@ const Login: React.FC = () => {
                     <div className="wrap-login100">
                         <form className="login100-form validate-form" onSubmit={handleSubmit(submit)}>
                             <span className="login100-form-title p-b-43">
-                                Chào mừng đến GECKO !
+                                {t('Welcome to GECKO !')}
                             </span>
                             <ErrorInput error={errorMsg}/>
                             <div className="wrap-input100" >
                                 
                             <input className={`input100 ${form.username && form.username.length > 0 && 'has-val'}`} type="text" {...register('username', { required: true, pattern: 'username', min: 6, max: 12 }, { required: 'Tài khoản không được để trống !', pattern: 'Yêu cầu tài khoản không chứa các ký tự đặt biệt', min: 'Yêu cầu tài khoản có ít nhất 6 ký tự', max: 'Yêu cầu tài khoản có nhiều nhất 12 ký tự' })} />
                                 <span className="focus-input100" />
-                                <span className="label-input100">Tài khoản<span style={{color: 'red'}}>* </span></span>
+                                <span className="label-input100">{t('Username')}<span style={{color: 'red'}}>* </span></span>
                             </div>
                             <ErrorInput error={error.username} />
                             <div className="wrap-input100">
                                 <input {...register('password', { min: 6, max: 20, required: true, pattern: 'password' }, { required: 'Mật khẩu không được để trống', min: 'Mật khẩu có ít nhất 6 ký tự', max: 'Mất khẩu có nhiều nhất 20 ký tự', pattern: 'Yêu cầu mật khẩu không chứa các ký tự đặt biệt' })} className={`input100 ${form && form.password.length > 0 && 'has-val'}`} type="password" />
                                 <span className="focus-input100" />
-                                <span className="label-input100">Mật khẩu<span style={{color: 'red'}}>* </span> </span>
+                                <span className="label-input100">{t('Password')}<span style={{color: 'red'}}>* </span> </span>
                             </div>
                             <ErrorInput error={error.password} />
                             <div className="flex-sb-m w-full p-t-3 p-b-32">
                                 <div>
-                                <p className='txt1'>{t(`Chưa có tài khoản ?`)} <Link to="/auth/register" style={{fontWeight: 'bold'}}>Đăng ký</Link></p>
+                                <p className='txt1'>{t(`Don't have an account yet ?`)} <Link to="/auth/register" style={{fontWeight: 'bold'}}>{t('Register')}</Link></p>
                                 </div>
                                 
                             </div>
                             <div className="container-login100-form-btn">
                                 <button className="login100-form-btn" type='submit'>
-                                    Đăng nhập
+                                    {t('Login')}
                                 </button>
                             </div>
                         </form>
-                        <div className="login100-more" style={{ backgroundImage: 'url(/img/icons/lOGO.png)' }}>
+                        <div className="login100-more" style={{ backgroundImage: 'url(https://firebasestorage.googleapis.com/v0/b/gecko-b3c27.appspot.com/o/background%2FLOGO.png?alt=media&token=b695b258-dadd-4812-af32-e261ad92643e)' }}>
                         </div>
                     </div>
                 </div>

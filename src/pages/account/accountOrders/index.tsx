@@ -12,7 +12,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 import { StateStore } from 'store'
 import { Paginate } from 'components/Paginate'
 import { productService } from 'services/productService'
-import { useTranslate } from 'core'
+import { history, useTranslate } from 'core'
 
 type FilterQuery = {
   // page: string,
@@ -51,7 +51,7 @@ const AccountOrders: React.FC = () => {
 
       queryUrl.RetailerId = user?.actorId
       queryUrl.PageSize = '3'
-      queryUrl.Status = status
+      // queryUrl.Status = status
       console.log('QUERYURL: ', queryUrl)
 
       // if (queryUrl.Status.length > 0) {
@@ -188,7 +188,7 @@ const AccountOrders: React.FC = () => {
       <div className="col-12" style={{ display: 'flex', justifyContent: 'flex-end', padding: '10px 0px' }}>
         <form >
           {/* Select */}
-          <select className="custom-select custom-select-sm" id="status" style={{ width: 200, }} onChange={(ev) => { setStatus(ev.currentTarget.value);  }} >
+          <select className="custom-select custom-select-sm" id="status" style={{ width: 200, }} onChange={(ev) => {history.push(changeQueryURL({...queryUrl, Status: ev.currentTarget.value, PageNumber: 1 }))  }} >
             <option value="">{t('Status')}</option>
             {/* <option value="-3">Có hàng bị trả</option> */}
             <option value="-2">{t('Delivery')}</option>

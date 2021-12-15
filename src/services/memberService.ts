@@ -1,4 +1,5 @@
-import { Membership, MembershipRank } from "../@types"
+import { convertObjectToQueryURL } from "utils"
+import { CustomerRank, Membership, MembershipRank } from "../@types"
 import { http } from "../core"
 let API = process.env.REACT_APP_API_KEY_SHOP || ''
 
@@ -11,5 +12,10 @@ export const memberService = {
     async getMembershipRank(id: string) {
         let url = API + `/membership-rank/${id}`
         return http.get<MembershipRank>(url)
+    },
+
+    async getMembershipByDistributorId(filter?: Object) {
+        let url = API + '/distributor/customer-rank' + (filter ? '?' + convertObjectToQueryURL(filter) : '')
+        return http.get<CustomerRank>(url)
     }
 }

@@ -240,5 +240,13 @@
     "Order ": "Đặt hàng ",
     "Delivery": "Đang giao hàng",
     "Default price": "Giá mặc định",
-    "Checkout": "Thanh toán"
+    "Checkout": "Thanh toán",
+    "Welcome to GECKO !": "Chào mừng đến GECKO !",
+    "Username": "Tài khoản",
+    "Password": "Mật khẩu",
+    "Register": "Đăng ký",
+    "Create new account": "Tạo tài khoản mới",
+    "Confirm password": "Xác nhận mật khẩu",
+    "Already have account ?": "Đã có tài khoản ?",
+    "Don't have an account yet ?": "Chưa có tài khoản ?"
 }

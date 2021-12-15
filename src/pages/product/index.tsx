@@ -23,6 +23,7 @@ import authService from 'services/authService'
 import { useSelector } from 'react-redux'
 import { StateStore } from 'store'
 import { useTranslate } from 'core'
+import MyTimeline from './components/MyTimeline'
 
 export type FilterQuery = {
     // page: string,
@@ -200,17 +201,22 @@ const ProductPage: React.FC = () => {
                         <div className="row align-items-center mb-7">
                             <div className="col-12">
                                 {/* Heading */}
-                                <div className='dis-header'>
+                                <div className='dis-header' id='DIS-HEADER' style={{ justifyContent: `${queryUrl.DistributorId ? 'space-around' : 'space-between'}` }}>
                                     <div className='header-header'>
-                                        {<h3 className="mb-1">{distributor?.data.displayName || t('Products')}</h3>}
-                                        {queryUrl.DistributorId && memberShipRank?.data.membershipRank ? <p>{t('Rank')}: <span style={{ fontWeight: 'bold' }}>{memberShipRank.data.membershipRank.rankName.toUpperCase()}</span></p> : ''}
+                                        {<h3 className="mb-1">{distributor?.data.displayName || t('Products')}</h3>}                                        
+                                        {queryUrl.DistributorId && memberShipRank?.data.membershipRank ? <p>{t('Rank')}: <span style={{ fontWeight: 'bold' }}>{memberShipRank.data.membershipRank.rankName.toUpperCase()} {
+                                            memberShipRank.data.membershipRank.rankName.toUpperCase() === 'BRONZE' ? <img src="/img/icons/bronze-medal.png" alt="" /> :
+                                            memberShipRank.data.membershipRank.rankName.toUpperCase() === 'SILVER' ? <img src="/img/icons/silver-medal.png" alt="" /> :
+                                            memberShipRank.data.membershipRank.rankName.toUpperCase() === 'GOLD' && <img src="/img/icons/gold-medal.png" alt="" /> 
+                                        }</span></p> : ''}
                                         {queryUrl.DistributorId && memberShipRank?.data ? <p>{t('Point')}: <span style={{ fontWeight: 'bold' }}>{memberShipRank.data.point}</span></p> : ''}
-                                    </div>
-                                    <div className='header-info'>
+                                        <br/>
                                         {queryUrl.DistributorId && distributor?.data.phoneNumber ? <p>{t('Phone')}: {distributor.data.phoneNumber}</p> : ''}
                                         {queryUrl.DistributorId && distributor?.data.email ? <p>Email: {distributor.data.email}</p> : ''}
                                         {queryUrl.DistributorId && distributor?.data.address ? <p>{t('Address')}: {distributor.data.address}</p> : ''}
                                     </div>
+                                    {queryUrl.DistributorId ?  <MyTimeline distributorId={queryUrl.DistributorId}/> : ''}
+                                   
                                 </div>
 
 

@@ -26,7 +26,7 @@ export const style = {
 const AccountInfo: React.FC = () => {
     // document.body.scrollTop = 0;
     // document.documentElement.scrollTop = 0;
-    let {t} = useTranslate()
+    let { t } = useTranslate()
     let dispatch = useDispatch()
     let [countDay, setCountDay] = useState<number>(0)
     let { register, setForm, handleSubmit, error, form } = useForm<Form>({}, {
@@ -38,7 +38,7 @@ const AccountInfo: React.FC = () => {
                 delete initRule.newPassword
             }
             if (!form.businessLicense) {
-                delete initRule.businessLicense 
+                delete initRule.businessLicense
                 // delete initRule.taxId
             }
             if (!form.taxId) delete initRule.taxId
@@ -63,8 +63,8 @@ const AccountInfo: React.FC = () => {
     let [typeLicense, setTypeLicense] = useState('')
     let [status, setStatus] = useState(true)
 
-    let[avatar1, setAvatar] = useState('')
-    let[license1, setLicense1] = useState('')
+    let [avatar1, setAvatar] = useState('')
+    let [license1, setLicense1] = useState('')
 
     let { user } = useSelector((store: StateStore) => store.auth)
     useEffect(() => {
@@ -131,13 +131,13 @@ const AccountInfo: React.FC = () => {
     }, [urlImgLicense])
 
 
-    
+
 
 
     const submit = async (form: Form) => {
         setLoading(true)
         form.doB = `${form.year}/${form.month > 9 ? '' : '0'}${form.month}/${form.day > 9 ? '' : '0'}${form.day}`;
-        
+
         if (form.avatarFile) {
             form.avatar = await changeAvatar(form.avatarFile)
         }
@@ -147,7 +147,7 @@ const AccountInfo: React.FC = () => {
         console.log('FORM PHASE 2: ', form)
 
         let profile = await authService.updateProfile(form)
-        
+
         if (profile.succeeded) {
             setLoading(false)
             dispatch(updateInfo(form))
@@ -157,9 +157,9 @@ const AccountInfo: React.FC = () => {
         }
         setOpen(true)
     }
-    
 
-    const changeAvatar = async (file: File) : Promise<any> => {
+
+    const changeAvatar = async (file: File): Promise<any> => {
         // // setLoading(true)
         // let avatar = file.avatarFile  as any
         if (file) {
@@ -174,18 +174,18 @@ const AccountInfo: React.FC = () => {
                     },
                     () => {
                         getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL: string) => {
-                            setForm({...form, avatar: downloadURL})
+                            setForm({ ...form, avatar: downloadURL })
                             res(downloadURL)
                         })
                     }
                 )
             })
-            
+
         }
         return ''
     }
 
-    const changeLicense = async (file: File) : Promise<any> => {
+    const changeLicense = async (file: File): Promise<any> => {
         // setLoading(true)
         // let license = file.businessLicenseFile as any
         // console.log('LICENSE: ', license)
@@ -202,8 +202,8 @@ const AccountInfo: React.FC = () => {
                     },
                     () => {
                         getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL: string) => {
-                            console.log('File available at', downloadURL);                       
-                            setForm({...form, businessLicense: downloadURL})
+                            console.log('File available at', downloadURL);
+                            setForm({ ...form, businessLicense: downloadURL })
                             res(downloadURL)
                         })
                     }
@@ -277,8 +277,8 @@ const AccountInfo: React.FC = () => {
                                 <div className="form-group">
                                     <label htmlFor="accountFirstName">
                                         {t('Full name')} *
-                                    </label> 
-                                    <input className="form-control form-control-sm" id="accountFirstName" type="text"  {...register('displayName', { required: true }, { required: 'Họ tên không được để trống' })} /> 
+                                    </label>
+                                    <input className="form-control form-control-sm" id="accountFirstName" type="text"  {...register('displayName', { required: true }, { required: 'Họ tên không được để trống' })} />
                                 </div>
                             </div>
                             <ErrorInput error={error.displayName} />
@@ -287,8 +287,8 @@ const AccountInfo: React.FC = () => {
                                 <div className="form-group">
                                     <label htmlFor="accountEmail">
                                         Email *
-                                    </label> 
-                                    <input className="form-control form-control-sm" id="accountEmail" type="email"    {...register('email', { pattern: 'email', required: true }, { required: 'Email không được để trống' })} /> 
+                                    </label>
+                                    <input className="form-control form-control-sm" id="accountEmail" type="email"    {...register('email', { pattern: 'email', required: true }, { required: 'Email không được để trống' })} />
                                 </div>
                                 <ErrorInput error={error.email} />
                             </div>
@@ -297,7 +297,7 @@ const AccountInfo: React.FC = () => {
                                 <div className="form-group">
                                     <label htmlFor="accountEmail">
                                         {t('Address')} *
-                                    </label> 
+                                    </label>
                                     <input className="form-control form-control-sm" id="accountEmail" type="text"    {...register('address', { required: true }, { required: 'Địa chỉ không được để trống' })} />
                                 </div>
                                 <ErrorInput error={error.address} />
@@ -308,10 +308,10 @@ const AccountInfo: React.FC = () => {
                                     {
                                         <label htmlFor="accountPassword">
                                             {t('Old password')}
-                                        </label> 
+                                        </label>
                                     }
                                     {
-                                        <input className="form-control form-control-sm" id="accountPassword" type="password"  {...register('oldPassword', { min: 6, max: 30, required: true }, { min: "Mật khẩu cũ ít nhất 6 ký tự", max: "Mật khẩu cũ nhiều nhất 30 ký tự", required: "Mật khẩu cũ không được để trống" })} /> 
+                                        <input className="form-control form-control-sm" id="accountPassword" type="password"  {...register('oldPassword', { min: 6, max: 30, required: true }, { min: "Mật khẩu cũ ít nhất 6 ký tự", max: "Mật khẩu cũ nhiều nhất 30 ký tự", required: "Mật khẩu cũ không được để trống" })} />
                                     }
 
                                 </div>
@@ -321,9 +321,9 @@ const AccountInfo: React.FC = () => {
 
                                 <div className="form-group">
                                     <label htmlFor="AccountNewPassword">
-                                            {t('New password')}
-                                        </label> 
-                                        <input className="form-control form-control-sm" id="AccountNewPassword" type="password"  {...register('newPassword', { min: 6, max: 30, required: true }, { min: "Mật khẩu mới ít nhất 6 ký tự", max: "Mật khẩu mới nhiều nhất 30 ký tự", required: "Mật khẩu mới không được để trống" })} /> 
+                                        {t('New password')}
+                                    </label>
+                                    <input className="form-control form-control-sm" id="AccountNewPassword" type="password"  {...register('newPassword', { min: 6, max: 30, required: true }, { min: "Mật khẩu mới ít nhất 6 ký tự", max: "Mật khẩu mới nhiều nhất 30 ký tự", required: "Mật khẩu mới không được để trống" })} />
                                 </div>
                                 <ErrorInput error={error.newPassword} />
                             </div>
@@ -331,7 +331,7 @@ const AccountInfo: React.FC = () => {
                                 {/* Birthday */}
                                 <div className="form-group">
                                     {/* Label */}
-                                   <label>{t('Date of birth')}</label>
+                                    <label>{t('Date of birth')}</label>
                                     {/* Inputs */}
                                     <div className="form-row">
                                         <div className="col-auto">
@@ -361,7 +361,7 @@ const AccountInfo: React.FC = () => {
                                         <div className="col-auto">
                                             {/* Date */}
                                             <label className='sr-only' htmlFor="accountYear">
-                                            {t('Year')}          
+                                                {t('Year')}
                                             </label>
                                             <select className="custom-select custom-select-sm" id="accountYear"  {...register('year')} >
                                                 {
@@ -379,7 +379,7 @@ const AccountInfo: React.FC = () => {
                                 {/* Gender */}
                                 <div className="form-group mb-8">
                                     <label>{t('Gender')}</label>
-                                   <div className="btn-group-toggle" data-toggle="buttons">
+                                    <div className="btn-group-toggle" data-toggle="buttons">
                                         <label className={`btn btn-sm btn-outline-border ${form.sex === TYPE_MALE ? 'active' : ''}`} onClick={e => setForm({ ...form, sex: TYPE_MALE })}>
                                             <input type="radio" name="gender" /> {t('Male')}
                                         </label>
@@ -392,30 +392,31 @@ const AccountInfo: React.FC = () => {
                             <div className="col-12">
                                 <label htmlFor="accountEmail">
                                     {t('License')}
-                                </label> 
+                                </label>
                                 <div className="form-group" >
                                     {/* <input className="form-control form-control-sm" id="accountFirstName" type="text" placeholder="First Name *" {...register('displayName')} />  */}
                                     {/* {
                                         form.businessLicense ? (isFile === true ? <a href={form.businessLicense}>{form.businessLicense}</a> : <img style={{ width: '50%', padding: '10px 0px' }} src={form.businessLicense || '/img/file.png'} alt="" onClick={() => { licenseRef.current?.dispatchEvent(new MouseEvent('click')) }} />) : ''
                                     } */}
-                                    
-                                            {/* <img style={{ width: '50%', padding: '10px 0px' }} src={form.businessLicense || '/img/file.png'} alt="" onClick={() => { licenseRef.current?.dispatchEvent(new MouseEvent('click')) }} /> */}
-                                            <a href={form.businessLicense} style={{ width: '100%' }} >{form.businessLicense}</a><br />
-                                       
+
+                                    {/* <img style={{ width: '50%', padding: '10px 0px' }} src={form.businessLicense || '/img/file.png'} alt="" onClick={() => { licenseRef.current?.dispatchEvent(new MouseEvent('click')) }} /> */}
+                                    <a href={form.businessLicense} style={{ maxWidth: '100%' }} >{form.businessLicense}</a><br />
+
                                     {/* {!loading ? (isFile === true ? <a href={form.businessLicense}>{form.businessLicense}</a> : <img style={{ width: '50%', padding: '10px 0px' }} src={form.businessLicense } alt="" onClick={() => { licenseRef.current?.dispatchEvent(new MouseEvent('click')) }} />) : <LoadingAvatar />} */}
-                                    <input type="file" className='form-control form-control-sm' ref={licenseRef} accept="image/*, application/pdf" disabled={status === true ? true : false} hidden={status === true ? true : false} {...register('businessLicenseFile')} /> 
+                                    {/* <img style={{ width: '50%', padding: '10px 0px' }} src={form.businessLicense } alt="" onClick={() => { licenseRef.current?.dispatchEvent(new MouseEvent('click')) }} /> */}
+                                    <input type="file" className='form-control form-control-sm' ref={licenseRef} accept="image/*, application/pdf" disabled={status === true ? true : false} hidden={status === true ? true : false} {...register('businessLicenseFile')} />
                                 </div>
                             </div>
-                            <div className="col-12">
-                                {/* Email */}
+                            {/* <div className="col-12">
+                                
                                 <div className="form-group">
                                     <label htmlFor="accountEmail">
                                         {t('Tax')}
-                                    </label> 
-                                    <input className="form-control form-control-sm tax-number" type="number" disabled={status === true ? true : false} {...register('taxId', { required: true, min: 10, max: 10, pattern: 'tax' }, { required: 'Cần nhập mã sô thuế', min: 'Mã số thuế cần 10 ký tự', max: 'Mã số thuế cần 10 ký tự', pattern: 'Mã số thuế chỉ chấp nhận số' })} /> 
+                                    </label>
+                                    <input className="form-control form-control-sm tax-number" type="number" disabled={status === true ? true : false} {...register('taxId', { required: true, min: 10, max: 10, pattern: 'tax' }, { required: 'Cần nhập mã sô thuế', min: 'Mã số thuế cần 10 ký tự', max: 'Mã số thuế cần 10 ký tự', pattern: 'Mã số thuế chỉ chấp nhận số' })} />
                                 </div>
                                 <ErrorInput error={error.taxId} />
-                            </div>
+                            </div> */}
                             <div className="col-12">
                                 {/* Button */}
                                 <button className="btn btn-dark" type="submit" disabled={form.id ? false : true}>{t('Save')}</button>

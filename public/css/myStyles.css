@@ -205,7 +205,7 @@ td {
 .dis-header {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
     /* margin: 30px 0px; */
     /* padding: 20px 0px; */
@@ -317,6 +317,14 @@ td {
 
 .py-12.border-gray-700.border-bottom {
     border-bottom: 1px solid #303030 !important;
+}
+
+.header-header {
+    width: 50%
+}
+
+.css-ghevlx-MuiTypography-root-MuiTimelineContent-root {
+    padding-top: 22px
 }
 
 

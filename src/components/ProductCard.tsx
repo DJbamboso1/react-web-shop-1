@@ -23,9 +23,9 @@ export const ProductCard: React.FC<{ product?: Product01, isActive?: boolean }> 
             {/* Card */}
             <div className="card">
                 {/* Badge */}
-                {/* <div className="badge badge-white card-badge card-badge-left text-uppercase">
-                    {product?.status === 0 ? <span style={{ color: 'red' }}>Ngừng bán</span> : product?.status === 1 ? <span style={{ color: '#6fbfc2' }}>Còn hàng</span> : product?.status === 2 && <span style={{ color: 'orange' }}>Hết hàng</span>}
-                </div> */}
+                <div className="badge card-badge card-badge-left text-uppercase">
+                    {product?.status === 2 && <span style={{ color: 'white', backgroundColor:'red', padding: '5px' }}>Hết hàng</span>}
+                </div>
                 {/* Image */}
                 <div className="card-img">
                     {/* Image */}

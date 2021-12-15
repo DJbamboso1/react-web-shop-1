@@ -385,7 +385,7 @@ const CheckoutComponent: React.FC = () => {
                                                         return (
                                                             <li className="list-group-item d-flex">
                                                                 <span style={{ width: '60%' }}>
-                                                                    <span style={{ width: '10%' }}>{i.data.product.name}</span><br />
+                                                                    <span style={{ width: '10%' }}>{i.data.product.name}</span> <span className='text-muted' style={{fontWeight: 'bold'}}>({i.data.discountRate}%)</span><br />
                                                                     <span className='text-muted' style={{ fontSize: '10pt' }}>{t('Distributor')}: {i.data.distributor.displayName}</span>
                                                                 </span>
                                                                 <span className="ml-auto font-size-sm" style={{ fontWeight: 'bold' }}>

@@ -27,3 +27,21 @@ export interface MembershipRank {
         rankName: string
     }
 }
+
+export interface CustomerRank {
+    succeeded: boolean,
+    message: string,
+    errors: null,
+    data: {
+        id: string,
+        distributorId: string,
+        // distributor?: User['data'],
+        membershipRankId: string,
+        // point: number,
+        threshold: number,
+        discountRate: number,
+        // membershipRank: MembershipRank['data'],
+        // product?: Product01,
+        // num?: number
+    }[]
+}

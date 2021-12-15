@@ -167,8 +167,8 @@ const ProductDetail: React.FC = () => {
                                                 </div>
                                                 {/* Heading */}
                                                 <h3 className="mb-2">{data.data.name}</h3>
-                                                <h6 className="mb-2"><span className="text-muted">{t('Distributor')}:</span> <Link style={{ fontSize: '15pt' }} to={`/?DistributorId=${data.data.distrubutorId}`}>{data.data.distributor}</Link></h6>
-                                                <h6 className="mb-2"><span className="text-muted">{t('Categories')}:</span>  <Link style={{ fontSize: '15pt' }} to={`/?CategoryId=${data.data.parentCategoryId}`}>{data.data.parentCategoryName}</Link></h6>
+                                                <h6 className="mb-2"><span className="text-muted">{t('Distributor')}:</span> <Link style={{ fontSize: '15pt' }} to={`/?DistributorId=${data.data.distributorId}`}>{data.data.distributor}</Link></h6>
+                                                <h6 className="mb-2"><span className="text-muted">{t('Categories')}:</span>  <Link style={{ fontSize: '15pt' }} to={`/?CategoryId=${data.data.parentCategoryId}&SubCategoryId=&PageNumber=1`}>{data.data.parentCategoryName}</Link></h6>
                                                 {/* Price */}
                                                 <div className="mb-7" style={{ fontWeight: 'bold', fontSize: '20pt' }}>
                                                     {/* <span className="font-size-lg font-weight-bold text-gray-350 text-decoration-line-through">$115.00</span> */}
